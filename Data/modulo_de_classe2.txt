@@ -1,0 +1,259 @@
+Option Explicit
+
+Private mCodigoBandeira As Long
+Private mCodigoCliente As Long
+Private mNumeroCartao As String
+Private mDiaSemana As Integer
+
+Private rsRestricaoUsoDiaSemana As New adodb.Recordset
+
+
+'Inicio das Propriedades da Classe
+Public Property Get CodigoBandeira() AS Long
+    CodigoBandeira = mCodigoBandeira
+End Property
+Public Property Let CodigoBandeira(ByVal Valor As Long)
+    mCodigoBandeira = Valor
+End Property
+
+
+Public Property Get CodigoCliente() AS Long
+    CodigoCliente = mCodigoCliente
+End Property
+Public Property Let CodigoCliente(ByVal Valor As Long)
+    mCodigoCliente = Valor
+End Property
+
+
+Public Property Get NumeroCartao() AS String
+    NumeroCartao = mNumeroCartao
+End Property
+Public Property Let NumeroCartao(ByVal Valor As String)
+    mNumeroCartao = Valor
+End Property
+
+
+Public Property Get DiaSemana() AS Integer
+    DiaSemana = mDiaSemana
+End Property
+Public Property Let DiaSemana(ByVal Valor As Integer)
+    mDiaSemana = Valor
+End Property
+'Fim das Propriedades da Classe
+
+
+'Inicio Métodos da Classe
+Public Function LocalizarCodigo(ByVal p As ) As Boolean
+Dim xCondicao As String
+On Error GoTo trata_erro
+
+    LocalizarCodigo = False
+    xCondicao = " WHERE  = " & p
+    gSQL = PreparaSQL(xCondicao, "")
+    LocalizarCodigo = Localizar(1)
+    If LocalizarCodigo = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function LocalizarAnterior() As Boolean
+Dim xCondicao As String
+On Error GoTo trata_erro
+
+    LocalizarAnterior = False
+    xCondicao = " WHERE  < " & m
+    gSQL = PreparaSQL(xCondicao, "ORDER BY  DESC")
+    LocalizarAnterior = Localizar(1)
+    If LocalizarAnterior = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function LocalizarNome(ByVal pNome As String) As Boolean
+
+On Error GoTo trata_erro
+    
+    LocalizarNome = False
+    gSQL = PreparaSQL(" WHERE Nome = " & preparaTexto(pNome), "")
+    LocalizarNome = Localizar(1)
+    If LocalizarNome = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function LocalizarPrimeiro() As Boolean
+Dim xCondicao As String
+On Error GoTo trata_erro
+
+    LocalizarPrimeiro = False
+    xCondicao = " WHERE  > " & m
+    gSQL = PreparaSQL(xCondicao, "ORDER BY  ASC")
+    LocalizarPrimeiro = Localizar(1)
+    If LocalizarPrimeiro = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function LocalizarProximo() As Boolean
+Dim xCondicao As String
+On Error GoTo trata_erro
+
+    LocalizarProximo = False
+    xCondicao = " WHERE  > " & m
+    gSQL = PreparaSQL(xCondicao, "ORDER BY  ASC")
+    LocalizarProximo = Localizar(1)
+    If LocalizarProximo = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function LocalizarUltimo(ByVal p As ) As Boolean
+Dim xCondicao As String
+On Error GoTo trata_erro
+
+    LocalizarUltimo = False
+    xCondicao = " WHERE  = " & p
+    gSQL = PreparaSQL(xCondicao, "ORDER BY  DESC")
+    LocalizarUltimo = Localizar(1)
+    If LocalizarUltimo = True Then
+        AtribuiValor
+    End If
+    rsRestricaoUsoDiaSemana.Close
+    Set rsRestricaoUsoDiaSemana = Nothing
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+End Function
+
+
+Public Function Incluir() As Boolean
+Dim lRecordsAffected As Long
+
+On Error GoTo Err_Incluir
+
+    Incluir = False
+    gSQL = "INSERT INTO RestricaoUsoDiaSemana ( [Codigo da Bandeira], [Codigo do Cliente], [Numero do Cartao], [Dia da Semana] ) VALUES ( "
+    Call sqlNumero(1, mCodigoBandeira, ", ")
+    Call sqlNumero(1, mCodigoCliente, ", ")
+    Call sqlTexto(1, mNumeroCartao, ", ")
+    Call sqlNumero(1, mDiaSemana, " )")
+    gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
+    If lRecordsAffected > 0 Then
+        Incluir = True
+    End If
+    Exit Function
+
+Err_Incluir:
+End Function
+
+
+Public Function Alterar(ByVal p As ) As Boolean
+Dim lRecordsAffected As Long
+
+On Error GoTo Err_Alterar
+
+    Alterar = False
+    gSQL = "UPDATE RestricaoUsoDiaSemana SET "
+    Call sqlNumero(2, "[Codigo da Bandeira] = ", mCodigoBandeira)
+    Call sqlNumero(2, ", [Codigo do Cliente] = ", mCodigoCliente)
+    Call sqlTexto(2, ", [Numero do Cartao] = ", mNumeroCartao)
+    Call sqlNumero(2, ", [Dia da Semana] = ", mDiaSemana)
+    gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
+    If lRecordsAffected > 0 Then
+        Alterar = True
+    End If
+    Exit Function
+
+Err_Alterar:
+End Function
+
+
+Public Function Excluir(ByVal p As ) As Boolean
+Dim lRecordsAffected As Long
+
+On Error GoTo Err_Excluir
+
+    Excluir = False
+    gSQL = "DELETE FROM RestricaoUsoDiaSemana"
+    gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
+    If lRecordsAffected > 0 Then
+        Excluir = True
+    End If
+    Exit Function
+
+Err_Excluir:
+End Function
+
+
+'Funções / Procedures internas
+Private Function PreparaSQL(ByVal xCondicao As String, ByVal xTipoOrdem As String) As String
+    PreparaSQL = Trim("SELECT [Codigo da Bandeira], [Codigo do Cliente], [Numero do Cartao], [Dia da Semana] FROM RestricaoUsoDiaSemana" & " " & xCondicao & " " & xTipoOrdem)
+End Function
+
+
+Private Function AtualizaRecordset(ByVal pQtdRegistro As Integer) As Boolean
+    Dim i As Integer
+    AtualizaRecordset = False
+    Set rsRestricaoUsoDiaSemana = New adodb.Recordset
+    rsRestricaoUsoDiaSemana.CursorLocation = adUseClient
+    i = Len(gSQL)
+    If pQtdRegistro > 0 Then
+        gSQL = Mid(gSQL, 1, 6) & " TOP " & pQtdRegistro & Mid(gSQL, 7, i - 6)
+    End If
+    rsRestricaoUsoDiaSemana.Open gSQL, gConn, adOpenForwardOnly, adLockReadOnly
+    If Not rsRestricaoUsoDiaSemana.EOF Then
+        AtualizaRecordset = True
+    End If
+End Function
+
+
+Private Sub AtribuiValor()
+    CodigoBandeira = rsRestricaoUsoDiaSemana("Codigo da Bandeira").Value
+    CodigoCliente = rsRestricaoUsoDiaSemana("Codigo do Cliente").Value
+    NumeroCartao = rsRestricaoUsoDiaSemana("Numero do Cartao").Value
+    DiaSemana = rsRestricaoUsoDiaSemana("Dia da Semana").Value
+End Sub
+
+
+Private Function Localizar(ByVal pQtdRegistro As Integer) As Boolean
+    Localizar = False
+    If AtualizaRecordset(pQtdRegistro) Then
+        Localizar = True
+    End If
+End Function

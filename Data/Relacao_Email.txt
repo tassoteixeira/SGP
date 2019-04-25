@@ -1,0 +1,6 @@
+Nome da Conta: = tasso_cerrado@uol.com.br
+Senha: = lara6192
+E-Mail Remetente: = tasso_cerrado@uol.com.br
+E-Mail Destinatario (01): = tasso@cerradoinformatica.com.br
+E-Mail Destinatario (02): = acessoremoto@cerradoinformatica.com.br
+

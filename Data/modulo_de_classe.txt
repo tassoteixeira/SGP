@@ -1,0 +1,347 @@
+Imports System.Data.SqlClient
+
+Public Class cMovEncerranteProduto
+
+#Region " Declaração "
+
+    Private mEmpresa As Short
+    Private mData As String
+    Private mPeriodo As Short
+    Private mNumeroIlha As Short
+    Private mCodigoFuncionario As Short
+    Private mCodigoProduto As Integer
+    Private mEncerranteInicial As Decimal
+    Private mEncerranteFinal As Decimal
+    Private mQuantidade As Decimal
+    Private mPrecoCusto As Decimal
+    Private mPrecoVenda As Decimal
+    Private mValorTotal As Decimal
+    Private mCodigoTipoSubEstoque As Short
+    Private mTipoMovimento As Short
+
+    Dim daTabela As OleDbDataAdapter
+    Dim drTabela As OleDbDataReader
+    Dim cmd As OleDbCommand
+
+#End Region
+
+#Region " Propriedades da Classe "
+
+    Public Property Empresa() AS Short
+        Get
+            Return mEmpresa
+        End Get
+        Set(ByVal Value As Short)
+            mEmpresa = Value
+        End Set
+    End Property
+    Public Property Data() AS String
+        Get
+            Return mData
+        End Get
+        Set(ByVal Value As String)
+            mData = Value
+        End Set
+    End Property
+    Public Property Periodo() AS Short
+        Get
+            Return mPeriodo
+        End Get
+        Set(ByVal Value As Short)
+            mPeriodo = Value
+        End Set
+    End Property
+    Public Property NumeroIlha() AS Short
+        Get
+            Return mNumeroIlha
+        End Get
+        Set(ByVal Value As Short)
+            mNumeroIlha = Value
+        End Set
+    End Property
+    Public Property CodigoFuncionario() AS Short
+        Get
+            Return mCodigoFuncionario
+        End Get
+        Set(ByVal Value As Short)
+            mCodigoFuncionario = Value
+        End Set
+    End Property
+    Public Property CodigoProduto() AS Integer
+        Get
+            Return mCodigoProduto
+        End Get
+        Set(ByVal Value As Integer)
+            mCodigoProduto = Value
+        End Set
+    End Property
+    Public Property EncerranteInicial() AS Decimal
+        Get
+            Return mEncerranteInicial
+        End Get
+        Set(ByVal Value As Decimal)
+            mEncerranteInicial = Value
+        End Set
+    End Property
+    Public Property EncerranteFinal() AS Decimal
+        Get
+            Return mEncerranteFinal
+        End Get
+        Set(ByVal Value As Decimal)
+            mEncerranteFinal = Value
+        End Set
+    End Property
+    Public Property Quantidade() AS Decimal
+        Get
+            Return mQuantidade
+        End Get
+        Set(ByVal Value As Decimal)
+            mQuantidade = Value
+        End Set
+    End Property
+    Public Property PrecoCusto() AS Decimal
+        Get
+            Return mPrecoCusto
+        End Get
+        Set(ByVal Value As Decimal)
+            mPrecoCusto = Value
+        End Set
+    End Property
+    Public Property PrecoVenda() AS Decimal
+        Get
+            Return mPrecoVenda
+        End Get
+        Set(ByVal Value As Decimal)
+            mPrecoVenda = Value
+        End Set
+    End Property
+    Public Property ValorTotal() AS Decimal
+        Get
+            Return mValorTotal
+        End Get
+        Set(ByVal Value As Decimal)
+            mValorTotal = Value
+        End Set
+    End Property
+    Public Property CodigoTipoSubEstoque() AS Short
+        Get
+            Return mCodigoTipoSubEstoque
+        End Get
+        Set(ByVal Value As Short)
+            mCodigoTipoSubEstoque = Value
+        End Set
+    End Property
+    Public Property TipoMovimento() AS Short
+        Get
+            Return mTipoMovimento
+        End Get
+        Set(ByVal Value As Short)
+            mTipoMovimento = Value
+        End Set
+    End Property
+
+#End Region
+
+#Region " Métodos da Classe "
+
+    Public Function Alterar(ByVal p As ) As Boolean
+        Alterar = False
+        Try
+            sbSQL.Clear()
+            sbSQL.Append("UPDATE MovimentoEncerranteProduto SET ")
+            Short(2, "Empresa = ", mEmpresa.ToString)
+            String(2, ", Data = ", mData.ToString)
+            Short(2, ", Periodo = ", mPeriodo.ToString)
+            Short(2, ", [Numero da Ilha] = ", mNumeroIlha.ToString)
+            Short(2, ", [Codigo do Funcionario] = ", mCodigoFuncionario.ToString)
+            Integer(2, ", [Codigo do Produto] = ", mCodigoProduto.ToString)
+            Decimal(2, ", [Encerrante Inicial] = ", mEncerranteInicial.ToString)
+            Decimal(2, ", [Encerrante Final] = ", mEncerranteFinal.ToString)
+            Decimal(2, ", Quantidade = ", mQuantidade.ToString)
+            Decimal(2, ", [Preco de Custo] = ", mPrecoCusto.ToString)
+            Decimal(2, ", [Preco de Venda] = ", mPrecoVenda.ToString)
+            Decimal(2, ", [Valor Total] = ", mValorTotal.ToString)
+            Short(2, ", [Codigo do Tipo do SubEstoque] = ", mCodigoTipoSubEstoque.ToString)
+            Short(2, ", [Tipo do Movimento] = ", mTipoMovimento.ToString)
+            Alterar = gBdFuncoesDiversas.ExecutaCmdAzure(sbSQL.ToString, Me.GetType.Name & ":Alterar")
+        Catch
+            gFuncoesDiversas.CriaLog(Me.GetType.Name & ":Alterar - Erro não identificado.", Err.Description, sbSQL.ToString)
+        End Try
+    End Function
+    Public Function Excluir(ByVal p As ) As Boolean
+        Excluir = False
+        Try
+            sbSQL.Clear()
+            sbSQL.Append("DELETE FROM MovimentoEncerranteProduto")
+            Excluir = gBdFuncoesDiversas.ExecutaCmdAzure(sbSQL.ToString, Me.GetType.Name & ":Excluir")
+        Catch
+            gFuncoesDiversas.CriaLog(Me.GetType.Name & ":Excluir - Erro não identificado.", Err.Description, sbSQL.ToString)
+        End Try
+    End Function
+    Public Function Incluir() As Boolean
+        Incluir = False
+        Try
+            sbSQL.Clear()
+            sbSQL.Append("INSERT INTO MovimentoEncerranteProduto ( Empresa, Data, Periodo, [Numero da Ilha], [Codigo do Funcionario], ")
+            sbSQL.Append("[Codigo do Produto], [Encerrante Inicial], [Encerrante Final], Quantidade, [Preco de Custo], ")
+            sbSQL.Append("[Preco de Venda], [Valor Total], [Codigo do Tipo do SubEstoque], [Tipo do Movimento] ) VALUES ( ")
+            sqlNumero(1, Empresa.ToString, ", ")
+            sqlTexto(1, Data, ", ")
+            sqlNumero(1, Periodo.ToString, ", ")
+            sqlNumero(1, NumeroIlha.ToString, ", ")
+            sqlNumero(1, CodigoFuncionario.ToString, ", ")
+            sqlNumero(1, CodigoProduto.ToString, ", ")
+            sqlValor(1, EncerranteInicial.ToString, ", ")
+            sqlValor(1, EncerranteFinal.ToString, ", ")
+            sqlValor(1, Quantidade.ToString, ", ")
+            sqlValor(1, PrecoCusto.ToString, ", ")
+            sqlValor(1, PrecoVenda.ToString, ", ")
+            sqlValor(1, ValorTotal.ToString, ", ")
+            sqlNumero(1, CodigoTipoSubEstoque.ToString, ", ")
+            sqlNumero(1, TipoMovimento.ToString.ToString, " )")
+            cmd = New OleDbCommand(gSQL, gConn)
+            If cmd.ExecuteNonQuery() > 0 Then
+                Incluir = True
+            Else
+                CriaLogRN(Me.GetType.Name & ":Incluir - Erro ao incluir registro.", "Err.Description", gSQL)
+            End If
+        Catch
+            CriaLogRN(Me.GetType.Name & ":Incluir - Erro não identificado.", Err.Description, gSQL)
+        Finally
+            cmd.Dispose()
+        End Try
+    End Function
+    Public Function LocalizarAnterior() As Boolean
+    Dim xCondicao As String
+
+        LocalizarAnterior = False
+        xCondicao = " WHERE  < " & m
+        gSQL = PreparaSQL(xCondicao, "ORDER BY  DESC")
+        LocalizarAnterior = Localizar(1, True, True, True)
+    End Function
+    Public Function LocalizarCodigo(ByVal p As ) As Boolean
+        Dim xCondicao As String
+
+        LocalizarCodigo = False
+        xCondicao = " WHERE  = " & p
+        gSQL = PreparaSQL(xCondicao, "")
+        LocalizarCodigo = Localizar(1, True, True, True)
+    End Function
+    Public Function LocalizarNome(ByVal pNome As String) As Boolean
+        LocalizarNome = False
+        gSQL = PreparaSQL(" WHERE Nome = " & preparaTexto(pNome), "")
+        LocalizarNome = Localizar(1, True, True, True)
+    End Function
+    Public Function LocalizarPrimeiro() As Boolean
+    Dim xCondicao As String
+
+        LocalizarPrimeiro = False
+        xCondicao = " WHERE  > " & m
+        gSQL = PreparaSQL(xCondicao, "ORDER BY  ASC")
+        LocalizarPrimeiro = Localizar(1, True, True, True)
+    End Function
+    Public Function LocalizarProximo() As Boolean
+    Dim xCondicao As String
+
+        LocalizarProximo = False
+        xCondicao = " WHERE  > " & m
+        gSQL = PreparaSQL(xCondicao, "ORDER BY  ASC")
+        LocalizarProximo = Localizar(1, True, True, True)
+    End Function
+    Public Function LocalizarUltimo(ByVal p As ) As Boolean
+    Dim xCondicao As String
+
+        LocalizarUltimo = False
+        xCondicao = " WHERE  = " & p
+        gSQL = PreparaSQL(xCondicao, "ORDER BY  DESC")
+        LocalizarUltimo = Localizar(1, True, True, True)
+    End Function
+    Public Function MontaDS(ByVal pSQL As String) As DataSet
+        Dim dsTabela As New DataSet
+
+        Try
+            daTabela = New OleDbDataAdapter(pSQL, gConn)
+            daTabela.Fill(dsTabela, "MovimentoEncerranteProduto")
+            Return dsTabela
+        Catch
+            CriaLogRN(Me.GetType.Name & ":MontaDS - Erro não identificado.", Err.Description, pSQL)
+        Finally
+        End Try
+    End Function
+
+#End Region
+
+#Region " Funções/Procedures Internas da Classe "
+
+    Private Sub AtribuiValor()
+        Dim xLocal As Short
+        Try
+            xLocal = 1
+            Empresa = drTabela.Item("Empresa")
+            xLocal = 2
+            Data = drTabela.Item("Data")
+            xLocal = 3
+            Periodo = drTabela.Item("Periodo")
+            xLocal = 4
+            NumeroIlha = drTabela.Item("Numero da Ilha")
+            xLocal = 5
+            CodigoFuncionario = drTabela.Item("Codigo do Funcionario")
+            xLocal = 6
+            CodigoProduto = drTabela.Item("Codigo do Produto")
+            xLocal = 7
+            EncerranteInicial = drTabela.Item("Encerrante Inicial")
+            xLocal = 8
+            EncerranteFinal = drTabela.Item("Encerrante Final")
+            xLocal = 9
+            Quantidade = drTabela.Item("Quantidade")
+            xLocal = 10
+            PrecoCusto = drTabela.Item("Preco de Custo")
+            xLocal = 11
+            PrecoVenda = drTabela.Item("Preco de Venda")
+            xLocal = 12
+            ValorTotal = drTabela.Item("Valor Total")
+            xLocal = 13
+            CodigoTipoSubEstoque = drTabela.Item("Codigo do Tipo do SubEstoque")
+            xLocal = 14
+            TipoMovimento = drTabela.Item("Tipo do Movimento")
+        Catch ex As Exception
+            CriaLogRN(Me.GetType.Name & ":AtribuiValor - Erro não identificado.", Err.Description, "xLocal=" & xLocal)
+        End Try
+    End Sub
+    Private Function Localizar(ByVal pQtdRegistro As Short, ByVal pLeRegistro As Boolean, ByVal pAtribuiValor As Boolean, ByVal pFecha As Boolean) As Boolean
+        Dim i As Short
+
+        Localizar = False
+        i = Len(gSQL)
+        If pQtdRegistro > 0 Then
+            gSQL = Mid(gSQL, 1, 6) & " Top " & pQtdRegistro & Mid(gSQL, 7, i - 6)
+        End If
+        Try
+            cmd = New OleDbCommand(gSQL, gConn)
+            drTabela = cmd.ExecuteReader
+            If pLeRegistro = True Then
+                If drTabela.Read() Then
+                    Localizar = True
+                    If pAtribuiValor Then
+                        AtribuiValor()
+                    End If
+                End If
+            Else
+                Localizar = True
+            End If
+        Catch
+            CriaLogRN(Me.GetType.Name & ":Localizar - Erro não identificado.", Err.Description, gSQL)
+        Finally
+            If pFecha Then
+                drTabela.Close()
+                cmd.Dispose()
+            End If
+        End Try
+    End Function
+    Private Function PreparaSQL(ByVal pCondicao As String, ByVal pTipoOrdem As String) As String
+        PreparaSQL = Trim("SELECT Empresa, Data, Periodo, [Numero da Ilha], [Codigo do Funcionario], [Codigo do Produto], [Encerrante Inicial], [Encerrante Final], Quantidade, [Preco de Custo], [Preco de Venda], [Valor Total], [Codigo do Tipo do SubEstoque], [Tipo do Movimento] FROM MovimentoEncerranteProduto" & " " & pCondicao & " " & pTipoOrdem)
+    End Function
+
+#End Region
+
+End Class
