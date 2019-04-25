@@ -328,3 +328,11 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Arquivos do SGP que NÃO podem ou NÃO faz sentido ser versionado.
+Sgp.exe
+SGP_Cadastro.exe
+indexador.exe
+libera_locacao.exe
+*.rar
+*.log

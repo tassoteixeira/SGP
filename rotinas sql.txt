@@ -1,0 +1,12 @@
+select [tipo de combustivel],  [codigo do produto] from bomba group by [codigo do produto], [tipo de combustivel]
+
+
+select [tipo de combustivel]  from bomba where [codigo do produto] in (77,85)
+
+
+select  [codigo do produto]  from bomba where [tipo de combustivel] = "A "
+
+
+SELECT SUM([Valor Total]) AS Total  FROM Movimento_Cupom_Fiscal WHERE [Codigo do Produto] IN ( SELECT  [Codigo do Produto]  FROM Bomba  WHERE [Tipo de Combustivel] = "A " GROUP BY [Codigo do Produto] )
+
+

@@ -1,0 +1,13 @@
+[OPTIONS]
+errorlog = editor.err
+title = Editor Help
+compress = false
+warning = 3
+
+[FILES]
+editor.rtf
+
+[WINDOWS]
+main = "Editor Help", (0,0,1023,1023 ),,, (192,192,192 )
+
+

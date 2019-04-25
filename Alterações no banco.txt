@@ -1,0 +1,15 @@
+MOVCHEQ  - CHEQUE DEVOLVIDO
+PREDMOVI - CHEQUE PRE-DATADO
+
+
+
+Movimento_Desconto_Personalizado
+Criado Campo 'Preco Fixo'  Currency
+
+Movimento_Cheque
+Criado Campo 'Codigo do Vendedor' Integer
+Criado Campo 'CPF CNPJ' String 14
+
+Baixa_Cheque
+Criado Campo 'Codigo do Vendedor' Integer
+Criado Campo 'CPF CNPJ' String 14

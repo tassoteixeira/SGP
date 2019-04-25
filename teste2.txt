@@ -1,0 +1,20 @@
+ALTER TABLE Movimento_Lubrificante ADD COLUMN `Codigo do Tipo do SubEstoque` SMALLINT
+ALTER TABLE Clientes               ADD COLUMN Notas BINARY(30)
+
+
+CREATE UNIQUE INDEX EMPREGADOS_IDX ON Movimento_Lubrificante(NOME);
+
+create table `SubEstoque` ( 
+	`Empresa` SMALLINT,
+	`Codigo do Produto` INTEGER,
+	`Codigo do Tipo do SubEstoque` SMALLINT,
+	`Quantidade` CURRENCY, constraint `SubEstoque_PK` primary key (`Empresa`, `Codigo do Produto`, `Codigo do Tipo do SubEstoque`) );
+
+
+id_data =   +Empresa;+Data;+Periodo;+Numero da Ilha;+Tipo do Movimento;+Codigo do Produto2;+Codigo do Funcionario
+
+ALTER TABLE Movimento_Lubrificante DROP PRIMARY KEY id_data
+
+CREATE PRIMARY KEY id_data ON Movimento_Lubrificante(`Empresa`, `Data`, `Periodo`, `Numero da Ilha`, `Tipo do Movimento`, `Codigo do Produto2`, `Codigo do Funcionario`);
+
+CREATE INDEX series ON tblalunos(serie ASC, periodo DESC)

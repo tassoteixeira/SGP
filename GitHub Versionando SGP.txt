@@ -1,0 +1,18 @@
+PROCESSO DE VERSIONAMENTO DO SGP NO GITHUB
+
+1) Dentro do GitHub cria o projeto e copia o link do projeto pra poder clonar.
+   https://github.com/tassoteixeira/SGP.git
+   
+2) Renomeia a pasta SGP pra "SGP A VERSIONAR"
+
+3) Cria uma nova pasta SGP.
+
+4) Dentro dessa pasta pelo git bash manda clonar o sgp que foi criado no github.
+   git clone https://github.com/tassoteixeira/SGP.git .
+obs: não esquecer do "." no final do comando.
+
+5) Após o projeto ser clonado do GitHub pra pasta local, MOVER o conteúdo da pasta "SGP A VERSIONAR"
+Obs: Nessa etapa MOVER somente os arquivos, e NÃO as subpastas.
+
+6) Editar o .gitignore na pasta "SGP" e adicionar os arquivos que NÃO faz sentido ser versionados.
+Ex: Sgp.exe, CadastroDll.dll ...

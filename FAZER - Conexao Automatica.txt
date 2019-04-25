@@ -1,0 +1,28 @@
+Private Declare Function InternetAutodial Lib "wininet.dll" _
+(ByVal dwFlags As Long, ByVal dwReserved As Long) As Long
+
+Private Declare Function InternetAutodialHangup Lib "wininet.dll" _
+(ByVal dwReserved As Long) As Long
+Private Const INTERNET_AUTODIAL_FORCE_ONLINE = 1
+Private Const INTERNET_AUTODIAL_FORCE_UNATTENDED = 2
+
+
+Private Sub Command1_Click()
+
+'Indicando ao usuário a conexão
+
+If InternetAutodial(INTERNET_AUTODIAL_FORCE_ONLINE, 0) Then
+	MsgBox "Você esta conectado!", vbInformation
+else
+
+'inicia a discagem automaticamente
+ InternetAutodial(INTERNET_AUTODIAL_FORCE_UNATTENDED, 0) Then
+	MsgBox "Você já esta conectado!", vbInformation
+End If
+
+'desconecta 
+If InternetAutodialHangup(0) Then
+   MsgBox "Você esta desconectado", vbInformation
+End If
+
+End Sub

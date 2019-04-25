@@ -1,0 +1,43 @@
+Formatando Colunas do DataGrid – WinForm 
+Olá pessoal me encorajei a escrever este artigo pelo motivo de que precisei realizar esta formatação e não estava achando nada na WEB que fosse algo simples de entender e de implementar. 
+
+Mas com este pequeno artigo, imagino que ninguém mais irá ficar quebrando a cabeça por este tipo de formatação. 
+
+Bem, irei apenas falar sobre como que deve ser feita a formatação, sendo que a parte de carregamento e utilização dos DataSets fica para uma próxima oportunidade. 
+
+Vamos ao que interessa. 
+
+Após, você já ter colocado o seu DataGrid no formulário e todos os outros componentes que você deseja, faça as seguintes linhas de códigos. 
+
+Dim pSet As New DataSet
+Dim pTable As New DataTable
+Dim pRow As DataRow
+Dim pAux As String
+
+[Nesta Parte é o lugar aonde vc deverá colocar o código para preenchimento do DataSet]
+
+For Each pTable In pSet.Tables
+For Each pRow In pTable.Rows
+pAux = pRow.Item("Celular")
+            If pAux.Length = 10 Then
+pRow.Item("Celular") = Format(Convert.ToInt64( _
+pRow.Item("Celular")), "(00) 0000-0000")
+            ElseIf pAux.Length = 11 Then
+pRow.Item("Celular") = Format(Convert.ToInt64( _
+pRow.Item("Celular")), "(000) 0000-0000")
+End If
+      Next
+Next
+DataGrid1.DataSource = pSet
+
+A formatação de valores deve sempre ter um cuidado um pouco especial. Para fazer, note no código acima que primeiramente é necessário converter o valor de STRING para NUMÉRICA, no nosso caso foi para Int32. 
+
+Logo, sabendo de como é feita a formatação, basta fazer dois laços de repetição para percorrer todo o DataSet previamente preenchido, localizando os campo que você deseja fazer a formatação. 
+
+A última linha do código, faz o preenchimento dos dados do DataSet já formatados para o DataGrid. 
+
+O Atributo FORMAT dos DataGridTextBoxColumn somente funciona caso o valor de preenchimento já esteja no formato numérico, caso contrário as linhas de código acima deverão ser utilizadas. 
+
+Pessoal, espero ter ajudado alguém com este artigo, sendo que passei algumas horas para poder descobrir como fazer esta formatação, uma vez que na WEB a grande maioria dos artigos/tutoriais a respeito de DataGrid são para a plataforma WEB. 
+
+Até a próxima!!! 

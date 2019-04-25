@@ -1,0 +1,351 @@
+ %% PLEASE DO NOT MODIFY OR DELETE THIS FILE! %% 
+ %% This file contains information about the installation of an application. %% 
+ %% It will be used to automatically remove all application components from your computer if you choose to do so. %% 
+
+
+NOTE: Beginning of the bootstrapper section
+
+CONFIG: Title: "Sistema Gerenciador de Posto"
+
+ACTION: RegKey: "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion", "SharedDLLs"
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\VB6STKIT.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\COMCAT.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT40.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\OLEPRO32.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\STDOLE2.TLB"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\ASYCFILT.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\OLEAUT32.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\msvbvm60.dll"
+(File currently on disk was already up to date)
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\COMCAT.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\OLEPRO32.DLL"
+
+ACTION: TLBRegister: "C:\WINDOWS\SYSTEM\STDOLE2.TLB"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\OLEAUT32.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\msvbvm60.dll"
+
+NOTE: End of the bootstrapper section
+
+NOTE: Now spawning the main Setup program 'Setup1.exe'....
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\RDOCURS.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSRDO20.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSFLXGRD.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSMAPI32.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSDATLST.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSSTDFMT.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSADODC.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSDATGRD.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\RICHED32.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\Richtx32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "c:\vb5\sgp\grid32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\comdlg32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\DBLIST32.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\TDBG32.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\DBGRID32.OCX"
+(File currently on disk was already up to date)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\gswdll32.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\gsw32.exe"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MFC40.DLL"
+(File currently on disk was already up to date)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\graph32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\msoutl32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\TABCTL32.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\Crystal\U2DDISK.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\P2SODBC.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\P2IRDAO.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\P2CTDAO.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\P2BDAO.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\P2BBND.DLL"
+(File was not found or was an older version -- new file copied)
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Ignore')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: If you ignore a copy error, the file will not be copied.  The application may not function properly as a result.  Do you want to ignore the error?
+*** ERROR: (User Responded with 'No')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT20.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Ignore')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT20.DLL"
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\CO2C40EN.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\PG32.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\IMPLODE.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\CRPE32.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\CRYSTL32.OCX"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\msmask32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\threed32.ocx"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\Cerrado_Tef.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\msadox.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\CadastroDLL.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\msxml2.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSDE.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MSBIND.DLL"
+(File was not found or was an older version -- new file copied)
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\MSVCRT.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Ignore')
+*** DURING THIS ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSVCRT.DLL"
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\SCRRUN.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\VB5DB.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSREPL35.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSRD2X35.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\expsrv.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\VBAJET32.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSJINT35.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSJTER35.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SystemFile: "C:\WINDOWS\SYSTEM\MSJET35.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\Arquivos de programas\Arquivos comuns\Microsoft Shared\DAO\DAO350.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\Arquivos de programas\Arquivos comuns\Microsoft Shared\DAO\Dao2535.tlb"
+(File currently on disk was already up to date)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\MP20FI32.DLL"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\BemaFI32.dll"
+(File was not found or was an older version -- new file copied)
+
+ACTION: SharedFile: "C:\WINDOWS\SYSTEM\ECF32M.DLL"
+(File was not found or was an older version -- new file copied)
+
+*** ERROR: C:\WINDOWS\SYSTEM\WININET.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SharedFile: "C:\WINDOWS\SYSTEM\WININET.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\WININET.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Retry')
+*** DURING THIS ACTION: SharedFile: "C:\WINDOWS\SYSTEM\WININET.DLL"
+
+*** ERROR: C:\WINDOWS\SYSTEM\WININET.DLL
+*** ERROR: An access violation occurred while copying the file.
+*** ERROR: (User Responded with 'Ignore')
+*** DURING THIS ACTION: SharedFile: "C:\WINDOWS\SYSTEM\WININET.DLL"
+
+ACTION: SharedFile: "c:\vb5\sgp\SGP.EXE"
+(File currently on disk was already up to date)
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSRDO20.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSFLXGRD.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSMAPI32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSDATLST.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSSTDFMT.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSADODC.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSDATGRD.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\Richtx32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\comdlg32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\DBLIST32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\TDBG32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\DBGRID32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MFC40.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\graph32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\msoutl32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\TABCTL32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\CRYSTL32.OCX"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\msmask32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\threed32.ocx"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\Cerrado_Tef.dll"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\msadox.dll"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\CadastroDLL.dll"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\msxml2.dll"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSDE.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSBIND.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\SCRRUN.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSRD2X35.DLL"
+
+ACTION: DllSelfRegister: "C:\WINDOWS\SYSTEM\MSJET35.DLL"
+
+ACTION: DllSelfRegister: "C:\Arquivos de programas\Arquivos comuns\Microsoft Shared\DAO\DAO350.DLL"
+
+ACTION: TLBRegister: "C:\Arquivos de programas\Arquivos comuns\Microsoft Shared\DAO\Dao2535.tlb"
+
+ACTION: ShellLink: "Sistema Gerenciador de Posto", "Sistema Gerenciador de Posto"
+
+ACTION: RegKey: "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion", "App Paths\SGP.exe"
+
+ACTION: RegValue: "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SGP.exe", ""
+

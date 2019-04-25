@@ -1,0 +1,103 @@
+[Passo1]
+ModoBasico=0
+ModoProfissional=1
+
+[Passo3]
+Titulo=Atualização do SGP
+PastaDefault=
+Introducao0=Este executável foi criado com uma versão NÃO
+Introducao1=REGISTRADA do BraZip Smart Packager. Sua
+Introducao2=distribuição por qualquer meio constitui violação
+Introducao3=dos direitos autorais de software e crime de
+Introducao4=sonegação fiscal.
+Introducao5=Denúncias:pirataria@brazip.com.br
+Introducao6=EndOfLines
+
+[Passo4]
+ModificarPasta=0
+PreservaCaminho=1
+CriarPasta=0
+PerguntarSobrescrever=1
+SempreSobrescrever=0
+NuncaSobrescrever=0
+
+[Passo5]
+RgNenhumaProtecao=1
+RgProtecaoComSenha=0
+RgProtecaoExclusiva=0
+Senha=
+
+[Passo6]
+M0=£
+M1=Todos os arquivos foram copiados com sucesso.
+M2=Erro #<Erro> durante o processo de decompactação. Um ou mais arquivos não foram copiados corretamente.
+M3=Não foi possível criar a pasta <Destino>.
+M4=
+M5=<desabilita>
+M6=Selecione a pasta de destino.
+M7=Entre com a senha:
+M8=O disco inserido não contém um arquivo Zip completo. Insira o último disco do backup caso você possua vários disquetes. Se não, o arquivo está corrompido.
+M9=Por favor, insira o disco #<Disco>.
+M10=Tem certeza que deseja cancelar o processo ?
+M11=A pasta <Destino> não existe. Deseja criá-la ?
+M12=O arquivo <Arquivo> já existe. Deseja sobrescrever este arquivo ?
+M13=<desabilita>
+M14=Extraindo arquivo:
+M15=Andamento:
+M16=Pasta Destino:
+M17=<Compartilhamento> no <Computador>
+M18=Toda Rede
+M19=<desabilita>
+M20=&Ok
+M21=&Cancelar
+M22=&Abortar
+M23=&Descartar
+M24=Desc.&Todos
+M25=&Sim
+M26=&Não
+M27=&Todos
+M28=&Nenhum
+M29=&Continuar
+M30=&Sair
+M31=&Concordar
+M32=&Discordar
+M33=
+M34=
+M35=
+
+[Passo7]
+GrupoProgramas=0
+Titulo=
+Extensoes=0
+P1=|
+P2=|
+P3=|
+P4=|
+P5=|
+P6=|
+P7=|
+P8=|
+P9=|
+P10=|
+E1=||
+E2=||
+E3=||
+E4=||
+E5=||
+E6=||
+E7=||
+E8=||
+E9=||
+E10=||
+
+[Passo8]
+MostrarTexto=0
+Texto=
+ExecutarAplicacao=1
+Aplicacao=\vb5\sgp\atualiza.bat
+Parametros=
+Install=0
+Icone=C:\Arquivos de programas\Microsoft Visual Studio\Common\Graphics\Icons\Industry\GASPUMP.ICO
+
+[Final]
+Destino=C:\sgp_3_40B\Atualizacao_SGP.exe

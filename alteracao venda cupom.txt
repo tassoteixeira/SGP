@@ -1,0 +1,13 @@
+movimento_cupom_fiscal
+id_data_produto
+empresa, data do cupom, codigo do produto, numero do cupom, ordem
+
+produto
+id_grupo_nome
+codigo do grupo, nome, codigo2
+
+
+
+
+Venda de Cupom Fiscal
+lst_venda_cupom

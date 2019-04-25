@@ -1,0 +1,36 @@
+detalhes conversao sql_server
+
+postorubi.myvnc.com,4949
+
+a tabela Baixa_Nota_Abastecimento
+UPDATE Baixa_Nota_Abastecimento SET [Placa Letra] = "" WHERE [Placa Letra] = NULL;
+UPDATE Baixa_Nota_Abastecimento SET [Placa Numero] = "" WHERE [Placa Numero] = NULL;
+UPDATE Baixa_Nota_Abastecimento SET [Historico] = "" WHERE [Historico] = NULL;
+UPDATE Baixa_Nota_Abastecimento SET [Responsavel] = "" WHERE [Responsavel] = NULL;
+
+UPDATE Movimento_Cupom_Fiscal SET [Nome] = "" WHERE [Nome] = NULL;
+UPDATE Movimento_Cupom_Fiscal SET [CPF CNPJ] = "" WHERE [CPF CNPJ] = NULL;
+
+UPDATE Movimento_Historico SET [Observacao] = "" WHERE [Observacao] = NULL;
+
+UPDATE Movimento_Nota_Abastecimento SET [Placa Letra] = "" WHERE [Placa Letra] = NULL;
+UPDATE Movimento_Nota_Abastecimento SET [Placa Numero] = "" WHERE [Placa Numero] = NULL;
+UPDATE Movimento_Nota_Abastecimento SET [Historico] = "" WHERE [Historico] = NULL;
+
+deletar atraves do visdata os registros da tabela 'pagina_lmc' quando tipo_combustivel 
+= '' pois comando sql não dá certo.
+
+
+DESCOBRIR como criar CHAVE PRIMARIA por comando sql
+
+
+
+
+How to configure Windows Firewall for TCP
+When you know what port SQL Server is using, you can follow these steps to configure Windows Firewall to enable SQL Server to listen on that port. 1. Click Start, and then click Run. 
+2. In the Run dialog box, type Firewall.cpl, and then click OK. 
+3. In the Windows Firewall dialog box, click Add Port on the Exceptions tab. 
+4. In the Add a Port dialog box, type your port number in the Port number box, and then click the TCP button. 
+5. Type a name for the port in the Name box such as SQL, and then click OK. 
+6. On the Exceptions tab, you will see the new service. To enable the port, click to select the check box next to your new service, and then click OK. 
+

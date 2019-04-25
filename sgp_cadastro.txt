@@ -1,0 +1,48 @@
+[TIPO DE OPERACAO]
+Tipo de Operacao=.Finaliza SGP
+
+[Empresa]
+Empresa=001
+NomeEmpresa=MARQUES DE CASTRO & GABRIEL LTDA
+CidadeEmpresa=GOIANIA
+ 
+[Programa]
+Programa=mov_nota
+cadastro_plano_conta
+CadastroIntegracaoCaixa
+CadastroHistoricoPadrao
+cadastro_plano_conta
+cadastro_programa
+movimento_cheque_devolvido
+mov_vale_troco_recebido
+cadastro_produto
+mov_nota_abastecimento
+MovimentoDiario
+mov_nota_abastecimento
+movimento_cheque_devolvido
+mov_nota_abastecimento
+ 
+[Usuario]
+Usuario=1
+NomeUsuario=Tasso Teixeira
+NivelAcessoUsuario=1
+ 
+[Outras]
+DataDef=13/11/2003
+FlagLmc=0
+ImpressoraMatricial=False
+CaixaUnificado=False
+ 
+[ContaBancaria]
+ContaBancaria=                    
+ 
+[Liberacao]
+EmpresaInicial=1
+EmpresaFinal=1
+DataInicial=19/09/2003
+DataFinal=19/09/2003
+PeriodoInicial=1
+PeriodoFinal=1
+ 
+[Automacao]
+Automacao=False

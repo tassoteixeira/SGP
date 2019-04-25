@@ -1,0 +1,38 @@
+Imprimindo direto para a impressora 
+Para imprimir direto para a impressora, tarefa ideal no caso de emissão de notas fiscais, a impressora deverá ser inicializada através do comando Open e utilizar o Print para realizar a impressão: 
+
+Open "Lpt1" For Output As #1
+
+Desta forma, o programador para enviar os caracteres especias para imprimir condensado, saltar linhas, etc... veja os exemplos a seguir: 
+
+Print #1, Chr(27) & "0" ' Muda o passo p/ 8 LPP
+Print #1, Chr(15) ' Condensado
+Print #1, "" ' Salta uma linha
+ 
+Selecionando a impressora a receber os trabalhos da fila: 
+O objeto Printer corresponde à impressora default, definida no sistema, porém a coleção Printers corresponde à todas as impressoras instaladas no sistema. Para selecionar uma impressora específica você deve usar a propriedade hDC do objeto Printer, conforme observamos a seguir: 
+
+Private Sub cmdImprimir_Click()
+
+Dim ImpressoraPadrão as Printer, Nova_Impressora as Printer
+
+CommonDialog1.ShowPrinter
+Set ImpressoraPadrão = Printer
+For Each Nova_Impressora in Printers
+If Nova_Impressora.hDC = CommonDialog1.hDC Then
+Set Printer = Nova_Impressora
+End If
+Next
+
+Printer.Print ""
+' Define a impressora para o controle RichTextBox à ser impresso
+rtbPrint.SelPrint Printer.hDC
+Printer.EndDoc
+Set Printer = ImpressoraPadrão
+
+End Sub
+
+O código acima recebe uma impressora selecionada no controle CommonDialog, define um objeto do tipo Printer com a impressora defualt do sistema, troca a impressora padrão pela impressora escolhida no CommonDilalog, imprime o texto escolhido e depois retorna a impressora padrão para a definição original.
+
+
+ 

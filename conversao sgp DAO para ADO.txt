@@ -1,0 +1,47 @@
+PROGRAMAS DO SGP A CONVERTER DAO -> ADO
+
+
+    SIM movimento_advertencia_suspencao
+    SIM movimento_afericao
+    SIM baixa_cartao
+    SIM baixa_cheque
+    SIM movimento_cheque_devolvido_baixado
+004 NAO baixa_cheque_devolvido_descontado
+    SIM baixa_duplicata_receber
+    SIM baixa_contas_pagar
+    SIM baixa_nota_abastecimento
+    SIM baixa_nota_abastecimento_periodo
+
+    SIM movimento_bancario
+    SIM movimento_bomba
+    SIM movimento_caixa
+    SIM movimento_cartao_credito
+    SIM movimento_cheque_avista
+    SIM movimento_cheque
+    SIM movimento_cheque_cobranca
+    SIM movimento_composicao_caixa
+    SIM mov_contas_pagar
+    SIM movimento_cupom_fiscal
+    SIM movimento_cupom_fiscal_automacao
+    SIM movimento_desconto_personalizado
+    SIM movimento_oleo_diverso
+    SIM movimento_despesa_caixa
+    SIM movimento_duplicata_receber
+    SIM mov_entrada_combustiveis
+    SIM movimento_entrada_produto
+    SIM movimento_falta_caixa
+999 NAO movimento_falta_funcionario
+999 NAO movimento_folha
+999 NAO gera_disquete_deposito
+    SIM movimento_mapa_resumo
+    SIM movimento_medicao_combustivel
+    *** mov_nota_abastecimento                  (já está no .net)
+    SIM movimento_previsao_venda_prazo
+    SIM pro_encerramento_inventario
+    SIM processamento_custo_combustivel
+    SIM processamento_estoque
+    SIM movimento_saida_transferencia_produto
+    SIM movimento_venda_conveniencia
+    SIM importa_exporta_mapa_resumo
+999 NAO movimento_pedido_combustivel
+
