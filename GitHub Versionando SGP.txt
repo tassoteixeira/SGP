@@ -44,3 +44,10 @@ ATUALIZANDO UMA VERSÃO LOCAL TRAZENDO O QUE TEM DE MAIS ATUAL DO GITHUB
 Ex: git pull
 
 -----------------------------------------------
+
+REMOVENDO Commit pendente.
+
+git reset --soft HEAD~;
+
+ainda preciso validar...
+-----------------------------------------------

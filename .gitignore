@@ -338,5 +338,8 @@ libera_locacao.exe
 *.log
 Cerrado_Tef.dll
 *.7z
+Sgp_data.mdb
+sgp_data.bak
+sgp_data_tmp.mdb
 
 
