@@ -16,3 +16,31 @@ Obs: Nessa etapa MOVER somente os arquivos, e NÃO as subpastas.
 
 6) Editar o .gitignore na pasta "SGP" e adicionar os arquivos que NÃO faz sentido ser versionados.
 Ex: Sgp.exe, CadastroDll.dll ...
+
+
+
+-----------------------------------------------
+
+PROCESSO DE ROTINA PRA VERSIONAR NO DIA A DIA
+
+1) Pra poder adicionar ou remover arquivos no versionamento local:
+Ex: git add .
+
+2) Pra poder versionar localmente:
+Ex: git commit -m "nome que identifica a alteração pro versionamento"
+
+3) Subindo o versionamento local pro GitHub.
+Ex: git push
+
+-----------------------------------------------
+
+BAIXANDO UMA VERSÃO DO GITHUB PRA UMA PASTA LOCAL.
+
+ Ex: git clone https://github.com/tassoteixeira/SGP.git .
+ 
+-----------------------------------------------
+
+ATUALIZANDO UMA VERSÃO LOCAL TRAZENDO O QUE TEM DE MAIS ATUAL DO GITHUB
+Ex: git pull
+
+-----------------------------------------------
