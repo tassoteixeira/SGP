@@ -332,14 +332,19 @@ ASALocalRun/
 # Arquivos do SGP que NÃO podem ou NÃO faz sentido ser versionado.
 Sgp.exe
 SGP_Cadastro.exe
-indexador.exe
-libera_locacao.exe
-*.rar
-*.log
-*.LOG
 Cerrado_Tef.dll
-*.7z
+CadastroDLL.dll
+
 Sgp_data.mdb
 sgp_data.bak
 sgp_data_tmp.mdb
+
+indexador.exe
+libera_locacao.exe
+GRUPO.EXE
+
+*.rar
+*.log
+*.LOG
+*.7z
 
