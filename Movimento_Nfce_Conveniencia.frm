@@ -173,7 +173,6 @@ Begin VB.Form Movimento_Nfce_Conveniencia
       _ExtentY        =   9340
       _Version        =   393217
       BackColor       =   16777215
-      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   3
       TextRTF         =   $"Movimento_Nfce_Conveniencia.frx":2BE8
@@ -3127,7 +3126,7 @@ Private Sub dtcboProduto_LostFocus()
             txt_quantidade.SetFocus
         End If
     Else
-        txt_produto.SetFocus
+        'txt_produto.SetFocus
         'If txt_produto = "" And l_flag_cupom_fiscal = "A" Then
         '    CancelaCupom
         'End If

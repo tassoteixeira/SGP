@@ -139,6 +139,7 @@ Begin VB.Form Movimento_Nfce_Auto
       _ExtentY        =   15584
       _Version        =   393217
       BackColor       =   16777215
+      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   3
       TextRTF         =   $"Movimento_Nfce_Auto.frx":2BE8
@@ -2455,12 +2456,12 @@ Begin VB.Form Movimento_Nfce_Auto
    End
    Begin VB.Frame frm_fila_bico 
       Enabled         =   0   'False
-      Height          =   5535
+      Height          =   8775
       Left            =   30
       TabIndex        =   124
       Top             =   60
       Visible         =   0   'False
-      Width           =   7810
+      Width           =   7775
       Begin VB.CommandButton cmdDescarregar 
          Caption         =   "&Descarregar"
          Height          =   315
@@ -3344,7 +3345,7 @@ Dim lValorTotalSemDesconto
 Dim lCartaoAutorizacao As String
 Dim lCartaoNSU As String
 Dim lCartaoDataVencimento As String
-Dim lTotalItem(0 To 20) As Currency
+Dim lTotalItem(0 To 30) As Currency
 Dim lBloqueiaEstoque As Boolean
 Dim lBloqueiaSubEstoque As Boolean
 Dim lBloqueiaDesconto As Boolean
@@ -3455,8 +3456,8 @@ Private MovSolicitacaoFuncaoNFe As New cMovSolicitacaoFuncaoNFe
 Private lUtilizaPrecoAPrazo As Boolean
  
 
-Dim rstAbastecimento As New ADODB.Recordset
-Dim rsTabela As New ADODB.Recordset
+Dim rstAbastecimento As New adodb.Recordset
+Dim rsTabela As New adodb.Recordset
 
 
 Dim lAutomacaoFlag As Integer
@@ -3486,8 +3487,8 @@ Dim lNomeArquivo As String
 Dim lLocalImpressao As Integer
 Dim lLinha As String
 
-Dim rst As New ADODB.Recordset
-Dim rst2  As New ADODB.Recordset
+Dim rst As New adodb.Recordset
+Dim rst2  As New adodb.Recordset
 
 '--- CRIADO PARA NFCE ---
 Const CODIGO_FISCAL_SUBSTITUICAO As String = "FF"
@@ -3521,7 +3522,7 @@ Private Enum GERADOR_NFCE
     CERRADO
 End Enum
 Private Sub CalculaTotalDescontoAcrescimo(ByVal pData As Date, ByVal pPeriodo As Integer, ByVal pTipoCombustivel As String, pBico As Integer, ByVal pNumeroSubCaixa As Integer)
-    Dim rs As New ADODB.Recordset
+    Dim rs As New adodb.Recordset
     
     On Error GoTo trata_erro
 
@@ -3711,7 +3712,7 @@ End Sub
 Private Function CancelamentoCupomFiscal() As Boolean
     Dim NumeroArquivo As Integer
     Dim x_excluiu As Boolean
-    Dim rs As New ADODB.Recordset
+    Dim rs As New adodb.Recordset
     
     On Error GoTo FileError
     
@@ -5068,8 +5069,8 @@ Private Sub ImprimeResumoVendas()
     Dim x_linha As Integer
     Dim i As Integer
     Dim xSQL As String
-    Dim rsProduto As New ADODB.Recordset
-    Dim rsMovCupomFiscal As New ADODB.Recordset
+    Dim rsProduto As New adodb.Recordset
+    Dim rsMovCupomFiscal As New adodb.Recordset
     
     On Error GoTo FileError
     x_linha = 0
@@ -5083,7 +5084,7 @@ Private Sub ImprimeResumoVendas()
     xSQL = xSQL & "     FROM Produto"
     xSQL = xSQL & " ORDER BY Nome ASC"
     'Abre RecordSet
-    Set rsProduto = New ADODB.Recordset
+    Set rsProduto = New adodb.Recordset
     Set rsProduto = Conectar.RsConexao(xSQL)
     
     
@@ -5097,7 +5098,7 @@ Private Sub ImprimeResumoVendas()
             xSQL = xSQL & "    WHERE [Codigo do Produto] = " & rsProduto("Codigo").Value
             xSQL = xSQL & "      AND Data = " & preparaData(CDate(g_data_def))
             'Abre RecordSet
-            Set rsMovCupomFiscal = New ADODB.Recordset
+            Set rsMovCupomFiscal = New adodb.Recordset
             Set rsMovCupomFiscal = Conectar.RsConexao(xSQL)
             If rsMovCupomFiscal.RecordCount > 0 Then
                 rsMovCupomFiscal.MoveFirst
@@ -5527,7 +5528,7 @@ Private Sub AguardaProcessamentoNFCe(ByVal pNSU As Long)
 End Sub
 Private Function LoopEstornaVendaProdutoNFCeAtual() As Boolean
      LoopEstornaVendaProdutoNFCeAtual = False
-     Dim xRsDadosParaNFCe As New ADODB.Recordset
+     Dim xRsDadosParaNFCe As New adodb.Recordset
     
   On Error GoTo TrataError
 
@@ -7024,7 +7025,7 @@ End Function
 Private Sub SelecionaVeiculoCliente(ByVal pCodigoCliente As Long)
     Dim xString As String
     Dim i As Integer
-    Dim rs As New ADODB.Recordset
+    Dim rs As New adodb.Recordset
     
     If VeiculoCliente.ClienteTemVeiculo(pCodigoCliente) Then
         lSQL = "SELECT [Codigo do Veiculo], Nome, Cor, Ano, [Placa Letra], [Placa Numero] FROM VeiculoCliente WHERE [Codigo do Cliente] = " & pCodigoCliente & " ORDER BY Nome"
@@ -7593,7 +7594,7 @@ End Function
 'OBTEM DADOS DO CUPOM GRAVADO PARA GERAÇÃO DA NFCE
 '
 Private Sub EnviaDadosParaNFCe(pNumeroCupom As Long, pDataCupom As Date)
-    Dim rsDadosParaNFCe As New ADODB.Recordset
+    Dim rsDadosParaNFCe As New adodb.Recordset
     Dim xTipoServico As String
     Dim xTextoSolicitacao As String
     Dim xRealizarImpressao As String
@@ -7771,7 +7772,7 @@ End Sub
 
 Private Function GeraSolicitacaoImpressaoNFCE(ByVal pChaveNFCE As String, ByVal pNumeroDaNota As Long, ByVal pNumeroLote As String) As Boolean
 
-    Dim rsDadosSolicitacao As New ADODB.Recordset
+    Dim rsDadosSolicitacao As New adodb.Recordset
     
     GeraSolicitacaoImpressaoNFCE = False
     
@@ -7780,10 +7781,10 @@ Private Function GeraSolicitacaoImpressaoNFCE(ByVal pChaveNFCE As String, ByVal 
 
 End Function
 'HOJE-ALEX
-Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pIdEstabelecimento As Integer) As ADODB.Recordset
+Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pIdEstabelecimento As Integer) As adodb.Recordset
     On Error GoTo trata_erro
     
-    Dim rsDadosSolicitacao As New ADODB.Recordset
+    Dim rsDadosSolicitacao As New adodb.Recordset
     
     Dim xSQL As String
     
@@ -7794,7 +7795,7 @@ Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pI
     xSQL = xSQL & " AND CodigoEstabelecimento_MovSolicitacaoFuncaoNFe = " & pIdEstabelecimento
     
     'Abre RecordSet
-    Set rsDadosSolicitacao = New ADODB.Recordset
+    Set rsDadosSolicitacao = New adodb.Recordset
     Set rsDadosSolicitacao = Conectar.RsConexao(xSQL)
 
 Set ObtenhaDadosSolicitacaoNFCeEmitida = rsDadosSolicitacao
@@ -7811,9 +7812,9 @@ trata_erro:
 
 End Function
 'INUTILIZAR
-Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDataCupom As Date) As ADODB.Recordset
+Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDataCupom As Date) As adodb.Recordset
 
-    Dim rsDadosParaNFCe As New ADODB.Recordset
+    Dim rsDadosParaNFCe As New adodb.Recordset
     
     Dim i As Integer
     Dim xSQL As String
@@ -7865,7 +7866,7 @@ Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDat
     xSQL = xSQL & " ORDER BY Movimento_Cupom_Fiscal.Ordem"
 
     'Abre RecordSet
-    Set rsDadosParaNFCe = New ADODB.Recordset
+    Set rsDadosParaNFCe = New adodb.Recordset
     Set rsDadosParaNFCe = Conectar.RsConexao(xSQL)
     
     
@@ -7886,9 +7887,9 @@ Private Sub CancelarFinalizacaoNFCe()
     frmDados.Enabled = True
     NovoCupom
 End Sub
-Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Long, ByVal pDataEmissao As Date) As ADODB.Recordset
+Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Long, ByVal pDataEmissao As Date) As adodb.Recordset
 
-    Dim rsDadosParaNFCe As New ADODB.Recordset
+    Dim rsDadosParaNFCe As New adodb.Recordset
     
     Dim i As Integer
     Dim xSQL As String
@@ -7964,7 +7965,7 @@ Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Lo
     
 
     'Abre RecordSet
-    Set rsDadosParaNFCe = New ADODB.Recordset
+    Set rsDadosParaNFCe = New adodb.Recordset
     Set rsDadosParaNFCe = Conectar.RsConexao(xSQL)
     CriaLogCupom ("[ObtenhaDadosParaNFCEDocumentoEletronico] - " & xSQL)
     
@@ -8046,7 +8047,7 @@ Private Sub VerificaDescontoPersonalizado()
         Else
             'Desconto por Grupo de Cliente
             If MovDescontoGrupoCliente.LocalizarCodigo(Cliente.CodigoGrupoCliente, CLng(dtcboProduto.BoundText)) Then
-                Call CriaLogMonitoraBug("Monitora Desconto Personalizado", "Movimento_NFce_Auto", "Cliente tem Gruo de preço personalizado. Produto: " & dtcboProduto.BoundText + " - Grupo: " + MovDescontoGrupoCliente.CodigoGrupoCliente)
+                Call CriaLogMonitoraBug("Monitora Desconto Personalizado", "Movimento_NFce_Auto", "Cliente tem Gruo de preço personalizado. Produto: " & dtcboProduto.BoundText & " - Grupo: " & MovDescontoGrupoCliente.CodigoGrupoCliente)
                 Call GravaAuditoria(1, Me.name, 22, "Preço diferenciado Por Grupo de Cliente:" & Cliente.CodigoGrupoCliente)
                 Call GravaAuditoria(1, Me.name, 22, "Preço diferenciado Cli:" & txt_cliente.Text & " Prod:" & txt_produto.Text)
                 MsgBox "Este cliente tem preço diferenciado." & Chr(10) & Chr(10) & "O sistema irá calcular automaticamente!", vbInformation, "Preço Diferenciado para o Cliente!"
@@ -8213,7 +8214,7 @@ Private Sub ZZTotalizaCupomAbertoNoBanco()
     Dim xData As Date
     Dim xOrdem As Integer
     Dim xValor As Currency
-    Dim rstMovCupomFiscal As ADODB.Recordset
+    Dim rstMovCupomFiscal As adodb.Recordset
     Dim xSQL As String
     
     xSQL = "SELECT [Codigo da Ecf], Data, [Numero do Cupom], Quantidade, [Valor Total]"
@@ -8461,7 +8462,7 @@ Private Sub PreencheDicionarioCSTPisCofins()
     If CSTPisValidos.Count > 0 And CSTCofinsValidos.Count > 0 Then Exit Sub
 
 
-    Dim rs As New ADODB.Recordset
+    Dim rs As New adodb.Recordset
 
 
         lSQL = "SELECT CstCofins_TributacaoPisCofins, CstPis_TributacaoPisCofins, AliquotaCofins_TributacaoPisCofins, AliquotaPis_TributacaoPisCofins "
@@ -8559,7 +8560,7 @@ End Sub
 
 
 Private Sub PreencheCboTipoSubEstoque()
-    Dim rstTipoSubEstoque As ADODB.Recordset
+    Dim rstTipoSubEstoque As adodb.Recordset
     
     cboTipoSubEstoque.Clear
     Set rstTipoSubEstoque = Conectar.RsConexao("SELECT Codigo, Nome FROM TipoSubEstoque WHERE Codigo > 1 ORDER BY Codigo")
@@ -8655,7 +8656,7 @@ Private Sub PreparaDadosAdicionaisFechamento()
     'frm_fechamento_cupom.Width = 5800
 End Sub
 Private Function PreparaDadosProdutos() As String
-    Dim rsProdutosECF As ADODB.Recordset
+    Dim rsProdutosECF As adodb.Recordset
     Dim xSQL As String
     Dim xString As String
     
@@ -8909,7 +8910,7 @@ Private Function MontaTextoInformacoesComplementaresNFCe() As String
     MontaTextoInformacoesComplementaresNFCe = xTextoInformacoesComplementares
 
 End Function
-Private Function MontaTextoItensSolicitacaoNFCE(ByVal pRsDadosParaNFCe As ADODB.Recordset) As String
+Private Function MontaTextoItensSolicitacaoNFCE(ByVal pRsDadosParaNFCe As adodb.Recordset) As String
 
     MontaTextoItensSolicitacaoNFCE = Empty
     Dim xOrdem As Integer
@@ -9375,7 +9376,7 @@ Private Function RetornaValorImpostoProdutoNFCE(ByVal pValorBaseCalculo As Curre
 
 End Function
 
-Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As ADODB.Recordset, ByVal pTipoServico As String) As String
+Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As adodb.Recordset, ByVal pTipoServico As String) As String
 
     MontaTextoCabecalhoSolicitacaoNFCE = Empty
     
@@ -9898,6 +9899,12 @@ Private Sub cmd_bico_Click(Index As Integer)
     On Error GoTo FileError
 
     xLocalErro = 1
+    
+    If lOrdem >= gQUANTIDADE_MAXIMA_ITENS_NFCE Then
+       MsgBox "Não é permitido venda com mais de " & gQUANTIDADE_MAXIMA_ITENS_NFCE & " ítens.", vbInformation + vbOKOnly, "Quantidade máxima de itens"
+       Exit Sub
+    End If
+    
     If lAutomacaoStatusBico(Index) = 6 And ValidaCliente And Not ProcessamentoComplementarEmAndamento Then
         If Bomba.LocalizarCodigo(g_empresa, lAutomacaoBico(Index)) Then
             If Bomba.CodigoFisicoBomba = 0 Then
@@ -10027,6 +10034,12 @@ Private Sub cmd_DescontoCorreio_Click()
 End Sub
 Private Sub cmd_fila_ok_Click()
     Dim i As Integer
+    
+    If lOrdem >= gQUANTIDADE_MAXIMA_ITENS_NFCE Then
+       MsgBox "Não é permitido venda com mais de " & gQUANTIDADE_MAXIMA_ITENS_NFCE & " ítens.", vbInformation + vbOKOnly, "Quantidade máxima de itens"
+       Exit Sub
+    End If
+    
     If MSFlexGrid.TextMatrix(MSFlexGrid.Row, 0) <> "" Then
         Call AutomacaoAlteraArredondamento(CDate(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 3)), CDate(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 4)), Val(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 0)), -1)
         If MovimentoAbastecimento.LocalizarCodigo(g_empresa, CDate(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 3)), CDate(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 4)), Val(MSFlexGrid.TextMatrix(MSFlexGrid.Row, 0))) Then
@@ -10255,7 +10268,7 @@ End Sub
 
 Private Sub AtualizaBaseCalculoICMSCabecalho()
 
-Dim ResultadoCalculo As New ADODB.Recordset
+Dim ResultadoCalculo As New adodb.Recordset
 
 
     lSQL = "SELECT DataEmissao_MovDEItem, Modelo_MovDEItem, Serie_MovDEItem, Numero_MovDEItem,"
@@ -10329,7 +10342,7 @@ Private Sub cmd_abastecimentos_nao_recebidos_Click()
     LimpaMSFlexGrid
     'Abre RecordSet
     xFaseErro = 3
-    Set rsTabela = New ADODB.Recordset
+    Set rsTabela = New adodb.Recordset
     Set rsTabela = Conectar.RsConexao(xSQL)
     'Verifica movimento
     i = 0
@@ -10757,7 +10770,7 @@ End Function
 Private Sub IncluiNotaAbastecimento()
 On Error GoTo trata_erro
     
-    Dim rsMovCupomFiscal As New ADODB.Recordset
+    Dim rsMovCupomFiscal As New adodb.Recordset
     
     If Cliente.GeraNotaAbastecimento Then
         lSQL = ""
@@ -12568,7 +12581,7 @@ Private Sub NovoCupom()
 '    End If
 
     If lOrdem = 0 Then
-        For i = 0 To 20
+        For i = 0 To gQUANTIDADE_MAXIMA_ITENS_NFCE
             lTotalItem(i) = 0
         Next
     End If

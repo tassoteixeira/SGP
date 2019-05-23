@@ -23,13 +23,16 @@ Ex: Sgp.exe, CadastroDll.dll ...
 
 PROCESSO DE ROTINA PRA VERSIONAR NO DIA A DIA
 
-1) Pra poder adicionar ou remover arquivos no versionamento local:
+1) Ir pra pasta "C:\VB5\SGP"
+Ex.: cd \VB5\SGP
+
+2) Pra poder adicionar ou remover arquivos no versionamento local:
 Ex: git add .
 
-2) Pra poder versionar localmente:
+3) Pra poder versionar localmente:
 Ex: git commit -m "nome que identifica a alteração pro versionamento"
 
-3) Subindo o versionamento local pro GitHub.
+4) Subindo o versionamento local pro GitHub.
 Ex: git push
 
 -----------------------------------------------
@@ -49,5 +52,4 @@ REMOVENDO Commit pendente.
 
 git reset --soft HEAD~;
 
-ainda preciso validar...
 -----------------------------------------------

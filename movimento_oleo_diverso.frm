@@ -15,6 +15,14 @@ Begin VB.Form movimento_oleo_diverso
    Picture         =   "movimento_oleo_diverso.frx":030A
    ScaleHeight     =   6840
    ScaleWidth      =   8850
+   Begin VB.CommandButton btnManutencaoVenda 
+      Caption         =   "Alterar múltiplos"
+      Height          =   435
+      Left            =   4560
+      TabIndex        =   40
+      Top             =   6120
+      Width           =   1935
+   End
    Begin VB.CommandButton cmd_novo 
       Caption         =   "&Novo"
       Height          =   855
@@ -610,6 +618,7 @@ Private Sub AjustaCaixaPista()
         grid_oleo.Row = grid_oleo.Rows - 2
         MarcaCelulaOleo
         AtivaBotoes
+        btnManutencaoVenda.Enabled = True
         grid_oleo.SetFocus
     ElseIf xOperacao = "Excluir" Then
         txtData.Text = Format(lCxData, "dd/mm/yyyy")
@@ -629,6 +638,7 @@ Private Sub AjustaCaixaPista()
         grid_oleo.Row = grid_oleo.Rows - 2
         MarcaCelulaOleo
         AtivaBotoes
+        btnManutencaoVenda.Enabled = False
         cmd_excluir.Enabled = True
         cmd_excluir.SetFocus
     End If
@@ -1105,6 +1115,40 @@ Private Sub PreencheCboTipoSubEstoque()
     rstTipoSubEstoque.Close
     Set rstTipoSubEstoque = Nothing
 End Sub
+
+Private Sub btnManutencaoVenda_Click()
+
+   Call GravaAuditoria(1, Me.name, 23, btnManutencaoVenda.Caption & " Func.:" & lCxCodigoFuncionario)
+
+    If lCxPeriodo > 0 Then
+        Call ChamaManutencaoVendaProduto
+    Else
+        gStringChamada = lData & "|@|" & lCxCodigoFuncionario & "|@|" & Val(cbo_periodo.Text) & "|@|" & lTipoMovimento & "|@|" & lTipoSubEstoque & "|@|" & lCxCodigoUsuario & "|@|"
+        Call menu_personalizado.GravaSgpNetCadastroIni("ManutencaoVendaProduto")
+    End If
+    
+    cmd_cancelar_Click
+End Sub
+Public Sub ChamaManutencaoVendaProduto()
+    Dim xArquivoDiscoTMP As TextStream
+    
+    On Error GoTo FileError
+    
+    g_string = "MANUTENCAO_VENDA_PRODUTO|@|" & lData & "|@|" & lCxCodigoFuncionario & "|@|" & Val(cbo_periodo.Text) & "|@|" & lTipoMovimento & "|@|" & lTipoSubEstoque & "|@|" & lCxCodigoUsuario & "|@|"
+    
+    Set xArquivoDiscoTMP = gArqTxt.CreateTextFile("C:" & gDiretorioAplicativo & "Retorno_VB6_Fim.TMP")
+    xArquivoDiscoTMP.WriteLine ("[Outras]")
+    xArquivoDiscoTMP.WriteLine ("gString=" & g_string)
+    xArquivoDiscoTMP.Close
+    
+    Call gArqTxt.MoveFile("C:" & gDiretorioAplicativo & "Retorno_VB6_Fim.TMP", "C:" & gDiretorioAplicativo & "Retorno_VB6_Fim.INI")
+    
+    g_string = ""
+    
+    Exit Sub
+FileError:
+End Sub
+
 Private Sub btnTransfereVendaECF_Click()
     Dim xTipoVenda As String
     
@@ -1152,6 +1196,7 @@ Private Sub cmd_alterar_Click()
     DesativaBotoes
     cmd_alterar.Visible = True
     cmd_alterar.Enabled = False
+    btnManutencaoVenda.Enabled = False
     cmd_ok.Visible = True
     cmd_cancelar.Visible = True
     frmDados.Enabled = True
@@ -1318,6 +1363,8 @@ Private Sub cmd_novo_Click()
     btnTransfereVendaECF.Enabled = True
     btnTransfereVendaECF.Visible = True
     frmDados.Enabled = True
+    btnManutencaoVenda.Enabled = False
+
     If lGravados = 0 Then
         If lCxPeriodo > 0 Then
             txtData.Text = Format(lCxData, "dd/mm/yyyy")

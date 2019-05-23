@@ -257,7 +257,7 @@ Dim lForm As Form
 Dim lEmpresaAtualPetromovel As Integer
 
 
-Private RstMenu As ADODB.Recordset
+Private RstMenu As adodb.Recordset
 
 Private Configuracao As New cConfiguracao
 Private ConfiguracaoDiversa As New cConfiguracaoDiversa
@@ -309,7 +309,7 @@ End Sub
 Private Sub BuscaDadosGIC()
     Dim xStringConexao As String
     Dim xIpBanco As String
-    Dim rsTabela As New ADODB.Recordset
+    Dim rsTabela As New adodb.Recordset
     Dim xSQL As String
     Dim xCodigoFuncionario As Integer
     Dim xNomeUsuario As String
@@ -326,7 +326,7 @@ Private Sub BuscaDadosGIC()
         xIpBanco = "tasso.myvnc.com" & gPortaBanco
     End If
     xStringConexao = "PROVIDER=SQLOLEDB.1;DATA SOURCE=" & xIpBanco & ";INITIAL CATALOG=" & "CerradoData" & ";USER ID=sa;PASSWORD=" & gSenhaBD & ";"
-    Set gConnGic = New ADODB.Connection
+    Set gConnGic = New adodb.Connection
     gConnGic.ConnectionString = xStringConexao
     gConnGic.Open
     
@@ -348,7 +348,7 @@ Private Sub BuscaDadosGIC()
     xSQL = xSQL & " WHERE Empresa = " & g_empresa
     xSQL = xSQL & "   AND [Codigo do Usuario] = " & g_usuario
     xSQL = xSQL & "   AND Situacao = " & preparaTexto("A")
-    Set rsTabela = New ADODB.Recordset
+    Set rsTabela = New adodb.Recordset
     rsTabela.Open xSQL, Conectar.Conexao, adOpenForwardOnly, adLockReadOnly
     If Not rsTabela.EOF Then
         
@@ -373,7 +373,7 @@ Private Sub BuscaDadosGIC()
         xSQL = xSQL & "SELECT [Empresa do Grupo]"
         xSQL = xSQL & "  FROM Empresa"
         xSQL = xSQL & " WHERE [Codigo Global] = " & gEmpresaGlobal
-        Set rsTabela = New ADODB.Recordset
+        Set rsTabela = New adodb.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             xCodigoGrupoEmpresa = rsTabela("Empresa do Grupo").Value
@@ -391,7 +391,7 @@ Private Sub BuscaDadosGIC()
         If gEmpresaGlobal = 7 Then
             xSQL = xSQL & "   AND [Empresa Global] = " & 7
         End If
-        Set rsTabela = New ADODB.Recordset
+        Set rsTabela = New adodb.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             gUsuarioGlobal = rsTabela("Codigo Global").Value
@@ -407,7 +407,7 @@ Private Sub BuscaDadosGIC()
         xSQL = xSQL & "   AND [Codigo do Destinatario Global] = " & gUsuarioGlobal
         xSQL = xSQL & "   AND Concluida = " & preparaBooleano(False)
         xSQL = xSQL & "   AND Cancelada = " & preparaBooleano(False)
-        Set rsTabela = New ADODB.Recordset
+        Set rsTabela = New adodb.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             If rsTabela("Quantidade").Value = 1 Then
@@ -1833,7 +1833,7 @@ Private Sub MontaMenu()
     lSQL = lSQL & " ORDER BY Tipo, Menu"
     
     'Abre RecordSet
-    Set RstMenu = New ADODB.Recordset
+    Set RstMenu = New adodb.Recordset
     Set RstMenu = Conectar.RsConexao(lSQL)
     
     Do Until RstMenu.EOF
@@ -2402,7 +2402,7 @@ Private Sub Form_Load()
     'Sub-Versao Mes   = 01
     'Sub-versao Dia   = 22
     'Correcao do dia  = a
-    gVersaoSGP = "19.04.23a"
+    gVersaoSGP = "19.05.22a"
 
     gTipoAmbienteNFCe = ""
     Me.Caption = "Sistema Gerênciador de Postos de Combustíveis - Versão " & gVersaoSGP
@@ -2654,6 +2654,7 @@ Private Sub timerVbNet_Timer()
                 End If
             End If
         ElseIf xNomePrograma2 = "ImprimeNotaAbastecimento" Then
+           Call DefineImpressoraTermicaComoPadrao
            frm_preview.Show 1
         Else
             MsgBox "Erro na ligação VB.Net para VB-6 2!", vbOKOnly + vbExclamation, "Programa Inexistente!"

@@ -11,6 +11,7 @@ Public ConexaoAuxiliar As cConexaoAuxiliar
 Public gNomeUsuarioBD As String
 Public gSenhaBD As String
 Public Const gQUANTIDADE_MAXIMA_BICO As Integer = 48
+Public Const gQUANTIDADE_MAXIMA_ITENS_NFCE As Integer = 30
 
 
 'habilita/desabilida CTRL+ALT+DEL e CTRL+ESC
