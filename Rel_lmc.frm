@@ -306,12 +306,12 @@ Dim lTanqueEntrada(0 To 20) As String
 Dim lQuantidadeNotasEntradas As Integer
 Dim l_total_entrada As Currency
 Dim l_volume_disponivel As Currency
-Dim l_bomba(1 To 40) As Integer       'mudado estas variaveis de 30 para 40 pois ao imprimir
-Dim l_fechamento(1 To 40) As Currency ' o lmc de do posto paineiras que contem mais de 30
-Dim l_abertura(1 To 40) As Currency   ' bicos dava erro estorando o tamanho da variavel
-Dim l_litros_afericao(1 To 40) As Currency 'variaveis mudadas l_bomba, l_fechamento,
-Dim l_litros_vendidos(1 To 40) As Currency 'l_abertura, l_litros_afericao, l_litros_vendidos,
-Dim l_tanque(1 To 40) As String            'l_tanque.
+Dim l_bomba(1 To 60) As Integer       'mudado estas variaveis de 30 para 40 pois ao imprimir
+Dim l_fechamento(1 To 60) As Currency ' o lmc de do posto paineiras que contem mais de 30
+Dim l_abertura(1 To 60) As Currency   ' bicos dava erro estorando o tamanho da variavel
+Dim l_litros_afericao(1 To 60) As Currency 'variaveis mudadas l_bomba, l_fechamento,
+Dim l_litros_vendidos(1 To 60) As Currency 'l_abertura, l_litros_afericao, l_litros_vendidos,
+Dim l_tanque(1 To 60) As String            'l_tanque.
 Dim l_estoque_escritural As Currency
 Dim l_perdas_sobras As Currency
 Dim l_litros_vendidos_dia As Currency
@@ -384,7 +384,7 @@ Private Sub ZeraVariaveis()
     l_total_entrada = 0
     l_litros_vendidos_dia = 0
     lQuantidadeAfericao = 0
-    For i = 1 To 40
+    For i = 1 To 60
         l_bomba(i) = 0
         l_fechamento(i) = 0
         l_abertura(i) = 0
@@ -420,13 +420,16 @@ End Sub
 Private Sub ImprimeDados()
     Dim x_tanque(1 To 40) As String
     Dim x_string As String
-    Dim x_bomba(1 To 15) As String
-    Dim x_fechamento(1 To 15) As String
-    Dim x_abertura(1 To 15) As String
-    Dim x_litros_vendidos(1 To 15) As String
-    Dim x_litros_afericao(1 To 15) As String
+    Dim x_bomba(1 To 20) As String
+    Dim x_fechamento(1 To 20) As String
+    Dim x_abertura(1 To 20) As String
+    Dim x_litros_vendidos(1 To 20) As String
+    Dim x_litros_afericao(1 To 20) As String
     Dim i As Integer
     Dim i2 As Integer
+    Dim iBico As Integer
+    Dim iNF As Integer
+    Dim xLinha As Currency
     
     Printer.FontSize = 10
     
@@ -562,83 +565,102 @@ Private Sub ImprimeDados()
 '        'volta a fonte ao normal
 '        Printer.FontSize = 10
     Else
-        ImprimeTexto lNotaEntrada(0), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 6.25, l_local
-        x_string = ""
-        If lDataEntrada(0) <> "0:00:00" Then
-            x_string = lDataEntrada(0)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 6.25, l_local
-        ImprimeCentralizado lTanqueEntrada(0), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 6.25, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(0), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 6.25, l_local
-        ImprimeTexto lNotaEntrada(1), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 6.75, l_local
-        x_string = ""
-        If lDataEntrada(1) <> "0:00:00" Then
-            x_string = lDataEntrada(1)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 6.75, l_local
-        ImprimeCentralizado lTanqueEntrada(1), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 6.75, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(1), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 6.75, l_local
-        ImprimeTexto lNotaEntrada(2), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 7.25, l_local
-        x_string = ""
-        If lDataEntrada(2) <> "0:00:00" Then
-            x_string = lDataEntrada(2)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 7.25, l_local
-        ImprimeCentralizado lTanqueEntrada(2), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 7.25, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(2), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 7.25, l_local
-        ImprimeTexto lNotaEntrada(3), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 7.75, l_local
-        x_string = ""
-        If lDataEntrada(3) <> "0:00:00" Then
-            x_string = lDataEntrada(3)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 7.75, l_local
-        ImprimeCentralizado lTanqueEntrada(3), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 7.75, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(3), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 7.75, l_local
-        ImprimeTexto lNotaEntrada(4), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 8.25, l_local
-        x_string = ""
-        If lDataEntrada(4) <> "0:00:00" Then
-            x_string = lDataEntrada(4)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 8.25, l_local
-        ImprimeCentralizado lTanqueEntrada(4), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 8.25, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(4), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 8.25, l_local
-        ImprimeTexto lNotaEntrada(5), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 8.75, l_local
-        x_string = ""
-        If lDataEntrada(5) <> "0:00:00" Then
-            x_string = lDataEntrada(5)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 8.75, l_local
-        ImprimeCentralizado lTanqueEntrada(5), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 8.75, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(5), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 8.75, l_local
-        ImprimeTexto lNotaEntrada(6), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 9.25, l_local
-        x_string = ""
-        If lDataEntrada(6) <> "0:00:00" Then
-            x_string = lDataEntrada(6)
-        End If
-        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 9.25, l_local
-        ImprimeCentralizado lTanqueEntrada(6), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 9.25, l_local
-        ImprimeValorB Format(lQuantidadeEntrada(6), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 9.25, l_local
+'        ImprimeTexto lNotaEntrada(0), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 6.25, l_local
+'        x_string = ""
+'        If lDataEntrada(0) <> "0:00:00" Then
+'            x_string = lDataEntrada(0)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 6.25, l_local
+'        ImprimeCentralizado lTanqueEntrada(0), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 6.25, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(0), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 6.25, l_local
+'        ImprimeTexto lNotaEntrada(1), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 6.75, l_local
+'        x_string = ""
+'        If lDataEntrada(1) <> "0:00:00" Then
+'            x_string = lDataEntrada(1)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 6.75, l_local
+'        ImprimeCentralizado lTanqueEntrada(1), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 6.75, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(1), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 6.75, l_local
+'        ImprimeTexto lNotaEntrada(2), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 7.25, l_local
+'        x_string = ""
+'        If lDataEntrada(2) <> "0:00:00" Then
+'            x_string = lDataEntrada(2)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 7.25, l_local
+'        ImprimeCentralizado lTanqueEntrada(2), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 7.25, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(2), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 7.25, l_local
+'        ImprimeTexto lNotaEntrada(3), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 7.75, l_local
+'        x_string = ""
+'        If lDataEntrada(3) <> "0:00:00" Then
+'            x_string = lDataEntrada(3)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 7.75, l_local
+'        ImprimeCentralizado lTanqueEntrada(3), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 7.75, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(3), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 7.75, l_local
+'        ImprimeTexto lNotaEntrada(4), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 8.25, l_local
+'        x_string = ""
+'        If lDataEntrada(4) <> "0:00:00" Then
+'            x_string = lDataEntrada(4)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 8.25, l_local
+'        ImprimeCentralizado lTanqueEntrada(4), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 8.25, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(4), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 8.25, l_local
+'        ImprimeTexto lNotaEntrada(5), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 8.75, l_local
+'        x_string = ""
+'        If lDataEntrada(5) <> "0:00:00" Then
+'            x_string = lDataEntrada(5)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 8.75, l_local
+'        ImprimeCentralizado lTanqueEntrada(5), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 8.75, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(5), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 8.75, l_local
+'        ImprimeTexto lNotaEntrada(6), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + 9.25, l_local
+'        x_string = ""
+'        If lDataEntrada(6) <> "0:00:00" Then
+'            x_string = lDataEntrada(6)
+'        End If
+'        ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + 9.25, l_local
+'        ImprimeCentralizado lTanqueEntrada(6), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + 9.25, l_local
+'        ImprimeValorB Format(lQuantidadeEntrada(6), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 9.25, l_local
+        ' Nova rotina de imprimir as NFe - Tasso 24/05/2019
+        xLinha = 5.85
+        For iNF = 0 To 9
+            xLinha = xLinha + 0.4
+            If lDataEntrada(iNF) <> "0:00:00" Then
+                Printer.FontSize = 7
+                ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + xLinha, l_local
+                ImprimeString "de", l_margem_col + 6.6, l_margem_lin + xLinha, l_local
+                
+                Printer.FontSize = 9
+                ImprimeTexto lNotaEntrada(iNF), l_margem_col + 1.9, l_margem_col + 6.5, l_margem_lin + xLinha, l_local
+                x_string = lDataEntrada(iNF)
+                ImprimeCentralizado x_string, l_margem_col + 6.9, l_margem_col + 10, l_margem_lin + xLinha, l_local
+                ImprimeCentralizado lTanqueEntrada(iNF), l_margem_col + 10, l_margem_col + 13.6, l_margem_lin + xLinha, l_local
+                ImprimeValorB Format(lQuantidadeEntrada(iNF), "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + xLinha, l_local
+            End If
+        Next
     End If
     
 
-    If lDataEntrada(8) <> "0:00:00" Then
+    If lDataEntrada(10) <> "0:00:00" Then
         Printer.FontSize = 16
-        ImprimeTexto "...", l_margem_col + 16.15, l_margem_col + 16.8, l_margem_lin + 8.1, l_local
+        ImprimeTexto "...", l_margem_col + 16.15, l_margem_col + 16.8, l_margem_lin + 9.9, l_local
         Printer.FontSize = 10
+        ImprimeTexto "** Existe Mais NFe de Entrada **", l_margem_col + 0.5, l_margem_col + 10, l_margem_lin + 10.6, l_local
     End If
+    Printer.FontSize = 10
     
     
     
     For i = 0 To 20
         l_total_entrada = l_total_entrada + lQuantidadeEntrada(i)
     Next
-    ImprimeValor Format(l_total_entrada, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 8.85, l_local
+    ImprimeValor Format(l_total_entrada, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 10.62, l_local
     l_volume_disponivel = l_total_entrada + lAberturaTanque
-    ImprimeValor Format(l_volume_disponivel, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 9.7, l_local
+    ImprimeValor Format(l_volume_disponivel, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.35, l_local
     
     'Dados da movimentação das bombas
     i2 = 0
-    For i = 1 To 40
+    For i = 1 To 60
         If l_abertura(i) > 0 Or l_fechamento(i) > 0 Then
             i2 = i2 + 1
             x_tanque(i2) = l_tanque(i)
@@ -651,120 +673,138 @@ Private Sub ImprimeDados()
         End If
     Next
     Printer.FontSize = 9
-    ImprimeCentralizado x_tanque(1), l_margem_col, l_margem_col + 2, l_margem_lin + 10.8, l_local
-    ImprimeCentralizado x_bomba(1), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 10.8, l_local
-    ImprimeValor x_fechamento(1), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 10.8, l_local
-    ImprimeValor x_abertura(1), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 10.8, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 10.8, l_local
-    ImprimeValor x_litros_afericao(1), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 10.8, l_local
-    ImprimeValor x_litros_vendidos(1), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 10.8, l_local
+'    ImprimeCentralizado x_tanque(1), l_margem_col, l_margem_col + 2, l_margem_lin + 10.8, l_local
+'    ImprimeCentralizado x_bomba(1), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 10.8, l_local
+'    ImprimeValor x_fechamento(1), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 10.8, l_local
+'    ImprimeValor x_abertura(1), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 10.8, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 10.8, l_local
+'    ImprimeValor x_litros_afericao(1), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 10.8, l_local
+'    ImprimeValor x_litros_vendidos(1), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 10.8, l_local
+'
+'    ImprimeCentralizado x_tanque(2), l_margem_col, l_margem_col + 2, l_margem_lin + 11.1, l_local
+'    ImprimeCentralizado x_bomba(2), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.1, l_local
+'    ImprimeValor x_fechamento(2), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.1, l_local
+'    ImprimeValor x_abertura(2), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.1, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.1, l_local
+'    ImprimeValor x_litros_afericao(2), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.1, l_local
+'    ImprimeValor x_litros_vendidos(2), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.1, l_local
+'
+'    ImprimeCentralizado x_tanque(3), l_margem_col, l_margem_col + 2, l_margem_lin + 11.4, l_local
+'    ImprimeCentralizado x_bomba(3), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.4, l_local
+'    ImprimeValor x_fechamento(3), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.4, l_local
+'    ImprimeValor x_abertura(3), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.4, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.4, l_local
+'    ImprimeValor x_litros_afericao(3), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.4, l_local
+'    ImprimeValor x_litros_vendidos(3), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.4, l_local
+'
+'    ImprimeCentralizado x_tanque(4), l_margem_col, l_margem_col + 2, l_margem_lin + 11.7, l_local
+'    ImprimeCentralizado x_bomba(4), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.7, l_local
+'    ImprimeValor x_fechamento(4), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.7, l_local
+'    ImprimeValor x_abertura(4), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.7, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.7, l_local
+'    ImprimeValor x_litros_afericao(4), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.7, l_local
+'    ImprimeValor x_litros_vendidos(4), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.7, l_local
+'
+'    ImprimeCentralizado x_tanque(5), l_margem_col, l_margem_col + 2, l_margem_lin + 12, l_local
+'    ImprimeCentralizado x_bomba(5), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12, l_local
+'    ImprimeValor x_fechamento(5), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12, l_local
+'    ImprimeValor x_abertura(5), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12, l_local
+'    ImprimeValor x_litros_afericao(5), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12, l_local
+'    ImprimeValor x_litros_vendidos(5), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12, l_local
+'
+'    ImprimeCentralizado x_tanque(6), l_margem_col, l_margem_col + 2, l_margem_lin + 12.3, l_local
+'    ImprimeCentralizado x_bomba(6), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.3, l_local
+'    ImprimeValor x_fechamento(6), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.3, l_local
+'    ImprimeValor x_abertura(6), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.3, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.3, l_local
+'    ImprimeValor x_litros_afericao(6), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.3, l_local
+'    ImprimeValor x_litros_vendidos(6), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.3, l_local
+'
+'    ImprimeCentralizado x_tanque(7), l_margem_col, l_margem_col + 2, l_margem_lin + 12.6, l_local
+'    ImprimeCentralizado x_bomba(7), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.6, l_local
+'    ImprimeValor x_fechamento(7), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.6, l_local
+'    ImprimeValor x_abertura(7), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.6, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.6, l_local
+'    ImprimeValor x_litros_afericao(7), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.6, l_local
+'    ImprimeValor x_litros_vendidos(7), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.6, l_local
+'
+'    ImprimeCentralizado x_tanque(8), l_margem_col, l_margem_col + 2, l_margem_lin + 12.9, l_local
+'    ImprimeCentralizado x_bomba(8), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.9, l_local
+'    ImprimeValor x_fechamento(8), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.9, l_local
+'    ImprimeValor x_abertura(8), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.9, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.9, l_local
+'    ImprimeValor x_litros_afericao(8), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.9, l_local
+'    ImprimeValor x_litros_vendidos(8), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.9, l_local
+'
+'    ImprimeCentralizado x_tanque(9), l_margem_col, l_margem_col + 2, l_margem_lin + 13.2, l_local
+'    ImprimeCentralizado x_bomba(9), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.2, l_local
+'    ImprimeValor x_fechamento(9), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.2, l_local
+'    ImprimeValor x_abertura(9), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.2, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.2, l_local
+'    ImprimeValor x_litros_afericao(9), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.2, l_local
+'    ImprimeValor x_litros_vendidos(9), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.2, l_local
+'
+'    ImprimeCentralizado x_tanque(10), l_margem_col, l_margem_col + 2, l_margem_lin + 13.5, l_local
+'    ImprimeCentralizado x_bomba(10), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.5, l_local
+'    ImprimeValor x_fechamento(10), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.5, l_local
+'    ImprimeValor x_abertura(10), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.5, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.5, l_local
+'    ImprimeValor x_litros_afericao(10), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.5, l_local
+'    ImprimeValor x_litros_vendidos(10), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.5, l_local
+'
+'    ImprimeCentralizado x_tanque(11), l_margem_col, l_margem_col + 2, l_margem_lin + 13.8, l_local
+'    ImprimeCentralizado x_bomba(11), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.8, l_local
+'    ImprimeValor x_fechamento(11), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.8, l_local
+'    ImprimeValor x_abertura(11), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.8, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.8, l_local
+'    ImprimeValor x_litros_afericao(11), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.8, l_local
+'    ImprimeValor x_litros_vendidos(11), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.8, l_local
+'
+'    'Dados do Bico: 12
+'    iBico = 12
+'    ImprimeCentralizado x_tanque(12), l_margem_col, l_margem_col + 2, l_margem_lin + 14.1, l_local
+'    ImprimeCentralizado x_bomba(12), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 14.1, l_local
+'    ImprimeValor x_fechamento(12), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 14.1, l_local
+'    ImprimeValor x_abertura(12), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 14.1, l_local
+'    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 14.1, l_local
+'    ImprimeValor x_litros_afericao(12), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 14.1, l_local
+'    ImprimeValor x_litros_vendidos(12), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 14.1, l_local
     
-    ImprimeCentralizado x_tanque(2), l_margem_col, l_margem_col + 2, l_margem_lin + 11.1, l_local
-    ImprimeCentralizado x_bomba(2), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.1, l_local
-    ImprimeValor x_fechamento(2), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.1, l_local
-    ImprimeValor x_abertura(2), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.1, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.1, l_local
-    ImprimeValor x_litros_afericao(2), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.1, l_local
-    ImprimeValor x_litros_vendidos(2), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.1, l_local
-    
-    ImprimeCentralizado x_tanque(3), l_margem_col, l_margem_col + 2, l_margem_lin + 11.4, l_local
-    ImprimeCentralizado x_bomba(3), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.4, l_local
-    ImprimeValor x_fechamento(3), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.4, l_local
-    ImprimeValor x_abertura(3), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.4, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.4, l_local
-    ImprimeValor x_litros_afericao(3), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.4, l_local
-    ImprimeValor x_litros_vendidos(3), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.4, l_local
-    
-    ImprimeCentralizado x_tanque(4), l_margem_col, l_margem_col + 2, l_margem_lin + 11.7, l_local
-    ImprimeCentralizado x_bomba(4), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 11.7, l_local
-    ImprimeValor x_fechamento(4), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 11.7, l_local
-    ImprimeValor x_abertura(4), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 11.7, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 11.7, l_local
-    ImprimeValor x_litros_afericao(4), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 11.7, l_local
-    ImprimeValor x_litros_vendidos(4), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 11.7, l_local
-    
-    ImprimeCentralizado x_tanque(5), l_margem_col, l_margem_col + 2, l_margem_lin + 12, l_local
-    ImprimeCentralizado x_bomba(5), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12, l_local
-    ImprimeValor x_fechamento(5), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12, l_local
-    ImprimeValor x_abertura(5), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12, l_local
-    ImprimeValor x_litros_afericao(5), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12, l_local
-    ImprimeValor x_litros_vendidos(5), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12, l_local
-    
-    ImprimeCentralizado x_tanque(6), l_margem_col, l_margem_col + 2, l_margem_lin + 12.3, l_local
-    ImprimeCentralizado x_bomba(6), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.3, l_local
-    ImprimeValor x_fechamento(6), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.3, l_local
-    ImprimeValor x_abertura(6), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.3, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.3, l_local
-    ImprimeValor x_litros_afericao(6), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.3, l_local
-    ImprimeValor x_litros_vendidos(6), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.3, l_local
-    
-    ImprimeCentralizado x_tanque(7), l_margem_col, l_margem_col + 2, l_margem_lin + 12.6, l_local
-    ImprimeCentralizado x_bomba(7), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.6, l_local
-    ImprimeValor x_fechamento(7), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.6, l_local
-    ImprimeValor x_abertura(7), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.6, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.6, l_local
-    ImprimeValor x_litros_afericao(7), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.6, l_local
-    ImprimeValor x_litros_vendidos(7), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.6, l_local
-    
-    ImprimeCentralizado x_tanque(8), l_margem_col, l_margem_col + 2, l_margem_lin + 12.9, l_local
-    ImprimeCentralizado x_bomba(8), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 12.9, l_local
-    ImprimeValor x_fechamento(8), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 12.9, l_local
-    ImprimeValor x_abertura(8), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 12.9, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 12.9, l_local
-    ImprimeValor x_litros_afericao(8), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 12.9, l_local
-    ImprimeValor x_litros_vendidos(8), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 12.9, l_local
-    
-    ImprimeCentralizado x_tanque(9), l_margem_col, l_margem_col + 2, l_margem_lin + 13.2, l_local
-    ImprimeCentralizado x_bomba(9), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.2, l_local
-    ImprimeValor x_fechamento(9), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.2, l_local
-    ImprimeValor x_abertura(9), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.2, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.2, l_local
-    ImprimeValor x_litros_afericao(9), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.2, l_local
-    ImprimeValor x_litros_vendidos(9), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.2, l_local
-    
-    ImprimeCentralizado x_tanque(10), l_margem_col, l_margem_col + 2, l_margem_lin + 13.5, l_local
-    ImprimeCentralizado x_bomba(10), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.5, l_local
-    ImprimeValor x_fechamento(10), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.5, l_local
-    ImprimeValor x_abertura(10), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.5, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.5, l_local
-    ImprimeValor x_litros_afericao(10), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.5, l_local
-    ImprimeValor x_litros_vendidos(10), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.5, l_local
-    
-    ImprimeCentralizado x_tanque(11), l_margem_col, l_margem_col + 2, l_margem_lin + 13.8, l_local
-    ImprimeCentralizado x_bomba(11), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 13.8, l_local
-    ImprimeValor x_fechamento(11), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 13.8, l_local
-    ImprimeValor x_abertura(11), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 13.8, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 13.8, l_local
-    ImprimeValor x_litros_afericao(11), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 13.8, l_local
-    ImprimeValor x_litros_vendidos(11), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 13.8, l_local
-    
-    ImprimeCentralizado x_tanque(12), l_margem_col, l_margem_col + 2, l_margem_lin + 14.1, l_local
-    ImprimeCentralizado x_bomba(12), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + 14.1, l_local
-    ImprimeValor x_fechamento(12), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + 14.1, l_local
-    ImprimeValor x_abertura(12), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + 14.1, l_local
-    ImprimeValor "    ", l_margem_col + 10, l_margem_col + 13.2, l_margem_lin + 14.1, l_local
-    ImprimeValor x_litros_afericao(12), l_margem_col + 10, l_margem_col + 13, l_margem_lin + 14.1, l_local
-    ImprimeValor x_litros_vendidos(12), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 14.1, l_local
+    'Imprime Bicos
+    xLinha = 12
+    For iBico = 1 To 20
+        xLinha = xLinha + 0.3
+        ImprimeCentralizado x_tanque(iBico), l_margem_col, l_margem_col + 2, l_margem_lin + xLinha, l_local
+        ImprimeCentralizado x_bomba(iBico), l_margem_col + 2, l_margem_col + 4.5, l_margem_lin + xLinha, l_local
+        ImprimeValor x_fechamento(iBico), l_margem_col + 4.5, l_margem_col + 6.8, l_margem_lin + xLinha, l_local
+        ImprimeValor x_abertura(iBico), l_margem_col + 7.2, l_margem_col + 9.6, l_margem_lin + xLinha, l_local
+        'ImprimeValor iBico & "    ", l_margem_col + 10.5, l_margem_col + 11, l_margem_lin + xLinha, l_local
+        ImprimeValor x_litros_afericao(iBico), l_margem_col + 10, l_margem_col + 13, l_margem_lin + xLinha, l_local
+        ImprimeValor x_litros_vendidos(iBico), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + xLinha, l_local
+    Next
     
    
     
     Printer.FontSize = 10
-    ImprimeValor Format(l_litros_vendidos_dia, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 15.05, l_local
+    ImprimeValor Format(l_litros_vendidos_dia, "###,##0.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 18.45, l_local
     
-    ImprimeValor Format(l_valor_vendas_dia, "#,###,###,##0.00"), l_margem_col + 6.3, l_margem_col + 9.6, l_margem_lin + 16.25, l_local
+    ImprimeValor Format(l_valor_vendas_dia, "#,###,###,##0.00"), l_margem_col + 6.3, l_margem_col + 9.6, l_margem_lin + 19.2, l_local
     l_estoque_escritural = l_volume_disponivel - l_litros_vendidos_dia
-    ImprimeValor Format(l_estoque_escritural, "###,###.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 16.25, l_local
+    ImprimeValor Format(l_estoque_escritural, "###,###.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 19.2, l_local
     
-    ImprimeValor Format(l_valor_vendas_mes, "#,###,###,##0.00"), l_margem_col + 6.3, l_margem_col + 9.6, l_margem_lin + 17.05, l_local
-    ImprimeValor Format(lFechamentoTanque, "###,###.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 17.05, l_local
+    ImprimeValor Format(l_valor_vendas_mes, "#,###,###,##0.00"), l_margem_col + 6.3, l_margem_col + 9.6, l_margem_lin + 19.75, l_local
+    ImprimeValor Format(lFechamentoTanque, "###,###.00"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 19.75, l_local
     
     l_perdas_sobras = lFechamentoTanque - l_estoque_escritural
-    ImprimeValor Format(l_perdas_sobras, "###,##0.00;(###,##0.00)"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 17.85, l_local
+    ImprimeValor Format(l_perdas_sobras, "###,##0.00;(###,##0.00)"), l_margem_col + 13.6, l_margem_col + 16.8, l_margem_lin + 20.43, l_local
     
-    ImprimeTexto l_observacao_1, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 19.9, l_local
-    ImprimeTexto l_observacao_2, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 20.7, l_local
-    ImprimeTexto l_observacao_3, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 21.5, l_local
+'    l_observacao_1 = "LINHA 1 DE TESTE DE OBSERVAÇÃO TEXTO VAI ATÉ BEM LONGE"
+'    l_observacao_2 = "LINHA 2 DE TESTE DE OBSERVAÇÃO LIMITE DE TEXTO"
+'    l_observacao_3 = "LINHA 3 DE TESTE DE OBSERVAÇÃO TEXTO VAI ATÉ BEM LONGE"
+    ImprimeTexto l_observacao_1, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 21.6, l_local
+    ImprimeTexto l_observacao_2, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 22.1, l_local
+    ImprimeTexto l_observacao_3, l_margem_col + 0.1, l_margem_col + 10, l_margem_lin + 22.6, l_local
     
     If lQuantidadeNotasEntradas >= 8 Then
         MsgBox "Neste dia, teve mais de 8 NF de Entrada de Combustível." & vbCrLf & "Como no papel do LMC impresso cabe apenas 8 NF." & vbCrLf & "Então DEVE ser impresso o Relatório de Entrada de Combustiveis da Data: " & lData & "." & vbCrLf & "E anexa-lo para encadernamento." & vbCrLf & "Em caso de dúvida, entre em contato com o suporte técnico.", vbInformation, "Estouro de capacidade de QTD de NF"
@@ -783,8 +823,8 @@ Private Sub ImprimeDados()
     'medição física no fim do dia
     For i = 0 To 10
         If lNumeroTanqueFechamento(i) > 0 Then
-            ImprimeCentralizadoB Format(lEstoqueFechamentoTanque(i), "###,##0.00"), l_margem_col + ((i + 1) * 2) - 2 + 3.4, l_margem_col + ((i + 1) * 2) + 3.4, l_margem_lin + 25.1, l_local
-            ImprimeString lNumeroTanqueFechamento(i), l_margem_col + ((i + 1) * 2) - 2 + 5, l_margem_lin + 24.2, l_local
+            ImprimeCentralizadoB Format(lEstoqueFechamentoTanque(i), "###,##0.00"), l_margem_col + ((i + 1) * 2) - 2 + 3.4, l_margem_col + ((i + 1) * 2) + 3.4, l_margem_lin + 25.4, l_local
+            ImprimeString lNumeroTanqueFechamento(i), l_margem_col + ((i + 1) * 2) - 2 + 5, l_margem_lin + 25, l_local
         End If
     Next
     'ImprimeCentralizadoB Format(lFechamentoTanque_1, "###,##0.00"), l_margem_col + 3.4, l_margem_col + 5.4, l_margem_lin + 25.2, l_local
@@ -793,7 +833,7 @@ Private Sub ImprimeDados()
     'ImprimeCentralizadoB Format(lFechamentoTanque_4, "###,##0.00"), l_margem_col + 9.4, l_margem_col + 11.4, l_margem_lin + 25.2, l_local
     'ImprimeCentralizadoB Format(lFechamentoTanque_5, "###,##0.00"), l_margem_col + 11.4, l_margem_col + 13.4, l_margem_lin + 25.2, l_local
     'ImprimeCentralizadoB Format(lFechamentoTanque_6, "###,##0.00"), l_margem_col + 13.4, l_margem_col + 15.4, l_margem_lin + 25.2, l_local
-    ImprimeCentralizado Format(lFechamentoTanque, "###,##0.00"), l_margem_col + 15.4, l_margem_col + 17.8, l_margem_lin + 25.2, l_local
+    ImprimeCentralizado Format(lFechamentoTanque, "###,##0.00"), l_margem_col + 15.4, l_margem_col + 17.8, l_margem_lin + 25.4, l_local
 End Sub
 Private Sub ImprimeGrade()
     Dim x_cgc As String
@@ -840,7 +880,6 @@ Private Sub ImprimeGrade()
     Printer.Line (l_margem_col + 7.4, l_margem_lin + 3.9)-(l_margem_col + 7.4, l_margem_lin + 4.7), RGB(0, 0, 0)
     Printer.Line (l_margem_col + 8, l_margem_lin + 3.9)-(l_margem_col + 8, l_margem_lin + 5.5), RGB(0, 0, 0)
     Printer.Line (l_margem_col + 9.4, l_margem_lin + 3.9)-(l_margem_col + 9.4, l_margem_lin + 4.7), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 10, l_margem_lin + 3.9)-(l_margem_col + 10, l_margem_lin + 23.4), RGB(0, 0, 0)
     Printer.Line (l_margem_col + 11.4, l_margem_lin + 3.9)-(l_margem_col + 11.4, l_margem_lin + 4.7), RGB(0, 0, 0)
     Printer.Line (l_margem_col + 12, l_margem_lin + 3.9)-(l_margem_col + 12, l_margem_lin + 5.5), RGB(0, 0, 0)
     ImprimeString "Tanque", l_margem_col + 0.2, l_margem_lin + 4.15, l_local
@@ -854,95 +893,116 @@ Private Sub ImprimeGrade()
     Printer.Line (l_margem_col, l_margem_lin + 5.5)-(l_col_max, l_margem_lin + 5.5), RGB(0, 0, 0)
     
     Printer.Line (l_margem_col, l_margem_lin + 6.1)-(l_col_max, l_margem_lin + 6.1), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 13.6, l_margem_lin + 5.5)-(l_margem_col + 13.6, l_margem_lin + 17.6), RGB(0, 0, 0)
+    
+    
+   
+    'Vertical separa "Tanques" até "Outros orgãos"
+    Printer.Line (l_margem_col + 10, l_margem_lin + 3.9)-(l_margem_col + 10, l_margem_lin + 24.6), RGB(0, 0, 0)
+    
+    
+    'Vertical separa "Nr. tanque descarga" de "Volume recebido"
+    '          até   "Perdas Sobras"
+    Printer.Line (l_margem_col + 13.6, l_margem_lin + 5.5)-(l_margem_col + 13.6, l_margem_lin + 21.1), RGB(0, 0, 0)
+    
     ImprimeString "4 Volume recebido no dia (em litros)", l_margem_col + 0.1, l_margem_lin + 5.65, l_local
     ImprimeString "4.1 Nr. tanque descarga", l_margem_col + 10.1, l_margem_lin + 5.65, l_local
     ImprimeString "4.2 Volume recebido", l_margem_col + 13.7, l_margem_lin + 5.65, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 8.7)-(l_col_max, l_margem_lin + 8.7), RGB(0, 0, 0)
-    ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + 6.25, l_local
-    ImprimeString "de", l_margem_col + 6.6, l_margem_lin + 6.25, l_local
-    ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + 6.75, l_local
-    ImprimeString "de", l_margem_col + 6.6, l_margem_lin + 6.75, l_local
-    ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + 7.25, l_local
-    ImprimeString "de", l_margem_col + 6.6, l_margem_lin + 7.25, l_local
-    ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + 7.75, l_local
-    ImprimeString "de", l_margem_col + 6.6, l_margem_lin + 7.75, l_local
-    ImprimeString "Nota fiscal nr.:", l_margem_col + 0.1, l_margem_lin + 8.25, l_local
-    ImprimeString "de", l_margem_col + 6.6, l_margem_lin + 8.25, l_local
+    'Horizontal Acima "Total recebido"
+    Printer.Line (l_margem_col, l_margem_lin + 10.55)-(l_col_max, l_margem_lin + 10.55), RGB(0, 0, 0)
+    ImprimeString "4.3 Total recebido", l_margem_col + 10.1, l_margem_lin + 10.63, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 9.3)-(l_col_max, l_margem_lin + 9.3), RGB(0, 0, 0)
-    ImprimeString "4.3 Total recebido", l_margem_col + 10.1, l_margem_lin + 8.85, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 10.2)-(l_col_max, l_margem_lin + 10.2), RGB(0, 0, 0)
-    ImprimeString "5 Volume vendido no dia (em litros)", l_margem_col + 0.1, l_margem_lin + 9.6, l_local
-    ImprimeString "4.4 Volume disponível", l_margem_col + 10.1, l_margem_lin + 9.4, l_local
-    ImprimeString "(3.1 + 4.3)", l_margem_col + 11, l_margem_lin + 9.8, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 10.8)-(l_col_max, l_margem_lin + 10.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 2, l_margem_lin + 10.2)-(l_margem_col + 2, l_margem_lin + 14.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 4.5, l_margem_lin + 10.2)-(l_margem_col + 4.5, l_margem_lin + 14.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 7.2, l_margem_lin + 10.2)-(l_margem_col + 7.2, l_margem_lin + 14.8), RGB(0, 0, 0)
-    ImprimeString "5.1 Tanque", l_margem_col + 0.1, l_margem_lin + 10.35, l_local
-    ImprimeString "5.2 Bico", l_margem_col + 2.1, l_margem_lin + 10.35, l_local
-    ImprimeString "5.3 + Fechamento", l_margem_col + 4.6, l_margem_lin + 10.35, l_local
-    ImprimeString "5.4 - Abertura", l_margem_col + 7.3, l_margem_lin + 10.35, l_local
-    ImprimeString "5.5 - Aferição", l_margem_col + 10.1, l_margem_lin + 10.35, l_local
-    ImprimeString "5.6 = vendas no bico", l_margem_col + 13.7, l_margem_lin + 10.35, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 14.8)-(l_col_max, l_margem_lin + 14.8), RGB(0, 0, 0)
+    'Horizontal Acima "Volume vendido no dia (em litros)"
+    Printer.Line (l_margem_col, l_margem_lin + 11.05)-(l_col_max, l_margem_lin + 11.05), RGB(0, 0, 0)
+    ImprimeString "5 Volume vendido no dia (em litros)", l_margem_col + 0.1, l_margem_lin + 11.35, l_local
+    ImprimeString "4.4 Volume disponível", l_margem_col + 10.1, l_margem_lin + 11.1, l_local
+    ImprimeString "(3.1 + 4.3)", l_margem_col + 11, l_margem_lin + 11.45, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 15.6)-(l_col_max, l_margem_lin + 15.6), RGB(0, 0, 0)
-    ImprimeString "10 Valor das vendas", l_margem_col + 0.1, l_margem_lin + 15.05, l_local
-    ImprimeString "5.7 Vendas no dia", l_margem_col + 10.1, l_margem_lin + 15.05, l_local
+    'Horizontal Acima "Tanque", "Bico" ...
+    Printer.Line (l_margem_col, l_margem_lin + 11.85)-(l_col_max, l_margem_lin + 11.85), RGB(0, 0, 0)
+    'Horizontal abaixo "Tanque", "Bico" ...
+    Printer.Line (l_margem_col, l_margem_lin + 12.25)-(l_col_max, l_margem_lin + 12.25), RGB(0, 0, 0)
+    'Vertical separa "Tanque" de "Bico"
+    Printer.Line (l_margem_col + 2, l_margem_lin + 11.85)-(l_margem_col + 2, l_margem_lin + 18.4), RGB(0, 0, 0)
+    'Vertical separa "Bico" de "Fechamento"
+    Printer.Line (l_margem_col + 4.5, l_margem_lin + 11.85)-(l_margem_col + 4.5, l_margem_lin + 18.4), RGB(0, 0, 0)
+    'Vertical separa "Fechamento" de "Abertura"
+    Printer.Line (l_margem_col + 7.2, l_margem_lin + 11.85)-(l_margem_col + 7.2, l_margem_lin + 18.4), RGB(0, 0, 0)
     
-    Printer.Line (l_margem_col, l_margem_lin + 16.8)-(l_col_max, l_margem_lin + 16.8), RGB(0, 0, 0)
-    ImprimeString "10.1 Valor das vendas do dia", l_margem_col + 0.1, l_margem_lin + 15.75, l_local
-    ImprimeString "(5.7 x Preço bomba)", l_margem_col + 1.1, l_margem_lin + 16.25, l_local
-    ImprimeString "6 Estoque escritural", l_margem_col + 10.1, l_margem_lin + 15.75, l_local
-    ImprimeString "(4.4 - 5.7)", l_margem_col + 11, l_margem_lin + 16.25, l_local
+    ImprimeString "5.1 Tanque", l_margem_col + 0.1, l_margem_lin + 11.9, l_local
+    ImprimeString "5.2 Bico", l_margem_col + 2.1, l_margem_lin + 11.9, l_local
+    ImprimeString "5.3 + Fechamento", l_margem_col + 4.6, l_margem_lin + 11.9, l_local
+    ImprimeString "5.4 - Abertura", l_margem_col + 7.3, l_margem_lin + 11.9, l_local
+    ImprimeString "5.5 - Aferição", l_margem_col + 10.1, l_margem_lin + 11.9, l_local
+    ImprimeString "5.6 = vendas no bico", l_margem_col + 13.7, l_margem_lin + 11.9, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 17.6)-(l_col_max, l_margem_lin + 17.6), RGB(0, 0, 0)
-    ImprimeString "10.2 Valor acumulado no mês", l_margem_col + 0.1, l_margem_lin + 17.05, l_local
-    ImprimeString "7 Estoque fechamento (9.1)", l_margem_col + 10.1, l_margem_lin + 17.05, l_local
+    'Horizontal acima "Valor das vendas"
+    Printer.Line (l_margem_col, l_margem_lin + 18.4)-(l_col_max, l_margem_lin + 18.4), RGB(0, 0, 0)
+    ImprimeString "10 Valor das vendas", l_margem_col + 0.1, l_margem_lin + 18.48, l_local
+    ImprimeString "5.7 Vendas no dia", l_margem_col + 10.1, l_margem_lin + 18.48, l_local
     
-    Printer.Line (l_margem_col + 10, l_margem_lin + 18.4)-(l_col_max, l_margem_lin + 18.4), RGB(0, 0, 0)
-    Printer.Line (l_margem_col, l_margem_lin + 18.9)-(l_margem_col + 10, l_margem_lin + 18.9), RGB(0, 0, 0)
-    ImprimeString "11 Para uso do revendedor", l_margem_col + 0.1, l_margem_lin + 17.85, l_local
-    ImprimeString "8 - Perdas + sobras (*)", l_margem_col + 10.1, l_margem_lin + 17.85, l_local
-    ImprimeString "12 Destinado a fiscalização DNC", l_margem_col + 10.1, l_margem_lin + 18.6, l_local
+    'Horizontal acima "Valor das vendas do dia"
+    Printer.Line (l_margem_col, l_margem_lin + 18.9)-(l_col_max, l_margem_lin + 18.9), RGB(0, 0, 0)
+    ImprimeString "10.1 Valor das vendas do dia", l_margem_col + 0.1, l_margem_lin + 18.95, l_local
+    ImprimeString "(5.7 x Preço bomba)", l_margem_col + 1.1, l_margem_lin + 19.3, l_local
+    ImprimeString "6 Estoque escritural", l_margem_col + 10.1, l_margem_lin + 18.95, l_local
+    ImprimeString "(4.4 - 5.7)", l_margem_col + 11, l_margem_lin + 19.3, l_local
     
-    Printer.Line (l_margem_col + 10, l_margem_lin + 21.3)-(l_col_max, l_margem_lin + 21.3), RGB(0, 0, 0)
-    Printer.Line (l_margem_col, l_margem_lin + 23.4)-(l_col_max, l_margem_lin + 23.4), RGB(0, 0, 0)
-    ImprimeString "13 Observações", l_margem_col + 0.1, l_margem_lin + 19.1, l_local
-    ImprimeString "Outros orgãos fiscais", l_margem_col + 10.1, l_margem_lin + 21.5, l_local
+    'Horizontal acima "Para Uso do Revendedor", "Perdas / Sobras"
+    Printer.Line (l_margem_col, l_margem_lin + 19.7)-(l_col_max, l_margem_lin + 19.7), RGB(0, 0, 0)
+    ImprimeString "10.2 Valor acumulado no mês", l_margem_col + 0.1, l_margem_lin + 19.78, l_local
+    ImprimeString "7 Estoque fechamento (9.1)", l_margem_col + 10.1, l_margem_lin + 19.78, l_local
     
-    Printer.Line (l_margem_col, l_margem_lin + 24)-(l_col_max, l_margem_lin + 24), RGB(0, 0, 0)
-    ImprimeString "Conciliação dos Estoques", l_margem_col + 7.3, l_margem_lin + 23.5, l_local
+    'Horizontal acima "Para Uso do Revendedor", "Perdas / Sobras"
+    Printer.Line (l_margem_col, l_margem_lin + 20.2)-(l_col_max, l_margem_lin + 20.2), RGB(0, 0, 0)
+    ImprimeString "11 Para uso do revendedor", l_margem_col + 0.1, l_margem_lin + 20.2, l_local
+    ImprimeString "8 - Perdas + sobras (*)", l_margem_col + 10.1, l_margem_lin + 20.5, l_local
+    
+    'Horizontal acima "Destinado a fiscalização DNC"
+    Printer.Line (l_margem_col + 10, l_margem_lin + 21.1)-(l_col_max, l_margem_lin + 21.1), RGB(0, 0, 0)
+    'Horizontal acima "Observacoes"
+    Printer.Line (l_margem_col, l_margem_lin + 21.1)-(l_margem_col + 10, l_margem_lin + 21.1), RGB(0, 0, 0)
+    ImprimeString "12 Destinado a fiscalização DNC", l_margem_col + 10.1, l_margem_lin + 21.15, l_local
+    ImprimeString "13 Observações", l_margem_col + 0.1, l_margem_lin + 21.15, l_local
+    
+    'Horizontal acima "Outros orgãos..."
+    Printer.Line (l_margem_col + 10, l_margem_lin + 22.9)-(l_col_max, l_margem_lin + 23), RGB(0, 0, 0)
+    'Horizontal acima de "Conciliaão de estoques
+    Printer.Line (l_margem_col, l_margem_lin + 24.6)-(l_col_max, l_margem_lin + 24.6), RGB(0, 0, 0)
+    ImprimeString "Outros orgãos fiscais", l_margem_col + 10.1, l_margem_lin + 23, l_local
+    
+    'Horizontal acima "9 Fechamento Fisico
+    Printer.Line (l_margem_col, l_margem_lin + 25)-(l_col_max, l_margem_lin + 25), RGB(0, 0, 0)
+    ImprimeString "Conciliação dos Estoques", l_margem_col + 7.3, l_margem_lin + 24.65, l_local
    
-    Printer.Line (l_margem_col + 3.4, l_margem_lin + 24.8)-(l_col_max, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col, l_margem_lin + 25.6)-(l_col_max, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 3.4, l_margem_lin + 24)-(l_margem_col + 3.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 4.8, l_margem_lin + 24)-(l_margem_col + 4.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 5.4, l_margem_lin + 24)-(l_margem_col + 5.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 6.8, l_margem_lin + 24)-(l_margem_col + 6.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 7.4, l_margem_lin + 24)-(l_margem_col + 7.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 8.8, l_margem_lin + 24)-(l_margem_col + 8.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 9.4, l_margem_lin + 24)-(l_margem_col + 9.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 10.8, l_margem_lin + 24)-(l_margem_col + 10.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 11.4, l_margem_lin + 24)-(l_margem_col + 11.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 12.8, l_margem_lin + 24)-(l_margem_col + 12.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 13.4, l_margem_lin + 24)-(l_margem_col + 13.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 14.8, l_margem_lin + 24)-(l_margem_col + 14.8, l_margem_lin + 24.8), RGB(0, 0, 0)
-    Printer.Line (l_margem_col + 15.4, l_margem_lin + 24)-(l_margem_col + 15.4, l_margem_lin + 25.6), RGB(0, 0, 0)
-    ImprimeString "9 Fechamento físico", l_margem_col + 0.1, l_margem_lin + 24.5, l_local
-    ImprimeString "Tanque", l_margem_col + 3.6, l_margem_lin + 24.2, l_local
-    ImprimeString "Tanque", l_margem_col + 5.6, l_margem_lin + 24.2, l_local
-    ImprimeString "Tanque", l_margem_col + 7.6, l_margem_lin + 24.2, l_local
-    ImprimeString "Tanque", l_margem_col + 9.6, l_margem_lin + 24.2, l_local
-    ImprimeString "Tanque", l_margem_col + 11.6, l_margem_lin + 24.2, l_local
-    ImprimeString "Tanque", l_margem_col + 13.6, l_margem_lin + 24.2, l_local
-    ImprimeString "9.1  Total", l_margem_col + 15.6, l_margem_lin + 24.2, l_local
+    'Horizontal abaixo de "Tanque...
+    Printer.Line (l_margem_col + 3.4, l_margem_lin + 25.4)-(l_col_max, l_margem_lin + 25.4), RGB(0, 0, 0)
+    'Horizontal acima da mensagem "(*)Atenção...
+    Printer.Line (l_margem_col, l_margem_lin + 25.8)-(l_col_max, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 3.4, l_margem_lin + 25)-(l_margem_col + 3.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 4.8, l_margem_lin + 25)-(l_margem_col + 4.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 5.4, l_margem_lin + 25)-(l_margem_col + 5.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 6.8, l_margem_lin + 25)-(l_margem_col + 6.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 7.4, l_margem_lin + 25)-(l_margem_col + 7.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 8.8, l_margem_lin + 25)-(l_margem_col + 8.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 9.4, l_margem_lin + 25)-(l_margem_col + 9.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 10.8, l_margem_lin + 25)-(l_margem_col + 10.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 11.4, l_margem_lin + 25)-(l_margem_col + 11.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 12.8, l_margem_lin + 25)-(l_margem_col + 12.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 13.4, l_margem_lin + 25)-(l_margem_col + 13.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 14.8, l_margem_lin + 25)-(l_margem_col + 14.8, l_margem_lin + 25.4), RGB(0, 0, 0)
+    Printer.Line (l_margem_col + 15.4, l_margem_lin + 25)-(l_margem_col + 15.4, l_margem_lin + 25.8), RGB(0, 0, 0)
+    ImprimeString "9 Fechamento físico", l_margem_col + 0.1, l_margem_lin + 25.2, l_local
+    ImprimeString "Tanque", l_margem_col + 3.6, l_margem_lin + 25.05, l_local
+    ImprimeString "Tanque", l_margem_col + 5.6, l_margem_lin + 25.05, l_local
+    ImprimeString "Tanque", l_margem_col + 7.6, l_margem_lin + 25.05, l_local
+    ImprimeString "Tanque", l_margem_col + 9.6, l_margem_lin + 25.05, l_local
+    ImprimeString "Tanque", l_margem_col + 11.6, l_margem_lin + 25.05, l_local
+    ImprimeString "Tanque", l_margem_col + 13.6, l_margem_lin + 25.05, l_local
+    ImprimeString "9.1  Total", l_margem_col + 15.6, l_margem_lin + 25.05, l_local
     ImprimeString "(*) Atenção se o resultado for negativo, pode estar havendo vazamento do produto para o meio ambiente", l_margem_col + 0.5, l_margem_lin + 25.8, l_local
 End Sub
 Private Sub Relatorio()
