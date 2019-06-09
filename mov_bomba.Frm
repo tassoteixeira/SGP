@@ -1337,7 +1337,7 @@ Private Sub cmd_excluir_Click()
     End If
     If IsDate(txtData.Text) Then
         If (MsgBox("Deseja Realmente Excluir Este Registro?", 4 + 32 + 256, "Exclusão de Registro!")) = 6 Then
-            Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtData.Text & " Per:" & Val(cbo_periodo.Text) & " SubCaixa:" & txtNumeroSubCaixa.Text & " Bico:" & Val(cbo_bomba.Text) & " Abert:" & txtAbertura.Text & " Abert:" & txtEncerrante.Text)
+            Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtData.Text & " P:" & Val(cbo_periodo.Text) & " SubCx:" & txtNumeroSubCaixa.Text & " B:" & Val(cbo_bomba.Text) & " Abe:" & txtAbertura.Text & " Enc:" & txtEncerrante.Text)
             If Not MovimentoBomba.Excluir(g_empresa, lData, lPeriodo, lBomba, lNumeroSubCaixa) Then
                 MsgBox "Não foi possível excluir este registro", vbInformation, "Erro de Integridade!"
             Else
@@ -1398,7 +1398,7 @@ Private Sub cmd_ok_Click()
         If VerificaLiberacaoDigitacao2 Then
             AtivaBotoes
             If lOpcao = 1 Then
-                Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtData.Text & " Per:" & Val(cbo_periodo.Text) & " SubCaixa:" & txtNumeroSubCaixa.Text & " Bico:" & Val(cbo_bomba.Text) & " Abert:" & txtAbertura.Text & " Abert:" & txtEncerrante.Text)
+                Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtData.Text & " P:" & Val(cbo_periodo.Text) & " SubCx:" & txtNumeroSubCaixa.Text & " B:" & Val(cbo_bomba.Text) & " Abe:" & txtAbertura.Text & " Enc:" & txtEncerrante.Text)
                 AtualTabe
                 If MovimentoBomba.Incluir Then
                     lData = CDate(txtData.Text)
@@ -1425,8 +1425,8 @@ Private Sub cmd_ok_Click()
                 Inclui
                 Exit Sub
             ElseIf lOpcao = 2 Then
-                Call GravaAuditoria(1, Me.name, 10, "De: Dt:" & Format(MovimentoBomba.Data, "dd/mm/yyyy") & " Per:" & MovimentoBomba.Periodo & " SubCaixa:" & MovimentoBomba.SubCaixa & " Bico:" & MovimentoBomba.CodigoBomba & " Abert:" & MovimentoBomba.Abertura & " Abert:" & MovimentoBomba.Encerrante)
-                Call GravaAuditoria(1, Me.name, 10, "Para: Dt:" & txtData.Text & " Per:" & Val(cbo_periodo.Text) & " SubCaixa:" & txtNumeroSubCaixa.Text & " Bico:" & Val(cbo_bomba.Text) & " Abert:" & txtAbertura.Text & " Abert:" & txtEncerrante.Text)
+                Call GravaAuditoria(1, Me.name, 10, "De: Dt:" & Format(MovimentoBomba.Data, "dd/mm/yyyy") & " P:" & MovimentoBomba.Periodo & " SubCx:" & MovimentoBomba.SubCaixa & " B:" & MovimentoBomba.CodigoBomba & " Abe:" & MovimentoBomba.Abertura & " Enc:" & MovimentoBomba.Encerrante)
+                Call GravaAuditoria(1, Me.name, 10, "Para: Dt:" & txtData.Text & " P:" & Val(cbo_periodo.Text) & " SubCx:" & txtNumeroSubCaixa.Text & " B:" & Val(cbo_bomba.Text) & " Abe:" & txtAbertura.Text & " Enc:" & txtEncerrante.Text)
                 Call ExcluiSaidaBomba(lTipoCombustivel, lQuantidade)
                 AtualTabe
                 If MovimentoBomba.Alterar(g_empresa, lData, lPeriodo, lBomba, lNumeroSubCaixa) Then
