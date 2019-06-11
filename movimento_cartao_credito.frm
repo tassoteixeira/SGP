@@ -835,7 +835,24 @@ Private Sub cmd_ok_Click()
                 AtualizaTabela
                 Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtDataVencimento.Text & " Per:" & cbo_periodo.Text & " N.Mov:" & lbl_numero_lancamento.Caption & " Vlr:" & txtValor.Text & " Cod.Cart:" & txt_cartao.Text)
 'ver aqui
+                Dim xNumeroLancamentoAtual As Integer
+                xNumeroLancamentoAtual = MovCartaoCredito.NumeroLancamento
+                
+                MovCartaoCredito.NumeroLancamento = MovCartaoCredito.ProximoRegistro(g_empresa, CDate(txtDataEmissao.Text))
+                lbl_numero_lancamento.Caption = MovCartaoCredito.NumeroLancamento
+                
                 If MovCartaoCredito.Incluir Then
+                    
+                    If xNumeroLancamentoAtual <> MovCartaoCredito.NumeroLancamento Then
+                        Dim xDadosInternoAtual As String
+                        xDadosInternoAtual = MovimentoCaixaPista.DadosInterno
+                        MovimentoCaixaPista.DadosInterno = "CAR" & Format(Val(txt_cartao.Text), "00") & "|@|" & MovCartaoCredito.NumeroLancamento & "|@|"
+                        If Not MovimentoCaixaPista.DefineDadosInternoMovimentoCaixaDoCartao(g_empresa, CDate(txtDataEmissao.Text), CInt(cbo_periodo.Text), MovCartaoCredito.NumeroMovimentoCaixa, xDadosInternoAtual) Then
+                            MsgBox "Não foi possível alterar dados integração com o Caixa!", vbInformation, "Erro de Integridade."
+                            Call CriaLogSGP("[cmd_ok_Click] - MovimentoCaixaPista.DefineDadosInternoMovimentoCaixaDoCartao", "Não foi possível alterar dados integração com o Caixa", "")
+                        End If
+                    End If
+                    
                     lData = MovCartaoCredito.DataEmissao
                     lPeriodo = MovCartaoCredito.Periodo
                     lOrdem = MovCartaoCredito.NumeroLancamento
@@ -1265,10 +1282,10 @@ Private Sub txt_cartao_LostFocus()
     End If
 End Sub
 Private Sub PreencheCboCartao()
-    Dim rsCartao As adodb.Recordset
+    Dim rsCartao As ADODB.Recordset
     Dim xSQL As String
     
-    Set rsCartao = New adodb.Recordset
+    Set rsCartao = New ADODB.Recordset
     xSQL = "SELECT Codigo, Nome FROM Cartao_Credito ORDER BY Nome"
     Set rsCartao = Conectar.RsConexao(xSQL)
     cboCartao.Clear
@@ -1321,8 +1338,8 @@ Private Sub txt_numero_cartao_KeyPress(KeyAscii As Integer)
     Call ValidaInteiro(KeyAscii)
 End Sub
 Private Sub zzLancaCartaoPelaComposicao()
-    Dim rsComposicaoCaixa As New adodb.Recordset
-    Dim rsMovimentoComposicaoCaixa As New adodb.Recordset
+    Dim rsComposicaoCaixa As New ADODB.Recordset
+    Dim rsMovimentoComposicaoCaixa As New ADODB.Recordset
     Dim xSQL As String
     'Prepara SQL
     xSQL = ""
@@ -1330,7 +1347,7 @@ Private Sub zzLancaCartaoPelaComposicao()
     xSQL = xSQL & "  FROM Composicao_Caixa"
     xSQL = xSQL & " WHERE MID(Configuracao,1,3) = " & Chr(39) & "CAR" & Chr(39)
     'Abre RecordSet
-    Set rsComposicaoCaixa = New adodb.Recordset
+    Set rsComposicaoCaixa = New ADODB.Recordset
     Set rsComposicaoCaixa = Conectar.RsConexao(xSQL)
     'Verifica Composicao_Caixa
     If rsComposicaoCaixa.RecordCount > 0 Then
@@ -1347,7 +1364,7 @@ Private Sub zzLancaCartaoPelaComposicao()
             xSQL = xSQL & "   AND Data >= #06/01/2004#"
             xSQL = xSQL & "   AND Data <= #12/31/2004#"
             'Abre RecordSet
-            Set rsMovimentoComposicaoCaixa = New adodb.Recordset
+            Set rsMovimentoComposicaoCaixa = New ADODB.Recordset
             Set rsMovimentoComposicaoCaixa = Conectar.RsConexao(xSQL)
         
             If rsMovimentoComposicaoCaixa.RecordCount > 0 Then

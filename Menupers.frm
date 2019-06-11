@@ -257,7 +257,7 @@ Dim lForm As Form
 Dim lEmpresaAtualPetromovel As Integer
 
 
-Private RstMenu As adodb.Recordset
+Private RstMenu As ADODB.Recordset
 
 Private Configuracao As New cConfiguracao
 Private ConfiguracaoDiversa As New cConfiguracaoDiversa
@@ -309,7 +309,7 @@ End Sub
 Private Sub BuscaDadosGIC()
     Dim xStringConexao As String
     Dim xIpBanco As String
-    Dim rsTabela As New adodb.Recordset
+    Dim rsTabela As New ADODB.Recordset
     Dim xSQL As String
     Dim xCodigoFuncionario As Integer
     Dim xNomeUsuario As String
@@ -326,7 +326,7 @@ Private Sub BuscaDadosGIC()
         xIpBanco = "tasso.myvnc.com" & gPortaBanco
     End If
     xStringConexao = "PROVIDER=SQLOLEDB.1;DATA SOURCE=" & xIpBanco & ";INITIAL CATALOG=" & "CerradoData" & ";USER ID=sa;PASSWORD=" & gSenhaBD & ";"
-    Set gConnGic = New adodb.Connection
+    Set gConnGic = New ADODB.Connection
     gConnGic.ConnectionString = xStringConexao
     gConnGic.Open
     
@@ -348,7 +348,7 @@ Private Sub BuscaDadosGIC()
     xSQL = xSQL & " WHERE Empresa = " & g_empresa
     xSQL = xSQL & "   AND [Codigo do Usuario] = " & g_usuario
     xSQL = xSQL & "   AND Situacao = " & preparaTexto("A")
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     rsTabela.Open xSQL, Conectar.Conexao, adOpenForwardOnly, adLockReadOnly
     If Not rsTabela.EOF Then
         
@@ -373,7 +373,7 @@ Private Sub BuscaDadosGIC()
         xSQL = xSQL & "SELECT [Empresa do Grupo]"
         xSQL = xSQL & "  FROM Empresa"
         xSQL = xSQL & " WHERE [Codigo Global] = " & gEmpresaGlobal
-        Set rsTabela = New adodb.Recordset
+        Set rsTabela = New ADODB.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             xCodigoGrupoEmpresa = rsTabela("Empresa do Grupo").Value
@@ -391,7 +391,7 @@ Private Sub BuscaDadosGIC()
         If gEmpresaGlobal = 7 Then
             xSQL = xSQL & "   AND [Empresa Global] = " & 7
         End If
-        Set rsTabela = New adodb.Recordset
+        Set rsTabela = New ADODB.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             gUsuarioGlobal = rsTabela("Codigo Global").Value
@@ -407,7 +407,7 @@ Private Sub BuscaDadosGIC()
         xSQL = xSQL & "   AND [Codigo do Destinatario Global] = " & gUsuarioGlobal
         xSQL = xSQL & "   AND Concluida = " & preparaBooleano(False)
         xSQL = xSQL & "   AND Cancelada = " & preparaBooleano(False)
-        Set rsTabela = New adodb.Recordset
+        Set rsTabela = New ADODB.Recordset
         rsTabela.Open xSQL, gConnGic, adOpenForwardOnly, adLockReadOnly
         If Not rsTabela.EOF Then
             If rsTabela("Quantidade").Value = 1 Then
@@ -1212,6 +1212,16 @@ Private Sub ClickMenu(ByVal x_tipo As String, ByVal xNomeMenu As String)
         Else
             MsgBox "Programa não encontrado!"
         End If
+    ElseIf xNomeInterno = "ManutencaoAbastecimento" Then
+      Dim xRetorno3 As String
+      Dim xCaminho3 As String
+         
+        xCaminho3 = "C:\Cerrado Tecnologia\Petromovel\Petromovel.exe"
+        If gArqTxt.FileExists(xCaminho3) Then
+            xRetorno2 = Shell(xCaminho3 & " " & g_empresa & " " & Replace(g_nome_empresa, " ", "_") & " " & g_usuario & " " & Replace(g_nome_usuario, " ", "_") & " " & g_nivel_acesso & " " & Replace(gDrive, ":", "") & " " & gIpBanco & " " & Replace(gPortaBanco, ",", "") & " " & gNomeInternoBD & " " & gSenhaBD & " " & gCNPJEmpresa & " " & Empresa.Cidade & " " & "frmManutencaoAbastecimento", vbNormalFocus)
+        Else
+            MsgBox "Programa não encontrado!"
+        End If
     Else
         Call Chama(xNomeInterno)
     End If
@@ -1833,7 +1843,7 @@ Private Sub MontaMenu()
     lSQL = lSQL & " ORDER BY Tipo, Menu"
     
     'Abre RecordSet
-    Set RstMenu = New adodb.Recordset
+    Set RstMenu = New ADODB.Recordset
     Set RstMenu = Conectar.RsConexao(lSQL)
     
     Do Until RstMenu.EOF
@@ -2402,7 +2412,7 @@ Private Sub Form_Load()
     'Sub-Versao Mes   = 01
     'Sub-versao Dia   = 22
     'Correcao do dia  = a
-    gVersaoSGP = "19.05.22a"
+    gVersaoSGP = "19.06.10a"
 
     gTipoAmbienteNFCe = ""
     Me.Caption = "Sistema Gerênciador de Postos de Combustíveis - Versão " & gVersaoSGP

@@ -3456,8 +3456,8 @@ Private MovSolicitacaoFuncaoNFe As New cMovSolicitacaoFuncaoNFe
 Private lUtilizaPrecoAPrazo As Boolean
  
 
-Dim rstAbastecimento As New adodb.Recordset
-Dim rsTabela As New adodb.Recordset
+Dim rstAbastecimento As New ADODB.Recordset
+Dim rsTabela As New ADODB.Recordset
 
 
 Dim lAutomacaoFlag As Integer
@@ -3487,8 +3487,8 @@ Dim lNomeArquivo As String
 Dim lLocalImpressao As Integer
 Dim lLinha As String
 
-Dim rst As New adodb.Recordset
-Dim rst2  As New adodb.Recordset
+Dim rst As New ADODB.Recordset
+Dim rst2  As New ADODB.Recordset
 
 '--- CRIADO PARA NFCE ---
 Const CODIGO_FISCAL_SUBSTITUICAO As String = "FF"
@@ -3522,7 +3522,7 @@ Private Enum GERADOR_NFCE
     CERRADO
 End Enum
 Private Sub CalculaTotalDescontoAcrescimo(ByVal pData As Date, ByVal pPeriodo As Integer, ByVal pTipoCombustivel As String, pBico As Integer, ByVal pNumeroSubCaixa As Integer)
-    Dim rs As New adodb.Recordset
+    Dim rs As New ADODB.Recordset
     
     On Error GoTo trata_erro
 
@@ -3712,7 +3712,7 @@ End Sub
 Private Function CancelamentoCupomFiscal() As Boolean
     Dim NumeroArquivo As Integer
     Dim x_excluiu As Boolean
-    Dim rs As New adodb.Recordset
+    Dim rs As New ADODB.Recordset
     
     On Error GoTo FileError
     
@@ -5069,8 +5069,8 @@ Private Sub ImprimeResumoVendas()
     Dim x_linha As Integer
     Dim i As Integer
     Dim xSQL As String
-    Dim rsProduto As New adodb.Recordset
-    Dim rsMovCupomFiscal As New adodb.Recordset
+    Dim rsProduto As New ADODB.Recordset
+    Dim rsMovCupomFiscal As New ADODB.Recordset
     
     On Error GoTo FileError
     x_linha = 0
@@ -5084,7 +5084,7 @@ Private Sub ImprimeResumoVendas()
     xSQL = xSQL & "     FROM Produto"
     xSQL = xSQL & " ORDER BY Nome ASC"
     'Abre RecordSet
-    Set rsProduto = New adodb.Recordset
+    Set rsProduto = New ADODB.Recordset
     Set rsProduto = Conectar.RsConexao(xSQL)
     
     
@@ -5098,7 +5098,7 @@ Private Sub ImprimeResumoVendas()
             xSQL = xSQL & "    WHERE [Codigo do Produto] = " & rsProduto("Codigo").Value
             xSQL = xSQL & "      AND Data = " & preparaData(CDate(g_data_def))
             'Abre RecordSet
-            Set rsMovCupomFiscal = New adodb.Recordset
+            Set rsMovCupomFiscal = New ADODB.Recordset
             Set rsMovCupomFiscal = Conectar.RsConexao(xSQL)
             If rsMovCupomFiscal.RecordCount > 0 Then
                 rsMovCupomFiscal.MoveFirst
@@ -5528,7 +5528,7 @@ Private Sub AguardaProcessamentoNFCe(ByVal pNSU As Long)
 End Sub
 Private Function LoopEstornaVendaProdutoNFCeAtual() As Boolean
      LoopEstornaVendaProdutoNFCeAtual = False
-     Dim xRsDadosParaNFCe As New adodb.Recordset
+     Dim xRsDadosParaNFCe As New ADODB.Recordset
     
   On Error GoTo TrataError
 
@@ -5856,63 +5856,106 @@ FileError:
 End Sub
 Private Sub AtualizaTabelaCartaoCredito()
     Dim xDataVencimento As Date
+    Dim xLocalErro As Integer
+    
+    Const TAMANHO_MAXIMO_NSU As Integer = 10
     
     On Error GoTo trata_erro
     
+    xLocalErro = 0
     Call PreparaTipoMovimento(Produto.CodigoGrupo)
+    
+    xLocalErro = 1
     'lNumeroLancamentoCartao = MovCartaoCredito.ProximoRegistro(g_empresa, MovCupomFiscal.Data, CStr(MovCupomFiscal.Periodo))
     lNumeroLancamentoCartao = MovCartaoCredito.ProximoRegistro(g_empresa, MovCupomFiscal.Data)
+    xLocalErro = 2
     If Not IntegracaoCaixa.LocalizarNome(g_empresa, "CARTAO " & CartaoCredito.Nome) Then
         MsgBox "Não será possível integrar com o caixa!", vbInformation, "Erro de Integridade"
     Else
+        xLocalErro = 3
+
         If IncluiMovimentoCaixa(MovCupomFiscal.Data, MovCupomFiscal.Periodo, False, "CartaoCredito", 0, "", "") Then
+            xLocalErro = 4
             'Le taxa adm do cartao
             If Not TaxaAdmCartaoCredito.LocalizarCodigo(g_empresa, CartaoCredito.Codigo) Then
                 TaxaAdmCartaoCredito.TaxaCusto = CartaoCredito.TaxaCusto
                 MsgBox "Taxa de Adm de Cartão de crédito não cadastrada.", vbInformation, "Erro de Integridade!"
             End If
+            xLocalErro = 5
             xDataVencimento = CDate(MovCupomFiscal.Data + CartaoCredito.DiasPrazo)
+            xLocalErro = 6
             MovCartaoCredito.Empresa = g_empresa
+            xLocalErro = 7
             MovCartaoCredito.DataEmissao = MovCupomFiscal.Data
+            xLocalErro = 8
             MovCartaoCredito.Periodo = MovCupomFiscal.Periodo
+            xLocalErro = 9
             MovCartaoCredito.TipoMovimento = MovCupomFiscal.TipoMovimento
+            xLocalErro = 10
             MovCartaoCredito.NumeroLancamento = lNumeroLancamentoCartao
+            xLocalErro = 11
             MovCartaoCredito.CodigoCartao = lCodigoCartao
+            xLocalErro = 12
             If lCartaoDataVencimento = "00:00:00" Then
                 MovCartaoCredito.DataVencimento = Format(xDataVencimento, "dd/mm/yyyy")
+                xLocalErro = 13
             Else
                 MovCartaoCredito.DataVencimento = CDate(lCartaoDataVencimento)
+                xLocalErro = 14
             End If
             MovCartaoCredito.Valor = lValorTotalUltimoCupom
+            xLocalErro = 15
             MovCartaoCredito.NumeroCartao = "1"
+            xLocalErro = 16
             'MovCartaoCredito.Nome = "E.C.F. " & Format(MovCupomFiscal.NumeroCupom, "###,##0")
             MovCartaoCredito.Nome = "NFCe-TEF " & Format(MovCupomFiscal.NumeroCupom, "###,##0")
+            xLocalErro = 17
             MovCartaoCredito.NumeroMovimentoCaixa = MovCaixaPista.NumeroMovimento
+            xLocalErro = 18
             MovCartaoCredito.TaxaAdministrativa = TaxaAdmCartaoCredito.TaxaCusto
+            xLocalErro = 19
             MovCartaoCredito.NumeroIlha = lIlha
+            xLocalErro = 20
             If Len(lCartaoAutorizacao) > 0 Then
                 MovCartaoCredito.Autorizacao = lCartaoAutorizacao
+                xLocalErro = 21
             Else
                 MovCartaoCredito.Autorizacao = ""
+                xLocalErro = 22
             End If
             If Val(lCartaoNSU) > 0 Then
-                MovCartaoCredito.NSU = CLng(lCartaoNSU)
+                If Len(lCartaoNSU) >= TAMANHO_MAXIMO_NSU Then
+                    MovCartaoCredito.NSU = Mid(lCartaoNSU, 6, Len(lCartaoNSU))
+                    xLocalErro = 23
+                Else
+                    MovCartaoCredito.NSU = lCartaoNSU 'CLng(lCartaoNSU)
+                    xLocalErro = 24
+                End If
             Else
                 MovCartaoCredito.NSU = ""
+                xLocalErro = 25
             End If
             MovCartaoCredito.CodigoFuncionario = l_codigo_funcionario
+            xLocalErro = 26
             
             If Not MovCartaoCredito.Incluir Then
                 MsgBox "Não foi possível incluir Cartão de Crédito", vbInformation, "Erro de Integridade!"
+                xLocalErro = 27
+            Else
+                Call CriaLogCupom("AtualizaTabelaCartaoCredito: MOVIMENTO GRAVADO OK -  MovCartaoCredito.NSU =" & MovCartaoCredito.NSU)
+                xLocalErro = 28
             End If
         Else
             MsgBox "Não foi possível integrar no caixa!", vbInformation, "Erro de Integridade!"
+            xLocalErro = 29
         End If
     End If
+     xLocalErro = 30
     Exit Sub
 
 trata_erro:
-    Call CriaLogCupom("Erro AtualizaTabelaCartaoCredito: Erro=" & Err.Number & " - " & Err.Description)
+    Call CriaLogCupom("Erro AtualizaTabelaCartaoCredito: Erro=" & Err.Number & " - " & Err.Description & "- xLocalErro =" & xLocalErro)
+    MsgBox "Erro ao tentar gravar movimento de cartão", vbCritical, "Erro de Integridade!"
 End Sub
 Private Function AtualizaTabelaSolicitacaoAutomacao(ByVal pTipoOperacao As String, ByVal pTexto As String) As Boolean
     Dim i As Integer
@@ -7025,7 +7068,7 @@ End Function
 Private Sub SelecionaVeiculoCliente(ByVal pCodigoCliente As Long)
     Dim xString As String
     Dim i As Integer
-    Dim rs As New adodb.Recordset
+    Dim rs As New ADODB.Recordset
     
     If VeiculoCliente.ClienteTemVeiculo(pCodigoCliente) Then
         lSQL = "SELECT [Codigo do Veiculo], Nome, Cor, Ano, [Placa Letra], [Placa Numero] FROM VeiculoCliente WHERE [Codigo do Cliente] = " & pCodigoCliente & " ORDER BY Nome"
@@ -7594,7 +7637,7 @@ End Function
 'OBTEM DADOS DO CUPOM GRAVADO PARA GERAÇÃO DA NFCE
 '
 Private Sub EnviaDadosParaNFCe(pNumeroCupom As Long, pDataCupom As Date)
-    Dim rsDadosParaNFCe As New adodb.Recordset
+    Dim rsDadosParaNFCe As New ADODB.Recordset
     Dim xTipoServico As String
     Dim xTextoSolicitacao As String
     Dim xRealizarImpressao As String
@@ -7772,7 +7815,7 @@ End Sub
 
 Private Function GeraSolicitacaoImpressaoNFCE(ByVal pChaveNFCE As String, ByVal pNumeroDaNota As Long, ByVal pNumeroLote As String) As Boolean
 
-    Dim rsDadosSolicitacao As New adodb.Recordset
+    Dim rsDadosSolicitacao As New ADODB.Recordset
     
     GeraSolicitacaoImpressaoNFCE = False
     
@@ -7781,10 +7824,10 @@ Private Function GeraSolicitacaoImpressaoNFCE(ByVal pChaveNFCE As String, ByVal 
 
 End Function
 'HOJE-ALEX
-Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pIdEstabelecimento As Integer) As adodb.Recordset
+Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pIdEstabelecimento As Integer) As ADODB.Recordset
     On Error GoTo trata_erro
     
-    Dim rsDadosSolicitacao As New adodb.Recordset
+    Dim rsDadosSolicitacao As New ADODB.Recordset
     
     Dim xSQL As String
     
@@ -7795,7 +7838,7 @@ Private Function ObtenhaDadosSolicitacaoNFCeEmitida(ByVal pNSU As Long, ByVal pI
     xSQL = xSQL & " AND CodigoEstabelecimento_MovSolicitacaoFuncaoNFe = " & pIdEstabelecimento
     
     'Abre RecordSet
-    Set rsDadosSolicitacao = New adodb.Recordset
+    Set rsDadosSolicitacao = New ADODB.Recordset
     Set rsDadosSolicitacao = Conectar.RsConexao(xSQL)
 
 Set ObtenhaDadosSolicitacaoNFCeEmitida = rsDadosSolicitacao
@@ -7812,9 +7855,9 @@ trata_erro:
 
 End Function
 'INUTILIZAR
-Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDataCupom As Date) As adodb.Recordset
+Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDataCupom As Date) As ADODB.Recordset
 
-    Dim rsDadosParaNFCe As New adodb.Recordset
+    Dim rsDadosParaNFCe As New ADODB.Recordset
     
     Dim i As Integer
     Dim xSQL As String
@@ -7866,7 +7909,7 @@ Private Function ObtenhaDadosParaNFCE_OLD(ByVal pNumeroCupom As Long, ByVal pDat
     xSQL = xSQL & " ORDER BY Movimento_Cupom_Fiscal.Ordem"
 
     'Abre RecordSet
-    Set rsDadosParaNFCe = New adodb.Recordset
+    Set rsDadosParaNFCe = New ADODB.Recordset
     Set rsDadosParaNFCe = Conectar.RsConexao(xSQL)
     
     
@@ -7887,9 +7930,9 @@ Private Sub CancelarFinalizacaoNFCe()
     frmDados.Enabled = True
     NovoCupom
 End Sub
-Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Long, ByVal pDataEmissao As Date) As adodb.Recordset
+Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Long, ByVal pDataEmissao As Date) As ADODB.Recordset
 
-    Dim rsDadosParaNFCe As New adodb.Recordset
+    Dim rsDadosParaNFCe As New ADODB.Recordset
     
     Dim i As Integer
     Dim xSQL As String
@@ -7965,7 +8008,7 @@ Private Function ObtenhaDadosParaNFCEDocumentoEletronico(ByVal pNumeroNFCe As Lo
     
 
     'Abre RecordSet
-    Set rsDadosParaNFCe = New adodb.Recordset
+    Set rsDadosParaNFCe = New ADODB.Recordset
     Set rsDadosParaNFCe = Conectar.RsConexao(xSQL)
     CriaLogCupom ("[ObtenhaDadosParaNFCEDocumentoEletronico] - " & xSQL)
     
@@ -8214,7 +8257,7 @@ Private Sub ZZTotalizaCupomAbertoNoBanco()
     Dim xData As Date
     Dim xOrdem As Integer
     Dim xValor As Currency
-    Dim rstMovCupomFiscal As adodb.Recordset
+    Dim rstMovCupomFiscal As ADODB.Recordset
     Dim xSQL As String
     
     xSQL = "SELECT [Codigo da Ecf], Data, [Numero do Cupom], Quantidade, [Valor Total]"
@@ -8462,7 +8505,7 @@ Private Sub PreencheDicionarioCSTPisCofins()
     If CSTPisValidos.Count > 0 And CSTCofinsValidos.Count > 0 Then Exit Sub
 
 
-    Dim rs As New adodb.Recordset
+    Dim rs As New ADODB.Recordset
 
 
         lSQL = "SELECT CstCofins_TributacaoPisCofins, CstPis_TributacaoPisCofins, AliquotaCofins_TributacaoPisCofins, AliquotaPis_TributacaoPisCofins "
@@ -8560,7 +8603,7 @@ End Sub
 
 
 Private Sub PreencheCboTipoSubEstoque()
-    Dim rstTipoSubEstoque As adodb.Recordset
+    Dim rstTipoSubEstoque As ADODB.Recordset
     
     cboTipoSubEstoque.Clear
     Set rstTipoSubEstoque = Conectar.RsConexao("SELECT Codigo, Nome FROM TipoSubEstoque WHERE Codigo > 1 ORDER BY Codigo")
@@ -8656,7 +8699,7 @@ Private Sub PreparaDadosAdicionaisFechamento()
     'frm_fechamento_cupom.Width = 5800
 End Sub
 Private Function PreparaDadosProdutos() As String
-    Dim rsProdutosECF As adodb.Recordset
+    Dim rsProdutosECF As ADODB.Recordset
     Dim xSQL As String
     Dim xString As String
     
@@ -8910,7 +8953,7 @@ Private Function MontaTextoInformacoesComplementaresNFCe() As String
     MontaTextoInformacoesComplementaresNFCe = xTextoInformacoesComplementares
 
 End Function
-Private Function MontaTextoItensSolicitacaoNFCE(ByVal pRsDadosParaNFCe As adodb.Recordset) As String
+Private Function MontaTextoItensSolicitacaoNFCE(ByVal pRsDadosParaNFCe As ADODB.Recordset) As String
 
     MontaTextoItensSolicitacaoNFCE = Empty
     Dim xOrdem As Integer
@@ -9376,7 +9419,7 @@ Private Function RetornaValorImpostoProdutoNFCE(ByVal pValorBaseCalculo As Curre
 
 End Function
 
-Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As adodb.Recordset, ByVal pTipoServico As String) As String
+Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As ADODB.Recordset, ByVal pTipoServico As String) As String
 
     MontaTextoCabecalhoSolicitacaoNFCE = Empty
     
@@ -10268,7 +10311,7 @@ End Sub
 
 Private Sub AtualizaBaseCalculoICMSCabecalho()
 
-Dim ResultadoCalculo As New adodb.Recordset
+Dim ResultadoCalculo As New ADODB.Recordset
 
 
     lSQL = "SELECT DataEmissao_MovDEItem, Modelo_MovDEItem, Serie_MovDEItem, Numero_MovDEItem,"
@@ -10342,7 +10385,7 @@ Private Sub cmd_abastecimentos_nao_recebidos_Click()
     LimpaMSFlexGrid
     'Abre RecordSet
     xFaseErro = 3
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(xSQL)
     'Verifica movimento
     i = 0
@@ -10770,7 +10813,7 @@ End Function
 Private Sub IncluiNotaAbastecimento()
 On Error GoTo trata_erro
     
-    Dim rsMovCupomFiscal As New adodb.Recordset
+    Dim rsMovCupomFiscal As New ADODB.Recordset
     
     If Cliente.GeraNotaAbastecimento Then
         lSQL = ""
@@ -11367,6 +11410,8 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                         xNomeAdm = "CIELO"
                     ElseIf xString Like "*REDECARD*" Then
                         xNomeAdm = "REDECARD"
+                    ElseIf xString Like "*SAFRAPAY*" Then
+                        xNomeAdm = "SAFRAPAY"
                     End If
                 ElseIf xNomeAdm = "REDECARD" Then
                     If UCase(xString) Like "*DEBITO*" Then
@@ -11374,7 +11419,6 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                     ElseIf UCase(xString) Like "*CREDITO*" Then
                         xOperacao = "CREDITO"
                     End If
-                    
                 End If
                 'Detecta a Bandeira
                 If xNomeBandeira = "" Then
@@ -11383,9 +11427,42 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                         xNomeBandeira = "VISA DEBITO"
                         xOperacao = "DEBITO"
                         Exit Do
+                    ElseIf xString Like "*MASTER*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeiraLido = "MASTERCARD"
+                        xNomeBandeira = "MASTERCARD"
+                        xOperacao = "CREDITO"
+                        Exit Do
+                    ElseIf xString Like "*MAESTRO*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeiraLido = "MAESTRO"
+                        xNomeBandeira = "MAESTRO"
+                        xOperacao = "DEBITO"
+                        Exit Do
+                    ElseIf xString Like "*VISADEB*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeira = "VISA DEBITO"
+                        xOperacao = "DEBITO"
+                        Exit Do
+                    ElseIf xString Like "*VISACRE*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeira = "VISA CREDITO"
+                        xOperacao = "CREDITO"
+                        Exit Do
+                    ElseIf xString Like "*ELO DEB*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeiraLido = "ELO"
+                        xNomeBandeira = "ELO DEBITO"
+                        xOperacao = "DEBITO"
+                        Exit Do
+                    ElseIf xString Like "*ELO CRE*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeiraLido = "ELO"
+                        xNomeBandeira = "ELO CREDITO"
+                        xOperacao = "CREDITO"
+                        Exit Do
+                    ElseIf xString Like "*ELOCRE*" And xNomeAdm = "SAFRAPAY" Then
+                        xNomeBandeiraLido = "ELO"
+                        xNomeBandeira = "ELO DEBITO"
+                        xOperacao = "DEBITO"
+                        Exit Do
 ' MAESTRO CRIADO por tasso em 03/03/2017 pra resolver problema no VILA ALZIRA
                     ElseIf xString Like "*MAESTRO*" Then
-                        xNomeBandeira = "REDECARD"
+                        xNomeBandeira = "MAESTRO"
                         xOperacao = "DEBITO"
                         Exit Do
                     ElseIf xString Like "*FLEX CAR VISA VALE*" Then
@@ -13479,6 +13556,9 @@ Private Sub DefineCartaoTefParaNFCe()
     
     'Define a INTEGRADORA
     lNFCe_CNPJCartao = DefineNFCe_CNPJCartao(xNomeBandeira)
+    
+    Call CriaLogCupom("DefineCartaoTefParaNFCe - DEU CERTO OK - xNomeBandeira=" & xNomeBandeira & " - lNFCe_vPag=" & lNFCe_vPag & " - lNFCe_TpIntegra=" & lNFCe_TpIntegra & " - lNFCe_CNPJCartao=" & lNFCe_CNPJCartao & " - lNFCe_tBand=" & lNFCe_tBand)
+
 End Sub
 Private Function DefineNFCe_tBand(ByVal pNomeBandeira As String) As String
     DefineNFCe_tBand = "99"
@@ -13805,8 +13885,8 @@ Private Sub Form_Activate()
 'MsgBox "Activate Finalizado"
 
 
-'    'Codigo abaixo pra debugar cartao nao integrado.
-'    'Precisa do arquivo de retorno estar na pasta c:\vb5\sgp\data\teste.txt
+    'Codigo abaixo pra debugar cartao nao integrado.
+    'Precisa do arquivo de retorno estar na pasta c:\vb5\sgp\data\teste.txt
 '    MsgBox "VERSAO PRA DEBUG"
 '    If IntegraCartaoCreditoNoCaixa Then
 '        DefineCartaoTefParaNFCe

@@ -542,6 +542,28 @@ On Error GoTo TrataErro
 
 TrataErro:
 End Function
+Public Function DefineDadosInternoMovimentoCaixaDoCartao(ByVal pEmpresa As Integer, ByVal pData As Date, ByVal pPeriodo As Integer, ByVal pNumeroMovimento As Integer, ByVal pAntigoDadosInterno As String) As Boolean
+Dim lRecordsAffected As Long
+
+On Error GoTo TrataErro
+
+    DefineDadosInternoMovimentoCaixaDoCartao = False
+    
+    gSQL = "UPDATE MovimentoCaixaPista SET "
+    Call sqlTexto(2, " [Dados Interno] = ", Me.DadosInterno)
+    gSQL = gSQL & " WHERE Empresa = " & pEmpresa
+    gSQL = gSQL & " AND Data = " & preparaData(pData)
+    gSQL = gSQL & " AND Periodo = " & pPeriodo
+    gSQL = gSQL & " AND [Numero do Movimento] = " & pNumeroMovimento
+    gSQL = gSQL & " AND [Dados Interno] = " & preparaTexto(pAntigoDadosInterno)
+    gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
+    If lRecordsAffected > 0 Then
+        DefineDadosInternoMovimentoCaixaDoCartao = True
+    End If
+    Exit Function
+
+TrataErro:
+End Function
 
 
 Public Function Excluir(ByVal pEmpresa As Integer, ByVal pData As Date, ByVal pNumeroMovimento As Integer) As Boolean
