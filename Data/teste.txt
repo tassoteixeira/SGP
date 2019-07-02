@@ -16,7 +16,7 @@
 028-000 = 16
 029-001 = "              REDECARD"
 029-002 = "   "
-029-003 = "                ELO"
+029-003 = "                CREDSYSTEM"
 029-004 = "   "
 029-005 = "AUTO POSTO IGUALDADE LT"
 029-006 = "R 49 000000            "
@@ -31,7 +31,7 @@
 029-015 = "FINAL:                      R$ 50,04"
 029-016 = "AUTORIZADA MEDIANTE SENHA PESSOAL"
 030-000 = TRANSACAO APROVADA
-040-000 = ELO
+040-000 = CREDSYSTEM
 710-000 = 4
 711-001 = "REDECARD                         ELO"
 711-002 = "************3306       TERM:DK077731"

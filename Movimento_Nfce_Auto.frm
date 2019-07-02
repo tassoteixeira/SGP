@@ -16,143 +16,6 @@ Begin VB.Form Movimento_Nfce_Auto
    Picture         =   "Movimento_Nfce_Auto.frx":27A2
    ScaleHeight     =   9990
    ScaleWidth      =   13785
-   Begin VB.CommandButton btnAbortaNFCe 
-      Caption         =   "Aborta NFCe (F9)"
-      Height          =   495
-      Left            =   12120
-      TabIndex        =   158
-      Top             =   9000
-      Width           =   1575
-   End
-   Begin VB.Timer TimerAguarde 
-      Enabled         =   0   'False
-      Left            =   3360
-      Top             =   9600
-   End
-   Begin VB.Frame frameAguarde 
-      Caption         =   "Aguarde..."
-      Height          =   4695
-      Left            =   8640
-      TabIndex        =   154
-      Top             =   840
-      Visible         =   0   'False
-      Width           =   4155
-      Begin VB.Label lblTituloAguarde 
-         Alignment       =   2  'Center
-         Caption         =   "lblTituloAguarde"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   13.5
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H00FF0000&
-         Height          =   615
-         Left            =   120
-         TabIndex        =   157
-         Top             =   1080
-         Width           =   3975
-      End
-      Begin VB.Label lblMensagemAguarde 
-         Alignment       =   2  'Center
-         Caption         =   "lblMensagemAguarde"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   9.75
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H00FF0000&
-         Height          =   615
-         Left            =   240
-         TabIndex        =   156
-         Top             =   3000
-         Width           =   4035
-      End
-      Begin VB.Label lblContadorAguarde 
-         Alignment       =   2  'Center
-         Caption         =   "lblContadorAguarde"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   13.5
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H000000C0&
-         Height          =   615
-         Left            =   840
-         TabIndex        =   155
-         Top             =   1920
-         Visible         =   0   'False
-         Width           =   1575
-      End
-   End
-   Begin VB.Timer TimerIdentFid 
-      Enabled         =   0   'False
-      Left            =   2580
-      Top             =   9540
-   End
-   Begin MSCommLib.MSComm MSCommIdentFid 
-      Left            =   1860
-      Top             =   9420
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-      DTREnable       =   -1  'True
-   End
-   Begin VB.CommandButton cmdIniciaProcessoFinalizacaoNFCe 
-      Caption         =   "&Finaliza NFCe (F10)"
-      Height          =   495
-      Left            =   7920
-      TabIndex        =   83
-      ToolTipText     =   "Inicia processo de fechamento da NFCe"
-      Top             =   9000
-      Width           =   2175
-   End
-   Begin VB.Timer TimerAutomacao 
-      Enabled         =   0   'False
-      Interval        =   100
-      Left            =   1200
-      Top             =   9480
-   End
-   Begin VB.Timer Timer2 
-      Interval        =   30
-      Left            =   720
-      Top             =   9480
-   End
-   Begin RichTextLib.RichTextBox txt_cupom_fiscal 
-      Height          =   8835
-      Left            =   7920
-      TabIndex        =   84
-      Top             =   60
-      Width           =   5835
-      _ExtentX        =   10292
-      _ExtentY        =   15584
-      _Version        =   393217
-      BackColor       =   16777215
-      Enabled         =   -1  'True
-      ReadOnly        =   -1  'True
-      ScrollBars      =   3
-      TextRTF         =   $"Movimento_Nfce_Auto.frx":2BE8
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Courier New"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-   End
    Begin VB.Frame frmDados 
       Height          =   9555
       Left            =   30
@@ -173,7 +36,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   47
          Left            =   1800
-         Picture         =   "Movimento_Nfce_Auto.frx":2C68
+         Picture         =   "Movimento_Nfce_Auto.frx":2BE8
          Style           =   1  'Graphical
          TabIndex        =   190
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -194,7 +57,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   46
          Left            =   960
-         Picture         =   "Movimento_Nfce_Auto.frx":516A
+         Picture         =   "Movimento_Nfce_Auto.frx":50EA
          Style           =   1  'Graphical
          TabIndex        =   188
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -215,7 +78,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   45
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":766C
+         Picture         =   "Movimento_Nfce_Auto.frx":75EC
          Style           =   1  'Graphical
          TabIndex        =   186
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -236,7 +99,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   44
          Left            =   6960
-         Picture         =   "Movimento_Nfce_Auto.frx":9B6E
+         Picture         =   "Movimento_Nfce_Auto.frx":9AEE
          Style           =   1  'Graphical
          TabIndex        =   184
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -257,7 +120,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   43
          Left            =   6100
-         Picture         =   "Movimento_Nfce_Auto.frx":C070
+         Picture         =   "Movimento_Nfce_Auto.frx":BFF0
          Style           =   1  'Graphical
          TabIndex        =   182
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -278,7 +141,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   42
          Left            =   5250
-         Picture         =   "Movimento_Nfce_Auto.frx":E572
+         Picture         =   "Movimento_Nfce_Auto.frx":E4F2
          Style           =   1  'Graphical
          TabIndex        =   180
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -299,7 +162,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   41
          Left            =   4400
-         Picture         =   "Movimento_Nfce_Auto.frx":10A74
+         Picture         =   "Movimento_Nfce_Auto.frx":109F4
          Style           =   1  'Graphical
          TabIndex        =   178
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -320,7 +183,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   40
          Left            =   3520
-         Picture         =   "Movimento_Nfce_Auto.frx":12F76
+         Picture         =   "Movimento_Nfce_Auto.frx":12EF6
          Style           =   1  'Graphical
          TabIndex        =   176
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -341,7 +204,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   39
          Left            =   2670
-         Picture         =   "Movimento_Nfce_Auto.frx":15478
+         Picture         =   "Movimento_Nfce_Auto.frx":153F8
          Style           =   1  'Graphical
          TabIndex        =   174
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -362,7 +225,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   38
          Left            =   1820
-         Picture         =   "Movimento_Nfce_Auto.frx":1797A
+         Picture         =   "Movimento_Nfce_Auto.frx":178FA
          Style           =   1  'Graphical
          TabIndex        =   172
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -383,7 +246,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   37
          Left            =   940
-         Picture         =   "Movimento_Nfce_Auto.frx":19E7C
+         Picture         =   "Movimento_Nfce_Auto.frx":19DFC
          Style           =   1  'Graphical
          TabIndex        =   170
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -404,7 +267,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   36
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":1C37E
+         Picture         =   "Movimento_Nfce_Auto.frx":1C2FE
          Style           =   1  'Graphical
          TabIndex        =   168
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -425,7 +288,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   35
          Left            =   6960
-         Picture         =   "Movimento_Nfce_Auto.frx":1E880
+         Picture         =   "Movimento_Nfce_Auto.frx":1E800
          Style           =   1  'Graphical
          TabIndex        =   166
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -446,7 +309,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   34
          Left            =   6100
-         Picture         =   "Movimento_Nfce_Auto.frx":20D82
+         Picture         =   "Movimento_Nfce_Auto.frx":20D02
          Style           =   1  'Graphical
          TabIndex        =   164
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -467,7 +330,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   33
          Left            =   5250
-         Picture         =   "Movimento_Nfce_Auto.frx":23284
+         Picture         =   "Movimento_Nfce_Auto.frx":23204
          Style           =   1  'Graphical
          TabIndex        =   162
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -488,7 +351,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   32
          Left            =   4400
-         Picture         =   "Movimento_Nfce_Auto.frx":25786
+         Picture         =   "Movimento_Nfce_Auto.frx":25706
          Style           =   1  'Graphical
          TabIndex        =   160
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -529,7 +392,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   31
          Left            =   3520
-         Picture         =   "Movimento_Nfce_Auto.frx":27C88
+         Picture         =   "Movimento_Nfce_Auto.frx":27C08
          Style           =   1  'Graphical
          TabIndex        =   67
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -550,7 +413,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   30
          Left            =   2670
-         Picture         =   "Movimento_Nfce_Auto.frx":2A18A
+         Picture         =   "Movimento_Nfce_Auto.frx":2A10A
          Style           =   1  'Graphical
          TabIndex        =   65
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -571,7 +434,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   29
          Left            =   1820
-         Picture         =   "Movimento_Nfce_Auto.frx":2C68C
+         Picture         =   "Movimento_Nfce_Auto.frx":2C60C
          Style           =   1  'Graphical
          TabIndex        =   63
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -592,7 +455,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   28
          Left            =   940
-         Picture         =   "Movimento_Nfce_Auto.frx":2EB8E
+         Picture         =   "Movimento_Nfce_Auto.frx":2EB0E
          Style           =   1  'Graphical
          TabIndex        =   61
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -613,7 +476,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   27
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":31090
+         Picture         =   "Movimento_Nfce_Auto.frx":31010
          Style           =   1  'Graphical
          TabIndex        =   59
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -634,7 +497,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   26
          Left            =   6960
-         Picture         =   "Movimento_Nfce_Auto.frx":33592
+         Picture         =   "Movimento_Nfce_Auto.frx":33512
          Style           =   1  'Graphical
          TabIndex        =   57
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -655,7 +518,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   25
          Left            =   6100
-         Picture         =   "Movimento_Nfce_Auto.frx":35A94
+         Picture         =   "Movimento_Nfce_Auto.frx":35A14
          Style           =   1  'Graphical
          TabIndex        =   55
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -676,7 +539,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   24
          Left            =   5250
-         Picture         =   "Movimento_Nfce_Auto.frx":37F96
+         Picture         =   "Movimento_Nfce_Auto.frx":37F16
          Style           =   1  'Graphical
          TabIndex        =   53
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -705,7 +568,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   23
          Left            =   4400
-         Picture         =   "Movimento_Nfce_Auto.frx":3A498
+         Picture         =   "Movimento_Nfce_Auto.frx":3A418
          Style           =   1  'Graphical
          TabIndex        =   51
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -726,7 +589,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   22
          Left            =   3520
-         Picture         =   "Movimento_Nfce_Auto.frx":3C99A
+         Picture         =   "Movimento_Nfce_Auto.frx":3C91A
          Style           =   1  'Graphical
          TabIndex        =   49
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -747,7 +610,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   21
          Left            =   2670
-         Picture         =   "Movimento_Nfce_Auto.frx":3EE9C
+         Picture         =   "Movimento_Nfce_Auto.frx":3EE1C
          Style           =   1  'Graphical
          TabIndex        =   47
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -768,7 +631,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   20
          Left            =   1820
-         Picture         =   "Movimento_Nfce_Auto.frx":4139E
+         Picture         =   "Movimento_Nfce_Auto.frx":4131E
          Style           =   1  'Graphical
          TabIndex        =   45
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -789,7 +652,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   19
          Left            =   940
-         Picture         =   "Movimento_Nfce_Auto.frx":438A0
+         Picture         =   "Movimento_Nfce_Auto.frx":43820
          Style           =   1  'Graphical
          TabIndex        =   43
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -810,7 +673,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   18
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":45DA2
+         Picture         =   "Movimento_Nfce_Auto.frx":45D22
          Style           =   1  'Graphical
          TabIndex        =   41
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -831,7 +694,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   17
          Left            =   6960
-         Picture         =   "Movimento_Nfce_Auto.frx":482A4
+         Picture         =   "Movimento_Nfce_Auto.frx":48224
          Style           =   1  'Graphical
          TabIndex        =   39
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -852,7 +715,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   16
          Left            =   6100
-         Picture         =   "Movimento_Nfce_Auto.frx":4A7A6
+         Picture         =   "Movimento_Nfce_Auto.frx":4A726
          Style           =   1  'Graphical
          TabIndex        =   37
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -873,7 +736,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   15
          Left            =   5250
-         Picture         =   "Movimento_Nfce_Auto.frx":4CCA8
+         Picture         =   "Movimento_Nfce_Auto.frx":4CC28
          Style           =   1  'Graphical
          TabIndex        =   35
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -894,7 +757,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   14
          Left            =   4400
-         Picture         =   "Movimento_Nfce_Auto.frx":4F1AA
+         Picture         =   "Movimento_Nfce_Auto.frx":4F12A
          Style           =   1  'Graphical
          TabIndex        =   33
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -915,7 +778,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   13
          Left            =   3520
-         Picture         =   "Movimento_Nfce_Auto.frx":516AC
+         Picture         =   "Movimento_Nfce_Auto.frx":5162C
          Style           =   1  'Graphical
          TabIndex        =   31
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -936,7 +799,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   12
          Left            =   2670
-         Picture         =   "Movimento_Nfce_Auto.frx":53BAE
+         Picture         =   "Movimento_Nfce_Auto.frx":53B2E
          Style           =   1  'Graphical
          TabIndex        =   29
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -957,7 +820,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   11
          Left            =   1820
-         Picture         =   "Movimento_Nfce_Auto.frx":560B0
+         Picture         =   "Movimento_Nfce_Auto.frx":56030
          Style           =   1  'Graphical
          TabIndex        =   27
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -978,7 +841,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   10
          Left            =   940
-         Picture         =   "Movimento_Nfce_Auto.frx":585B2
+         Picture         =   "Movimento_Nfce_Auto.frx":58532
          Style           =   1  'Graphical
          TabIndex        =   25
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -999,7 +862,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   9
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":5AAB4
+         Picture         =   "Movimento_Nfce_Auto.frx":5AA34
          Style           =   1  'Graphical
          TabIndex        =   23
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1020,7 +883,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   8
          Left            =   6960
-         Picture         =   "Movimento_Nfce_Auto.frx":5CFB6
+         Picture         =   "Movimento_Nfce_Auto.frx":5CF36
          Style           =   1  'Graphical
          TabIndex        =   21
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1049,7 +912,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   7
          Left            =   6100
-         Picture         =   "Movimento_Nfce_Auto.frx":5F4B8
+         Picture         =   "Movimento_Nfce_Auto.frx":5F438
          Style           =   1  'Graphical
          TabIndex        =   19
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1070,7 +933,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   6
          Left            =   5250
-         Picture         =   "Movimento_Nfce_Auto.frx":619BA
+         Picture         =   "Movimento_Nfce_Auto.frx":6193A
          Style           =   1  'Graphical
          TabIndex        =   17
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1091,7 +954,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   5
          Left            =   4400
-         Picture         =   "Movimento_Nfce_Auto.frx":63EBC
+         Picture         =   "Movimento_Nfce_Auto.frx":63E3C
          Style           =   1  'Graphical
          TabIndex        =   15
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1112,7 +975,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   3
          Left            =   2670
-         Picture         =   "Movimento_Nfce_Auto.frx":663BE
+         Picture         =   "Movimento_Nfce_Auto.frx":6633E
          Style           =   1  'Graphical
          TabIndex        =   11
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1133,7 +996,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   4
          Left            =   3520
-         Picture         =   "Movimento_Nfce_Auto.frx":688C0
+         Picture         =   "Movimento_Nfce_Auto.frx":68840
          Style           =   1  'Graphical
          TabIndex        =   13
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1174,7 +1037,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   2
          Left            =   1820
-         Picture         =   "Movimento_Nfce_Auto.frx":6ADC2
+         Picture         =   "Movimento_Nfce_Auto.frx":6AD42
          Style           =   1  'Graphical
          TabIndex        =   9
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1195,7 +1058,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   1
          Left            =   940
-         Picture         =   "Movimento_Nfce_Auto.frx":6D2C4
+         Picture         =   "Movimento_Nfce_Auto.frx":6D244
          Style           =   1  'Graphical
          TabIndex        =   7
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1216,7 +1079,7 @@ Begin VB.Form Movimento_Nfce_Auto
          Height          =   735
          Index           =   0
          Left            =   90
-         Picture         =   "Movimento_Nfce_Auto.frx":6F7C6
+         Picture         =   "Movimento_Nfce_Auto.frx":6F746
          Style           =   1  'Graphical
          TabIndex        =   5
          ToolTipText     =   "Bico Livre para Abastecimento."
@@ -1332,7 +1195,7 @@ Begin VB.Form Movimento_Nfce_Auto
          _Version        =   393216
       End
       Begin MSDataListLib.DataCombo dtcboCliente 
-         Bindings        =   "Movimento_Nfce_Auto.frx":71CC8
+         Bindings        =   "Movimento_Nfce_Auto.frx":71C48
          Height          =   315
          Left            =   1020
          TabIndex        =   4
@@ -1395,7 +1258,7 @@ Begin VB.Form Movimento_Nfce_Auto
          _Version        =   393216
       End
       Begin MSDataListLib.DataCombo dtcboProduto 
-         Bindings        =   "Movimento_Nfce_Auto.frx":71CE3
+         Bindings        =   "Movimento_Nfce_Auto.frx":71C63
          Height          =   315
          Left            =   960
          TabIndex        =   75
@@ -2454,246 +2317,141 @@ Begin VB.Form Movimento_Nfce_Auto
          Width           =   855
       End
    End
-   Begin VB.Frame frm_fila_bico 
+   Begin VB.CommandButton btnAbortaNFCe 
+      Caption         =   "Aborta NFCe (F9)"
+      Height          =   495
+      Left            =   12120
+      TabIndex        =   158
+      Top             =   9000
+      Width           =   1575
+   End
+   Begin VB.Timer TimerAguarde 
       Enabled         =   0   'False
-      Height          =   8775
-      Left            =   30
-      TabIndex        =   124
-      Top             =   60
+      Left            =   3360
+      Top             =   9600
+   End
+   Begin VB.Frame frameAguarde 
+      Caption         =   "Aguarde..."
+      Height          =   4695
+      Left            =   8640
+      TabIndex        =   154
+      Top             =   840
       Visible         =   0   'False
-      Width           =   7775
-      Begin VB.CommandButton cmdDescarregar 
-         Caption         =   "&Descarregar"
-         Height          =   315
-         Left            =   1080
-         TabIndex        =   135
-         ToolTipText     =   "Descarregar abastecimento de um bico."
-         Top             =   4680
-         Width           =   1095
-      End
-      Begin VB.CommandButton cmd_fila_sair 
-         Caption         =   "&Sair"
-         Height          =   315
-         Left            =   3720
-         TabIndex        =   137
-         ToolTipText     =   "Voltar para visualização dos bicos."
-         Top             =   4680
-         Width           =   555
-      End
-      Begin VB.CommandButton cmd_fila_ok 
-         Caption         =   "&Imprime Cupom"
-         Height          =   315
-         Left            =   2280
-         TabIndex        =   136
-         ToolTipText     =   "Imprime o cupom do ítem selecionado."
-         Top             =   4680
-         Width           =   1335
-      End
-      Begin MSFlexGridLib.MSFlexGrid MSFlexGrid 
-         Height          =   2715
-         Left            =   60
-         TabIndex        =   133
-         Top             =   540
-         Width           =   5655
-         _ExtentX        =   9975
-         _ExtentY        =   4789
-         _Version        =   393216
-         Cols            =   5
-         FixedCols       =   0
-      End
-      Begin VB.Label Label10 
+      Width           =   4155
+      Begin VB.Label lblTituloAguarde 
          Alignment       =   2  'Center
-         Caption         =   "Abastecimentos Não Recebidos"
+         Caption         =   "lblTituloAguarde"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
-            Size            =   12
+            Size            =   13.5
             Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H000000FF&
-         Height          =   315
-         Left            =   60
-         TabIndex        =   138
-         Top             =   180
-         Width           =   5655
-      End
-      Begin VB.Label lbl_fila_litros 
-         Alignment       =   1  'Right Justify
-         BackColor       =   &H00000000&
-         BackStyle       =   0  'Transparent
-         Caption         =   "88888888"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H0000FF00&
-         Height          =   195
-         Left            =   3060
-         TabIndex        =   134
-         Top             =   3735
-         Width           =   1035
-      End
-      Begin VB.Label lbl_fila_total 
-         Alignment       =   1  'Right Justify
-         BackColor       =   &H00000000&
-         BackStyle       =   0  'Transparent
-         Caption         =   "88888888"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H0000FF00&
-         Height          =   195
-         Left            =   3060
-         TabIndex        =   132
-         Top             =   4035
-         Width           =   1035
-      End
-      Begin VB.Label Label9 
-         BackColor       =   &H00000000&
-         Caption         =   "Label9"
-         Height          =   255
-         Left            =   3180
-         TabIndex        =   131
-         Top             =   3720
-         Width           =   975
-      End
-      Begin VB.Label Label8 
-         BackColor       =   &H00000000&
-         Caption         =   "Label8"
-         Height          =   255
-         Left            =   3180
-         TabIndex        =   130
-         Top             =   4020
-         UseMnemonic     =   0   'False
-         Width           =   975
-      End
-      Begin VB.Label lbl_fila_valor 
-         Alignment       =   1  'Right Justify
-         BackStyle       =   0  'Transparent
-         Caption         =   "88888888"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H0000FF00&
-         Height          =   195
-         Left            =   3060
-         TabIndex        =   129
-         Top             =   3420
-         Width           =   1035
-      End
-      Begin VB.Label Label7 
-         BackColor       =   &H00000000&
-         BeginProperty Font 
-            Name            =   "Terminal"
-            Size            =   6
-            Charset         =   255
             Weight          =   700
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
          ForeColor       =   &H00FF0000&
-         Height          =   255
-         Left            =   3180
-         TabIndex        =   128
-         Top             =   3405
-         Width           =   975
+         Height          =   615
+         Left            =   120
+         TabIndex        =   157
+         Top             =   1080
+         Width           =   3975
       End
-      Begin VB.Label Label6 
-         Caption         =   "Total"
+      Begin VB.Label lblMensagemAguarde 
+         Alignment       =   2  'Center
+         Caption         =   "lblMensagemAguarde"
          BeginProperty Font 
-            Name            =   "Small Fonts"
-            Size            =   6
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
             Charset         =   0
             Weight          =   700
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   210
-         Left            =   2460
-         TabIndex        =   127
-         Top             =   4020
-         Width           =   1095
+         ForeColor       =   &H00FF0000&
+         Height          =   615
+         Left            =   240
+         TabIndex        =   156
+         Top             =   3000
+         Width           =   4035
       End
-      Begin VB.Label Label5 
-         Caption         =   "Valor"
+      Begin VB.Label lblContadorAguarde 
+         Alignment       =   2  'Center
+         Caption         =   "lblContadorAguarde"
          BeginProperty Font 
-            Name            =   "Small Fonts"
-            Size            =   6
+            Name            =   "MS Sans Serif"
+            Size            =   13.5
             Charset         =   0
             Weight          =   700
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   210
-         Left            =   2460
-         TabIndex        =   126
-         Top             =   3420
-         Width           =   1095
+         ForeColor       =   &H000000C0&
+         Height          =   615
+         Left            =   840
+         TabIndex        =   155
+         Top             =   1920
+         Visible         =   0   'False
+         Width           =   1575
       End
-      Begin VB.Label Label4 
-         Caption         =   "Litros"
-         BeginProperty Font 
-            Name            =   "Small Fonts"
-            Size            =   6
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   210
-         Left            =   2460
-         TabIndex        =   125
-         Top             =   3720
-         Width           =   1095
-      End
-      Begin VB.Line Line6 
-         X1              =   2295
-         X2              =   4260
-         Y1              =   4320
-         Y2              =   4320
-      End
-      Begin VB.Line Line5 
-         X1              =   4260
-         X2              =   4260
-         Y1              =   3360
-         Y2              =   4335
-      End
-      Begin VB.Line Line4 
-         X1              =   2295
-         X2              =   2295
-         Y1              =   3360
-         Y2              =   4335
-      End
-      Begin VB.Line Line3 
-         X1              =   2295
-         X2              =   4260
-         Y1              =   3360
-         Y2              =   3360
-      End
+   End
+   Begin VB.Timer TimerIdentFid 
+      Enabled         =   0   'False
+      Left            =   2580
+      Top             =   9540
+   End
+   Begin MSCommLib.MSComm MSCommIdentFid 
+      Left            =   1860
+      Top             =   9420
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      _Version        =   393216
+      DTREnable       =   -1  'True
+   End
+   Begin VB.CommandButton cmdIniciaProcessoFinalizacaoNFCe 
+      Caption         =   "&Finaliza NFCe (F10)"
+      Height          =   495
+      Left            =   7920
+      TabIndex        =   83
+      ToolTipText     =   "Inicia processo de fechamento da NFCe"
+      Top             =   9000
+      Width           =   2175
+   End
+   Begin VB.Timer TimerAutomacao 
+      Enabled         =   0   'False
+      Interval        =   100
+      Left            =   1200
+      Top             =   9480
+   End
+   Begin VB.Timer Timer2 
+      Interval        =   30
+      Left            =   720
+      Top             =   9480
+   End
+   Begin RichTextLib.RichTextBox txt_cupom_fiscal 
+      Height          =   8835
+      Left            =   7920
+      TabIndex        =   84
+      Top             =   60
+      Width           =   5835
+      _ExtentX        =   10292
+      _ExtentY        =   15584
+      _Version        =   393217
+      BackColor       =   16777215
+      ReadOnly        =   -1  'True
+      ScrollBars      =   3
+      TextRTF         =   $"Movimento_Nfce_Auto.frx":71C7E
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Courier New"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
    End
    Begin VB.Frame frmDescarregar 
       Caption         =   "Descarregar Abastecimento"
@@ -3057,6 +2815,247 @@ Begin VB.Form Movimento_Nfce_Auto
          TabIndex        =   98
          Top             =   240
          Width           =   1815
+      End
+   End
+   Begin VB.Frame frm_fila_bico 
+      Enabled         =   0   'False
+      Height          =   8775
+      Left            =   30
+      TabIndex        =   124
+      Top             =   60
+      Visible         =   0   'False
+      Width           =   7775
+      Begin VB.CommandButton cmdDescarregar 
+         Caption         =   "&Descarregar"
+         Height          =   315
+         Left            =   1080
+         TabIndex        =   135
+         ToolTipText     =   "Descarregar abastecimento de um bico."
+         Top             =   4680
+         Width           =   1095
+      End
+      Begin VB.CommandButton cmd_fila_sair 
+         Caption         =   "&Sair"
+         Height          =   315
+         Left            =   3720
+         TabIndex        =   137
+         ToolTipText     =   "Voltar para visualização dos bicos."
+         Top             =   4680
+         Width           =   555
+      End
+      Begin VB.CommandButton cmd_fila_ok 
+         Caption         =   "&Imprime Cupom"
+         Height          =   315
+         Left            =   2280
+         TabIndex        =   136
+         ToolTipText     =   "Imprime o cupom do ítem selecionado."
+         Top             =   4680
+         Width           =   1335
+      End
+      Begin MSFlexGridLib.MSFlexGrid MSFlexGrid 
+         Height          =   2715
+         Left            =   60
+         TabIndex        =   133
+         Top             =   540
+         Width           =   5655
+         _ExtentX        =   9975
+         _ExtentY        =   4789
+         _Version        =   393216
+         Cols            =   5
+         FixedCols       =   0
+      End
+      Begin VB.Label Label10 
+         Alignment       =   2  'Center
+         Caption         =   "Abastecimentos Não Recebidos"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H000000FF&
+         Height          =   315
+         Left            =   60
+         TabIndex        =   138
+         Top             =   180
+         Width           =   5655
+      End
+      Begin VB.Label lbl_fila_litros 
+         Alignment       =   1  'Right Justify
+         BackColor       =   &H00000000&
+         BackStyle       =   0  'Transparent
+         Caption         =   "88888888"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H0000FF00&
+         Height          =   195
+         Left            =   3060
+         TabIndex        =   134
+         Top             =   3735
+         Width           =   1035
+      End
+      Begin VB.Label lbl_fila_total 
+         Alignment       =   1  'Right Justify
+         BackColor       =   &H00000000&
+         BackStyle       =   0  'Transparent
+         Caption         =   "88888888"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H0000FF00&
+         Height          =   195
+         Left            =   3060
+         TabIndex        =   132
+         Top             =   4035
+         Width           =   1035
+      End
+      Begin VB.Label Label9 
+         BackColor       =   &H00000000&
+         Caption         =   "Label9"
+         Height          =   255
+         Left            =   3180
+         TabIndex        =   131
+         Top             =   3720
+         Width           =   975
+      End
+      Begin VB.Label Label8 
+         BackColor       =   &H00000000&
+         Caption         =   "Label8"
+         Height          =   255
+         Left            =   3180
+         TabIndex        =   130
+         Top             =   4020
+         UseMnemonic     =   0   'False
+         Width           =   975
+      End
+      Begin VB.Label lbl_fila_valor 
+         Alignment       =   1  'Right Justify
+         BackStyle       =   0  'Transparent
+         Caption         =   "88888888"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H0000FF00&
+         Height          =   195
+         Left            =   3060
+         TabIndex        =   129
+         Top             =   3420
+         Width           =   1035
+      End
+      Begin VB.Label Label7 
+         BackColor       =   &H00000000&
+         BeginProperty Font 
+            Name            =   "Terminal"
+            Size            =   6
+            Charset         =   255
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FF0000&
+         Height          =   255
+         Left            =   3180
+         TabIndex        =   128
+         Top             =   3405
+         Width           =   975
+      End
+      Begin VB.Label Label6 
+         Caption         =   "Total"
+         BeginProperty Font 
+            Name            =   "Small Fonts"
+            Size            =   6
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   210
+         Left            =   2460
+         TabIndex        =   127
+         Top             =   4020
+         Width           =   1095
+      End
+      Begin VB.Label Label5 
+         Caption         =   "Valor"
+         BeginProperty Font 
+            Name            =   "Small Fonts"
+            Size            =   6
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   210
+         Left            =   2460
+         TabIndex        =   126
+         Top             =   3420
+         Width           =   1095
+      End
+      Begin VB.Label Label4 
+         Caption         =   "Litros"
+         BeginProperty Font 
+            Name            =   "Small Fonts"
+            Size            =   6
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   210
+         Left            =   2460
+         TabIndex        =   125
+         Top             =   3720
+         Width           =   1095
+      End
+      Begin VB.Line Line6 
+         X1              =   2295
+         X2              =   4260
+         Y1              =   4320
+         Y2              =   4320
+      End
+      Begin VB.Line Line5 
+         X1              =   4260
+         X2              =   4260
+         Y1              =   3360
+         Y2              =   4335
+      End
+      Begin VB.Line Line4 
+         X1              =   2295
+         X2              =   2295
+         Y1              =   3360
+         Y2              =   4335
+      End
+      Begin VB.Line Line3 
+         X1              =   2295
+         X2              =   4260
+         Y1              =   3360
+         Y2              =   3360
       End
    End
    Begin VB.Frame frm_ponto 
@@ -8597,6 +8596,8 @@ Private Sub PreencheCboFormaPagamentoParaPostoAki()
     cbo_forma_pagamento.ItemData(cbo_forma_pagamento.NewIndex) = 1
     cbo_forma_pagamento.AddItem "4 - Cartão de Crédito"
     cbo_forma_pagamento.ItemData(cbo_forma_pagamento.NewIndex) = 4
+    cbo_forma_pagamento.AddItem "16 - Cartão pelo POS"
+    cbo_forma_pagamento.ItemData(cbo_forma_pagamento.NewIndex) = 16
     cbo_forma_pagamento.ListIndex = 0
     cbo_forma_pagamento.SetFocus
 End Sub
@@ -11416,8 +11417,17 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                 ElseIf xNomeAdm = "REDECARD" Then
                     If UCase(xString) Like "*DEBITO*" Then
                         xOperacao = "DEBITO"
+                        If xNomeBandeiraLido <> "" Then
+                           xNomeBandeira = xNomeBandeiraLido & " " & xOperacao
+                           Exit Do
+                        End If
+                        
                     ElseIf UCase(xString) Like "*CREDITO*" Then
                         xOperacao = "CREDITO"
+                        If xNomeBandeiraLido <> "" Then
+                           xNomeBandeira = xNomeBandeiraLido & " " & xOperacao
+                           Exit Do
+                        End If
                     End If
                 End If
                 'Detecta a Bandeira
@@ -11460,6 +11470,11 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                         xNomeBandeira = "ELO DEBITO"
                         xOperacao = "DEBITO"
                         Exit Do
+                    ElseIf xNomeAdm = "REDECARD" And xString Like "*ALELO*" Then
+                        xNomeBandeiraLido = "ALELO"
+                    ElseIf xNomeAdm = "REDECARD" And xString Like "*ELO*" Then
+                        xNomeBandeiraLido = "ELO"
+                        
 ' MAESTRO CRIADO por tasso em 03/03/2017 pra resolver problema no VILA ALZIRA
                     ElseIf xString Like "*MAESTRO*" Then
                         xNomeBandeira = "MAESTRO"
@@ -11760,12 +11775,22 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                 If xOperacao = "" Then
                     If xString Like "*CREDITO*" Or xString Like "*CRÉDITO*" Then
                         xOperacao = "CREDITO"
+                        
+                        If xNomeBandeiraLido <> "" And xNomeAdm = "REDECARD" Then
+                            xNomeBandeira = xNomeBandeiraLido & " " & xOperacao
+                        End If
+                        
                         If xNomeBandeira <> "" Then
                             Exit Do
                         End If
                     End If
                     If xString Like "*DEBITO*" Or xString Like "*DÉBITO*" Or xString Like "*ELECTRON*" Then
                         xOperacao = "DEBITO"
+                        
+                        If xNomeBandeiraLido <> "" And xNomeAdm = "REDECARD" Then
+                            xNomeBandeira = xNomeBandeiraLido & " " & xOperacao
+                        End If
+                        
                         If xNomeBandeira <> "" Then
                             Exit Do
                         End If
@@ -11812,6 +11837,8 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                         End If
                     End If
                 End If
+                
+                
             End If
         Loop
         xArquivo.Close
@@ -11890,6 +11917,12 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                             End If
                         Else
                             If UCase(CartaoCredito.Nome) Like "*" & xNomeBandeira & "*" Then
+                                If UCase(CartaoCredito.Nome) Like "*" & xOperacao & "*" Then
+                                    lCodigoCartao = CartaoCredito.Codigo
+                                    Exit Do
+                                End If
+                                
+                            ElseIf UCase(CartaoCredito.Nome) Like "*REDECARD*" And (xNomeBandeira Like "*MAESTRO*" Or xNomeBandeira Like "*MASTERCARD*") Then
                                 If UCase(CartaoCredito.Nome) Like "*" & xOperacao & "*" Then
                                     lCodigoCartao = CartaoCredito.Codigo
                                     Exit Do
