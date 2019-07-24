@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "Msflxgrd.ocx"
+Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "MSFLXGRD.OCX"
 Begin VB.Form movimento_medicao_combustivel 
    Caption         =   "Medição dos Combustíveis (Abertura)"
    ClientHeight    =   7620
@@ -217,7 +217,7 @@ Private ControlVisible As Boolean     ' Se o controle esta visivel ou nao
 Private LastRow As Long               ' Ultima linha em que se editou
 Private LastCol As Long               ' ultima coluna em que se editou
 
-Private rsAuxiliar As New adodb.Recordset
+Private rsAuxiliar As New ADODB.Recordset
 Private Combustivel As New cCombustivel
 Private LivroLMC As New cLivroLMC
 Private MedicaoCombustivel As New cMedicaoCombustivel
@@ -278,7 +278,7 @@ Private Sub AtualizaGrid()
     xSQL = xSQL & "      AND Combustivel.Codigo = " & MedicaoCombustivel.NomeTabela & ".[Tipo de Combustivel]"
     xSQL = xSQL & " ORDER BY [Numero do Tanque], [Tipo de Combustivel]"
     'xSQL = xSQL & " ORDER BY Data, Periodo"
-    Set rsAuxiliar = New adodb.Recordset
+    Set rsAuxiliar = New ADODB.Recordset
     Set rsAuxiliar = Conectar.RsConexao(xSQL)
     If rsAuxiliar.RecordCount > 0 Then
         If Not rsAuxiliar.EOF Then
@@ -375,7 +375,7 @@ Private Sub AutomatizaGridInclusao()
     xSQL = xSQL & "      AND Combustivel.Empresa = " & g_empresa
     xSQL = xSQL & "      AND Combustivel.Codigo = Tanque_Combustivel.[Tipo de Combustivel]"
     xSQL = xSQL & " ORDER BY [Numero do Tanque]"
-    Set rsAuxiliar = New adodb.Recordset
+    Set rsAuxiliar = New ADODB.Recordset
     Set rsAuxiliar = Conectar.RsConexao(xSQL)
     If Not rsAuxiliar.EOF Then
         Do Until rsAuxiliar.EOF
@@ -525,7 +525,7 @@ Private Sub LimpaGrid()
     i = i + 1
     fgd_dados.Col = i
     fgd_dados.Text = "Combustível"
-    fgd_dados.ColWidth(i) = 1500
+    fgd_dados.ColWidth(i) = 3000
     fgd_dados.ColAlignment(i) = 1
     i = i + 1
     fgd_dados.Col = i
@@ -661,7 +661,7 @@ Private Sub TransfereDadosLMC()
     xSQL = xSQL & "    WHERE Empresa = " & g_empresa
     xSQL = xSQL & "      AND Data >= " & preparaData(x_data)
     xSQL = xSQL & " ORDER BY Data, [Numero do Tanque]"
-    Set rsAuxiliar = New adodb.Recordset
+    Set rsAuxiliar = New ADODB.Recordset
     Set rsAuxiliar = Conectar.RsConexao(xSQL)
     
     'Transfere Dados para o LMC

@@ -2412,7 +2412,7 @@ Private Sub Form_Load()
     'Sub-Versao Mes   = 01
     'Sub-versao Dia   = 22
     'Correcao do dia  = a
-    gVersaoSGP = "19.06.27a"
+    gVersaoSGP = "19.07.24a"
 
     gTipoAmbienteNFCe = ""
     Me.Caption = "Sistema Gerênciador de Postos de Combustíveis - Versão " & gVersaoSGP
