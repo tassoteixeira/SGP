@@ -2400,8 +2400,7 @@ Private Sub Form_Activate()
 End Sub
 Private Sub Form_Load()
     Dim retval As Long
-    
-    
+  
     'Versão para SGP  = 7
     'Sub-Versao (Mes) = 8
     'Sub-versao (Dia) = 9
