@@ -2440,6 +2440,7 @@ Begin VB.Form Movimento_Nfce_Auto
       _ExtentY        =   15584
       _Version        =   393217
       BackColor       =   16777215
+      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   3
       TextRTF         =   $"Movimento_Nfce_Auto.frx":71C7E
@@ -5180,8 +5181,17 @@ Private Sub AbilitaMenu(ByVal pAbilita As Boolean)
     End If
     mnRelatorio.Enabled = pAbilita
         
-    If lCaixaIndividual = False Then
-       mnRelatorio.Enabled = False
+    If pAbilita = True Then
+        If lCaixaIndividual = False Then
+           mnRelatorio.Enabled = False
+        Else
+            If ConfiguracaoDiversa.LocalizarCodigo(1, "NFCEAUTO: Bloqueia Rel. Abast. Func.") Then
+                mnAbastecimentoAutomacaoFuncionario.Enabled = Not ConfiguracaoDiversa.Verdadeiro
+            End If
+            If ConfiguracaoDiversa.LocalizarCodigo(1, "NFCEAUTO: Bloqueia Rel. Falta de Caixa") Then
+                mnFaltaCaixa.Enabled = Not ConfiguracaoDiversa.Verdadeiro
+            End If
+        End If
     End If
 
 End Sub
