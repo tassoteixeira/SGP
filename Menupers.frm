@@ -254,6 +254,7 @@ Dim lNotificacaoGic As Boolean
 Dim lResgateAbertoPeloSGP As Boolean
 Dim lForm As Form
 
+
 Dim lEmpresaAtualPetromovel As Integer
 
 
