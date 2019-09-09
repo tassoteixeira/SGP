@@ -268,7 +268,6 @@ Private LiberacaoDigitacao As New cLiberacaoDigitacao
 Private Programa As New cPrograma
 
 
-
 Private Sub BuscaConfiguracao()
     g_caixa_unificado = False
     BuscaConfiguracaoCaixaUnificado
