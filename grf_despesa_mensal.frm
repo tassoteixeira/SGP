@@ -152,7 +152,7 @@ End Sub
 Private Sub LeDados()
     Dim i As Integer
     Dim xData As String
-    Dim rsEmpresa As New adodb.Recordset
+    Dim rsEmpresa As New ADODB.Recordset
     Dim xDataInicial As Date
     Dim xDataFinal As Date
     
@@ -304,13 +304,13 @@ Private Sub Form_Load()
     CentraForm Me
 End Sub
 Private Sub PreencheCboConta()
-    Dim rsConta As New adodb.Recordset
+    Dim rsConta As New ADODB.Recordset
     
     cbo_conta.Clear
     cbo_conta.AddItem "Todas as Contas"
     cbo_conta.ItemData(cbo_conta.NewIndex) = 0
     
-    Set rsConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas ORDER BY Nome")
+    Set rsConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas WHERE Empresa = " & g_empresa & " ORDER BY Nome")
     'loop RecordSet
     With rsConta
         If .RecordCount > 0 Then

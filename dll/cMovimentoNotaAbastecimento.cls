@@ -758,9 +758,7 @@ On Error GoTo trata_erro
 trata_erro:
     MsgBox Err.Number & " - " & Err.Description
 End Function
-
-
-Public Function TotalDataLiquido(ByVal pEmpresa As Integer, ByVal pCodigoCliente As Long, ByVal pDataInicial As Date, ByVal pDataFinal As Date, ByVal pConferencia As Boolean) As Currency
+Public Function TotalDataLiquido(ByVal pEmpresa As Integer, ByVal pCodigoCliente As Long, ByVal pDataInicial As Date, ByVal pDataFinal As Date, ByVal pConferencia As Boolean, Optional ByVal pCondiderarBaixadas As Boolean = False) As Currency
     Dim xValor As Currency
 
 On Error GoTo trata_erro
@@ -783,6 +781,29 @@ On Error GoTo trata_erro
         gSQL = gSQL & " AND [Data do Abastecimento] >= " & preparaData(pDataInicial)
         gSQL = gSQL & " AND [Data do Abastecimento] <= " & preparaData(pDataFinal)
     End If
+    
+    If pCondiderarBaixadas Then
+    
+        gSQL = gSQL & " UNION "
+        gSQL = gSQL & " SELECT Quantidade, [Valor Desconto Unitario], [Valor Unitario], [Valor Total] FROM Baixa_Nota_Abastecimento"
+        If pEmpresa > 0 Then
+            gSQL = gSQL & " WHERE Empresa = " & pEmpresa
+        Else
+            gSQL = gSQL & " WHERE Empresa > 0"
+        End If
+        If pCodigoCliente > 0 Then
+            gSQL = gSQL & " AND [Codigo do Cliente] = " & pCodigoCliente
+        End If
+        If pConferencia Then
+            gSQL = gSQL & " AND [Data da Conferencia] >= " & preparaData(pDataInicial)
+            gSQL = gSQL & " AND [Data da Conferencia] <= " & preparaData(pDataFinal)
+        Else
+            gSQL = gSQL & " AND [Data do Abastecimento] >= " & preparaData(pDataInicial)
+            gSQL = gSQL & " AND [Data do Abastecimento] <= " & preparaData(pDataFinal)
+        End If
+    
+    End If
+    
     If Localizar(0) Then
         If rsMovNotaAbastecimento.RecordCount > 0 Then
             Do Until rsMovNotaAbastecimento.EOF

@@ -31,6 +31,9 @@ Private mCodigoConta As Integer
 Private mContaContabil As String
 Private mDataAlteracao As Date
 Private mInativo As Boolean
+Private mFornecedorEmiteNFe As Boolean
+
+
 
 Private rsFornecedor As New adodb.Recordset
 
@@ -178,6 +181,16 @@ End Property
 Public Property Let Inativo(ByVal Valor As Boolean)
     mInativo = Valor
 End Property
+
+Public Property Get FornecedorEmiteNFe() As Boolean
+    FornecedorEmiteNFe = mFornecedorEmiteNFe
+End Property
+Public Property Let FornecedorEmiteNFe(ByVal Valor As Boolean)
+    mFornecedorEmiteNFe = Valor
+End Property
+
+
+
 'Fim das Propriedades da Classe
 
 
@@ -286,7 +299,7 @@ On Error GoTo Err_Incluir
     gSQL = "INSERT INTO Fornecedor ( Empresa, Codigo, Nome, Endereco, Bairro, "
     gSQL = gSQL & "Cidade, UF, CEP, Telefone, [Telefone 2], "
     gSQL = gSQL & "Fax, Vendedor, CGC, [Inscricao Estadual], [Codigo da Conta], "
-    gSQL = gSQL & "[Conta Contabil], [Data da Alteracao], Inativo ) VALUES ( "
+    gSQL = gSQL & "[Conta Contabil], [Data da Alteracao], Inativo, [Fornecedor Emite NFe]  ) VALUES ( "
     Call sqlNumero(1, mEmpresa, ", ")
     Call sqlNumero(1, mCodigo, ", ")
     Call sqlTexto(1, mNome, ", ")
@@ -304,7 +317,8 @@ On Error GoTo Err_Incluir
     Call sqlNumero(1, mCodigoConta, ", ")
     Call sqlTexto(1, mContaContabil, ", ")
     Call sqlData(1, mDataAlteracao, ", ")
-    Call sqlBoolean(1, mInativo, " )")
+    Call sqlBoolean(1, mInativo, ", ")
+    Call sqlBoolean(1, mFornecedorEmiteNFe, " )")
     gConn.Execute gSQL, Incluir, adCmdText + adExecuteNoRecords
     Incluir = True
     Exit Function
@@ -335,8 +349,9 @@ On Error GoTo Err_Alterar
     Call sqlTexto(2, ", [Inscricao Estadual] = ", mInscricaoEstadual)
     Call sqlNumero(2, ", [Codigo da Conta] = ", mCodigoConta)
     Call sqlTexto(2, ", [Conta Contabil] = ", mContaContabil)
-    Call sqlData(2, ", [Data da Acerto] = ", mDataAlteracao)
+    Call sqlData(2, ", [Data da Alteracao] = ", mDataAlteracao)
     Call sqlBoolean(2, ", Inativo = ", mInativo)
+    Call sqlBoolean(2, ", [Fornecedor Emite NFe] = ", mFornecedorEmiteNFe)
     gSQL = gSQL & " WHERE Empresa = " & nEmpresa
     gSQL = gSQL & " AND Codigo = " & nCodigo
     gConn.Execute gSQL, Alterar, adCmdText + adExecuteNoRecords
@@ -365,7 +380,7 @@ End Function
 
 'Funções / Procedures internas
 Private Function PreparaSQL(ByVal xCondicao As String, ByVal xTipoOrdem As String) As String
-    PreparaSQL = Trim("SELECT Empresa, Codigo, Nome, Endereco, Bairro, Cidade, UF, CEP, Telefone, [Telefone 2], Fax, Vendedor, CGC, [Inscricao Estadual], [Codigo da Conta], [Conta Contabil], [Data da Alteracao], Inativo FROM Fornecedor" & " " & xCondicao & " " & xTipoOrdem)
+    PreparaSQL = Trim("SELECT Empresa, Codigo, Nome, Endereco, Bairro, Cidade, UF, CEP, Telefone, [Telefone 2], Fax, Vendedor, CGC, [Inscricao Estadual], [Codigo da Conta], [Conta Contabil], [Data da Alteracao], Inativo, [Fornecedor Emite NFe] FROM Fornecedor" & " " & xCondicao & " " & xTipoOrdem)
 End Function
 
 
@@ -408,6 +423,7 @@ Private Sub AtribuiValor()
         DataAlteracao = rsFornecedor("Data da Alteracao").Value
     End If
     Inativo = rsFornecedor("Inativo").Value
+    FornecedorEmiteNFe = rsFornecedor("Fornecedor Emite NFe").Value
 End Sub
 
 

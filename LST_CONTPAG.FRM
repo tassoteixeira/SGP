@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
-Object = "{00025600-0000-0000-C000-000000000046}#4.6#0"; "CRYSTL32.OCX"
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "msmask32.ocx"
+Object = "{00025600-0000-0000-C000-000000000046}#4.6#0"; "crystl32.ocx"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form lst_contas_pagar 
    Caption         =   "Relação de Contas à Pagar"
    ClientHeight    =   3555
@@ -226,7 +226,13 @@ Private Sub PreencheCboConta()
     tbl_conta.Index = "id_nome"
     If tbl_conta.RecordCount > 0 Then
         tbl_conta.MoveFirst
+        tbl_conta.Seek ">", g_empresa, " "
         Do Until tbl_conta.EOF
+        
+            If tbl_conta!Empresa <> g_empresa Then
+                Exit Do
+            End If
+
             cbo_conta.AddItem tbl_conta!Nome
             cbo_conta.ItemData(cbo_conta.NewIndex) = tbl_conta!Codigo
             tbl_conta.MoveNext
@@ -261,7 +267,7 @@ Private Sub Relatorio()
     cr_relato.Action = 1
 End Sub
 Private Sub cbo_conta_GotFocus()
-    SendMessageLong cbo_conta.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_conta.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -270,7 +276,7 @@ Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 Private Sub cbo_fornecedor_GotFocus()
-    SendMessageLong cbo_fornecedor.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_fornecedor.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_fornecedor_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then

@@ -15,6 +15,8 @@ Option Explicit
 
 Private mCodigo As Integer
 Private mNome As String
+Private mCodigoFinContaTesouraria As Integer
+Private mEmpresa As Integer
 
 Private rsContas As New adodb.Recordset
 
@@ -34,16 +36,33 @@ End Property
 Public Property Let Nome(ByVal Valor As String)
     mNome = Valor
 End Property
+
+
+Public Property Get CodigoFinContaTesouraria() As Integer
+    CodigoFinContaTesouraria = mCodigoFinContaTesouraria
+End Property
+Public Property Let CodigoFinContaTesouraria(ByVal Valor As Integer)
+    mCodigoFinContaTesouraria = Valor
+End Property
+
+Public Property Get Empresa() As Integer
+    Empresa = mEmpresa
+End Property
+Public Property Let Empresa(ByVal Valor As Integer)
+    mEmpresa = Valor
+End Property
+
+
 'Fim das Propriedades da Classe
 
 
 'Inicio Métodos da Classe
-Public Function LocalizarCodigo(ByVal nCodigo As Integer) As Boolean
+Public Function LocalizarCodigo(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 Dim xCondicao As String
 On Error GoTo trata_erro
 
     LocalizarCodigo = False
-    xCondicao = " WHERE Codigo = " & nCodigo
+    xCondicao = " WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa
     gSQL = PreparaSQL(xCondicao, "")
     LocalizarCodigo = Localizar
     Exit Function
@@ -53,12 +72,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarAnterior() As Boolean
+Public Function LocalizarAnterior(ByVal pEmpresa As Integer) As Boolean
 Dim xCondicao As String
 On Error GoTo trata_erro
 
     LocalizarAnterior = False
-    xCondicao = " WHERE Codigo < " & mCodigo
+    xCondicao = " WHERE Codigo < " & mCodigo & " AND Empresa = " & pEmpresa
     gSQL = PreparaSQL(xCondicao, "ORDER BY Codigo DESC")
     LocalizarAnterior = Localizar
     Exit Function
@@ -68,12 +87,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarNome(ByVal nNome As String) As Boolean
+Public Function LocalizarNome(ByVal nNome As String, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarNome = False
-    gSQL = PreparaSQL(" WHERE Nome = " & preparaTexto(nNome), "")
+    gSQL = PreparaSQL(" WHERE Nome = " & preparaTexto(nNome) & " AND Empresa = " & pEmpresa, "")
     LocalizarNome = Localizar
     Exit Function
 
@@ -82,12 +101,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarPrimeiro() As Boolean
+Public Function LocalizarPrimeiro(ByVal pEmpresa As Integer) As Boolean
 Dim xCondicao As String
 On Error GoTo trata_erro
 
     LocalizarPrimeiro = False
-    xCondicao = " WHERE Codigo > 0"
+    xCondicao = " WHERE Codigo > 0 AND Empresa = " & pEmpresa
     gSQL = PreparaSQL(xCondicao, "ORDER BY Codigo ASC")
     LocalizarPrimeiro = Localizar
     Exit Function
@@ -97,12 +116,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarProximo() As Boolean
+Public Function LocalizarProximo(ByVal pEmpresa As Integer) As Boolean
 Dim xCondicao As String
 On Error GoTo trata_erro
 
     LocalizarProximo = False
-    xCondicao = " WHERE Codigo > " & mCodigo
+    xCondicao = " WHERE Codigo > " & mCodigo & " AND Empresa = " & pEmpresa
     gSQL = PreparaSQL(xCondicao, "ORDER BY Codigo ASC")
     LocalizarProximo = Localizar
     Exit Function
@@ -112,12 +131,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarUltimo() As Boolean
+Public Function LocalizarUltimo(ByVal pEmpresa As Integer) As Boolean
 Dim xCondicao As String
 On Error GoTo trata_erro
 
     LocalizarUltimo = False
-    xCondicao = " WHERE Codigo < " & 9999
+    xCondicao = " WHERE Codigo < 9999 AND Empresa = " & pEmpresa
     gSQL = PreparaSQL(xCondicao, "ORDER BY Codigo DESC")
     LocalizarUltimo = Localizar
     Exit Function
@@ -132,9 +151,12 @@ Public Function Incluir() As Boolean
 On Error GoTo Err_Incluir
 
     Incluir = False
-    gSQL = "INSERT INTO Contas ( Codigo, Nome ) VALUES ( "
+    gSQL = "INSERT INTO Contas ( Codigo, Nome, CodigoFinContaTesouraria, Empresa ) VALUES ( "
     Call sqlNumero(1, mCodigo, ", ")
-    Call sqlTexto(1, mNome, " )")
+    Call sqlTexto(1, mNome, ", ")
+    Call sqlNumero(1, mCodigoFinContaTesouraria, ", ")
+    Call sqlNumero(1, mEmpresa, " )")
+
     gConn.Execute gSQL, Incluir, adCmdText + adExecuteNoRecords
     Incluir = True
     Exit Function
@@ -143,7 +165,7 @@ Err_Incluir:
 End Function
 
 
-Public Function Alterar(ByVal nCodigo As Integer) As Boolean
+Public Function Alterar(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo Err_Alterar
 
@@ -151,7 +173,10 @@ On Error GoTo Err_Alterar
     gSQL = "UPDATE Contas SET "
     Call sqlNumero(2, "Codigo = ", mCodigo)
     Call sqlTexto(2, ", Nome = ", mNome)
-    gSQL = gSQL & " WHERE Codigo = " & nCodigo
+    Call sqlNumero(2, ", CodigoFinContaTesouraria = ", mCodigoFinContaTesouraria)
+    Call sqlNumero(2, ", Empresa = ", mEmpresa)
+
+    gSQL = gSQL & " WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa
     gConn.Execute gSQL, Alterar, adCmdText + adExecuteNoRecords
     Alterar = True
     Exit Function
@@ -160,13 +185,13 @@ Err_Alterar:
 End Function
 
 
-Public Function Excluir(ByVal nCodigo As Integer) As Boolean
+Public Function Excluir(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo Err_Excluir
 
     Excluir = False
     gSQL = "DELETE FROM Contas"
-    gSQL = gSQL & " WHERE Codigo = " & nCodigo
+    gSQL = gSQL & " WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa
     gConn.Execute gSQL, Excluir, adCmdText + adExecuteNoRecords
     Excluir = True
     Exit Function
@@ -177,7 +202,7 @@ End Function
 
 'Funções / Procedures internas
 Private Function PreparaSQL(ByVal xCondicao As String, ByVal xTipoOrdem As String) As String
-    PreparaSQL = Trim("SELECT Codigo, Nome FROM Contas" & " " & xCondicao & " " & xTipoOrdem)
+    PreparaSQL = Trim("SELECT Codigo, Nome, CodigoFinContaTesouraria, Empresa FROM Contas" & " " & xCondicao & " " & xTipoOrdem)
 End Function
 
 
@@ -200,6 +225,8 @@ End Function
 Private Sub AtribuiValor()
     Codigo = rsContas("Codigo").Value
     Nome = rsContas("Nome").Value
+    CodigoFinContaTesouraria = rsContas("CodigoFinContaTesouraria").Value
+    Empresa = rsContas("Empresa").Value
 End Sub
 
 

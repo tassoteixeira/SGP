@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "msmask32.ocx"
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form lst_nota_cliente_geral 
    Caption         =   "Emissão das Notas de Abastecimento/Duplicata"
    ClientHeight    =   3405
@@ -54,6 +54,22 @@ Begin VB.Form lst_nota_cliente_geral
       TabIndex        =   0
       Top             =   120
       Width           =   6555
+      Begin VB.CheckBox chkConsiderarNotasBaixadas 
+         Caption         =   "Considerar Notas Baixadas"
+         Height          =   255
+         Left            =   3600
+         TabIndex        =   18
+         Top             =   1200
+         Width           =   2655
+      End
+      Begin VB.CheckBox chkSomenteCombustivel 
+         Caption         =   "Somente notas de combustível"
+         Height          =   195
+         Left            =   3600
+         TabIndex        =   17
+         Top             =   1560
+         Width           =   2775
+      End
       Begin VB.ComboBox cboGrupoCliente 
          Height          =   315
          Left            =   1680
@@ -206,7 +222,9 @@ Dim lNomeArquivo As String
 Dim lSQL As String
 'Fim de variáveis padrão para relatório
 Dim lTotal As Currency
+Dim lTotalLitroCombustivel As Currency
 Dim lValorAbastecimento As Currency
+Dim lLitrosAbastecimento As Currency
 Dim lTotalDup As Currency
 Dim lTotalDupDia As Currency
 Dim lTotalDupVencer As Currency
@@ -220,7 +238,8 @@ Dim lQtdDupVencida As Currency
 Private Cliente As New cCliente
 Private DuplicataReceber As New cDuplicataReceber
 Private MovimentoNotaAbastecimento As New cMovimentoNotaAbastecimento
-Private rsTabela As New adodb.Recordset
+Private rsTabela As New ADODB.Recordset
+Private rsTabelaNotaAbastecimento As New ADODB.Recordset
 Private Sub Finaliza()
     Call GravaAuditoria(1, Me.name, 11, "")
     Set Cliente = Nothing
@@ -231,6 +250,7 @@ Private Sub ZeraVariaveis()
     lLinha = 0
     lPagina = 0
     lTotal = 0
+    lTotalLitroCombustivel = 0
     lTotalDup = 0
     lTotalDupDia = 0
     lTotalDupVencer = 0
@@ -299,7 +319,7 @@ Private Sub PreencheCboGrupoCliente()
     lSQL = lSQL & "     FROM GrupoCliente"
     lSQL = lSQL & " ORDER BY Nome, Codigo"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(lSQL)
     
     cboGrupoCliente.Clear
@@ -327,11 +347,17 @@ Private Sub Relatorio()
     End If
     lSQL = lSQL & " ORDER BY [Razao Social]"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(lSQL)
     'Verifica movimento
     If rsTabela.RecordCount > 0 Then
-        ImpDados
+    
+        If CBool(chkSomenteCombustivel.Value) = True Then
+            Call ImpDadosCombustivel(chkConsiderarNotasBaixadas.Value)
+        Else
+            ImpDados
+        End If
+    
     End If
     If rsTabela.State = 1 Then
         rsTabela.Close
@@ -360,7 +386,7 @@ Private Sub RelatorioDuplicata()
     lSQL = lSQL & "   AND Duplicata_Receber.[Codigo do Cliente] = Cliente.Codigo"
     lSQL = lSQL & " ORDER BY Cliente.[Razao Social] ASC, Duplicata_Receber.[Data do Vencimento] ASC"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(lSQL)
     'Verifica movimento
     If rsTabela.RecordCount > 0 Then
@@ -392,7 +418,7 @@ Private Sub ImpDados()
             ImpCab
             ImpCabNota
         End If
-        lValorAbastecimento = MovimentoNotaAbastecimento.TotalDataLiquido(xEmpresa, rsTabela("Codigo").Value, CDate(msk_data_i.Text), CDate(msk_data_f.Text), False)
+        lValorAbastecimento = MovimentoNotaAbastecimento.TotalDataLiquido(xEmpresa, rsTabela("Codigo").Value, CDate(msk_data_i.Text), CDate(msk_data_f.Text), False, CBool(chkConsiderarNotasBaixadas.Value))
         If lValorAbastecimento > 0 Then
             ImpCliente
             lTotal = lTotal + lValorAbastecimento
@@ -403,6 +429,134 @@ Private Sub ImpDados()
         ImpTotal
     End If
 End Sub
+Private Sub ImpDadosCombustivel(ByVal pConsiderarBaixadas As Boolean)
+    Dim xLinha As String
+    Dim xEmpresa As Integer
+    
+    If chkUnificaEmpresa.Value = 1 Then
+        xEmpresa = 0
+    Else
+        xEmpresa = g_empresa
+    End If
+    Do Until rsTabela.EOF
+        If lPagina = 0 Then
+            ImpCab
+            ImpCabNotaCombustivel
+        End If
+        If lLinha >= 55 Then
+            xLinha = "+-------+------------------------------------------+-----------+-----------+----------+"
+            Mid(xLinha, 25, 22) = " Cerrado Informática. "
+            BioImprime "@Printer.Print " & xLinha
+            BioImprime "@@Printer.NewPage"
+            ImpCab
+            ImpCabNotaCombustivel
+        End If
+        lValorAbastecimento = 0 'MovimentoNotaAbastecimento.TotalDataLiquido(xEmpresa, rsTabela("Codigo").Value, CDate(msk_data_i.Text), CDate(msk_data_f.Text), False)
+        lLitrosAbastecimento = 0 'MovimentoNotaAbastecimento.TotalDataLitrosCombustivel(xEmpresa, rsTabela("Codigo").Value, CDate(msk_data_i.Text), CDate(msk_data_f.Text), False)
+        
+        Call BuscaTotaisLitroEValorLiquidoCombustivelCliente(xEmpresa, rsTabela("Codigo").Value, CDate(msk_data_i.Text), CDate(msk_data_f.Text), chkConsiderarNotasBaixadas.Value)
+        
+        If lValorAbastecimento > 0 Then
+            ImpClienteCombustivel
+            lTotal = lTotal + lValorAbastecimento
+            lTotalLitroCombustivel = lTotalLitroCombustivel + lLitrosAbastecimento
+        End If
+        rsTabela.MoveNext
+    Loop
+    If lTotal > 0 Then
+        ImpTotalCombustivel
+    End If
+End Sub
+
+Private Sub BuscaTotaisLitroEValorLiquidoCombustivelCliente(ByVal pEmpresa As Integer, ByVal pCodigoCliente As Long, ByVal pDataInicial As Date, ByVal pDataFinal As Date, ByVal pCondiderarBaixadas As Boolean)
+
+    Dim xSQL As String
+
+    Dim xValor As Currency
+    Dim xQuantidade As Currency
+    
+    Set rsTabelaNotaAbastecimento = New ADODB.Recordset
+
+
+On Error GoTo trata_erro
+
+    xValor = 0
+    xQuantidade = 0
+    xSQL = "SELECT Quantidade, [Valor Desconto Unitario], [Valor Unitario], [Valor Total] FROM Movimento_Nota_Abastecimento"
+    If pEmpresa > 0 Then
+        xSQL = xSQL & " WHERE Empresa = " & pEmpresa
+    Else
+        xSQL = xSQL & " WHERE Empresa > 0"
+    End If
+    If pCodigoCliente > 0 Then
+        xSQL = xSQL & " AND [Codigo do Cliente] = " & pCodigoCliente
+    End If
+    
+    'Forma de selecionar somente nota de combustivel
+    xSQL = xSQL & " AND [Codigo do Produto2] IN (SELECT DISTINCT([Codigo do Produto]) FROM Bomba WHERE Empresa =" & pEmpresa & ")"
+        
+    xSQL = xSQL & " AND [Data do Abastecimento] >= " & preparaData(pDataInicial)
+    xSQL = xSQL & " AND [Data do Abastecimento] <= " & preparaData(pDataFinal)
+    
+    If pCondiderarBaixadas Then
+    
+        xSQL = xSQL & " UNION "
+        xSQL = xSQL & " SELECT Quantidade, [Valor Desconto Unitario], [Valor Unitario], [Valor Total] FROM Baixa_Nota_Abastecimento"
+        If pEmpresa > 0 Then
+            xSQL = xSQL & " WHERE Empresa = " & pEmpresa
+        Else
+            xSQL = xSQL & " WHERE Empresa > 0"
+        End If
+        If pCodigoCliente > 0 Then
+            xSQL = xSQL & " AND [Codigo do Cliente] = " & pCodigoCliente
+        End If
+            
+        'Forma de selecionar somente nota de combustivel
+        xSQL = xSQL & " AND [Codigo do Produto2] IN (SELECT DISTINCT([Codigo do Produto]) FROM Bomba WHERE Empresa =" & pEmpresa & ")"
+    
+            
+        xSQL = xSQL & " AND [Data do Abastecimento] >= " & preparaData(pDataInicial)
+        xSQL = xSQL & " AND [Data do Abastecimento] <= " & preparaData(pDataFinal)
+    
+    End If
+    
+    Set rsTabelaNotaAbastecimento = Conectar.RsConexao(xSQL)
+
+    
+    If rsTabelaNotaAbastecimento.RecordCount > 0 Then
+            rsTabelaNotaAbastecimento.MoveFirst
+            Do Until rsTabelaNotaAbastecimento.EOF
+                'Quantidade
+                xQuantidade = xQuantidade + rsTabelaNotaAbastecimento("Quantidade").Value
+                'Desconto
+                If rsTabelaNotaAbastecimento("Valor Desconto Unitario").Value > 0 Then
+                    xValor = xValor + rsTabelaNotaAbastecimento("Valor Total").Value
+                    xValor = xValor - Format(rsTabelaNotaAbastecimento("Valor Desconto Unitario").Value * rsTabelaNotaAbastecimento("Quantidade").Value, "0000000000.00")
+                'Acrescimo
+                ElseIf rsTabelaNotaAbastecimento("Valor Desconto Unitario").Value < 0 Then
+                    xValor = xValor + rsTabelaNotaAbastecimento("Valor Total").Value
+                    xValor = xValor + Format(rsTabelaNotaAbastecimento("Valor Desconto Unitario").Value * -1 * rsTabelaNotaAbastecimento("Quantidade").Value, "0000000000.00")
+                Else
+                    xValor = xValor + rsTabelaNotaAbastecimento("Valor Total").Value
+                End If
+                rsTabelaNotaAbastecimento.MoveNext
+            Loop
+    End If
+    rsTabelaNotaAbastecimento.Close
+    Set rsTabelaNotaAbastecimento = Nothing
+    
+    lValorAbastecimento = xValor
+    lLitrosAbastecimento = xQuantidade
+
+    Exit Sub
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+
+
+
+End Sub
+
 Private Sub ImpDadosDuplicata()
     Dim xLinha As String
     
@@ -460,6 +614,31 @@ Private Sub ImpCliente()
     BioImprime "@Printer.Print " & xLinha
     lLinha = lLinha + 1
 End Sub
+Private Sub ImpClienteCombustivel()
+    Dim xLinha As String
+    Dim i As Integer
+    Dim xData As Date
+    Dim xDias As Integer
+    '        "+----+------------------------------------------+------------+--------------+---------+"
+    xLinha = "|    |                                          |            |              |         |"
+    i = Len(Format(rsTabela("Codigo").Value, "#####"))
+    Mid(xLinha, 2 + 4 - i, i) = Format(rsTabela("Codigo").Value, "#####")
+    Mid(xLinha, 7, 40) = rsTabela("NomeCliente").Value
+    
+    i = Len(Format(lLitrosAbastecimento, "###,###,##0.00"))
+    Mid(xLinha, 50 + 12 - i, i) = Format(lLitrosAbastecimento, "###,###,##0.00")
+    
+    i = Len(Format(lValorAbastecimento, "###,###,##0.00"))
+    Mid(xLinha, 63 + 14 - i, i) = Format(lValorAbastecimento, "###,###,##0.00")
+    
+    xData = MovimentoNotaAbastecimento.LocalizaPrimeiraDataCliente(g_empresa, CLng(rsTabela("Codigo").Value))
+    xDias = DateDiff("d", xData, Date)
+    i = Len(Format(xDias, "##,##0"))
+    Mid(xLinha, 78 + 9 - i, i) = Format(xDias, "##,##0")
+    
+    BioImprime "@Printer.Print " & xLinha
+    lLinha = lLinha + 1
+End Sub
 Private Sub ImpDetDuplicata()
     Dim xLinha As String
     Dim i As Integer
@@ -506,6 +685,25 @@ Private Sub ImpTotal()
     Mid(xLinha, 54 + 14 - i, i) = Format(lTotal, "###,###,##0.00")
     BioImprime "@Printer.Print " & xLinha
     xLinha = "+--------------------------------------------------+----------------+----------+"
+    Mid(xLinha, 5, 22) = " Cerrado Informática. "
+    BioImprime "@Printer.Print " & xLinha
+    BioImprime "@@Printer.FontName = Draft 10cpi"
+    BioImprime "@Printer.Print " & " "
+End Sub
+Private Sub ImpTotalCombustivel()
+    Dim xLinha As String
+    Dim i As Integer
+    
+    '        "+----+------------------------------------------+------------+--------------+---------+"
+    xLinha = "+----+------------------------------------------+------------+--------------+---------+"
+    BioImprime "@Printer.Print " & xLinha
+    xLinha = "|                                        TOTAL  |            |              |         |"
+    i = Len(Format(lTotalLitroCombustivel, "###,###,##0.00"))
+    Mid(xLinha, 50 + 12 - i, i) = Format(lTotalLitroCombustivel, "###,###,##0.00")
+    i = Len(Format(lTotal, "###,###,##0.00"))
+    Mid(xLinha, 63 + 14 - i, i) = Format(lTotal, "###,###,##0.00")
+    BioImprime "@Printer.Print " & xLinha
+    xLinha = "+-----------------------------------------------+------------+--------------+---------+"
     Mid(xLinha, 5, 22) = " Cerrado Informática. "
     BioImprime "@Printer.Print " & xLinha
     BioImprime "@@Printer.FontName = Draft 10cpi"
@@ -568,27 +766,70 @@ Private Sub ImpCab()
     BioImprime "@@Printer.FontName = Draft 5cpi"
     BioImprime "@@Printer.FontName = Draft 10cpi"
     BioImprime "@@Printer.CurrentY = 0"
-    BioImprime "@Printer.Print " & "+------------------------------------------------------------------------------+"
-    x_string_40 = g_nome_empresa
-    BioImprime "@Printer.Print " & "| " & x_string_40 & "                         Página, " & Format(lPagina, "000") & " |"
-    '                   1         2         3         4         5         6         7         8
-    '          12345678901234567890123456789012345678901234567890123456789012345678901234567890
-    '                                              123456789012345678901234567890
-    xLinha = "| NOTAS DE ABASTECIMENTO/DUPLICATA                          CIDADE, __/__/____ |"
-    i = Len(g_cidade_empresa)
-    Mid(xLinha, 37 + 30 - i, i) = g_cidade_empresa
-    Mid(xLinha, 69, 10) = msk_data.Text
-    BioImprime "@Printer.Print " & xLinha
-    BioImprime "@Printer.Print " & "| Referente a.: " & msk_data_i.Text & " a " & msk_data_f.Text & "                                        |"
-    xLinha = "| GRUPO DE CLIENTE.:                                                           |"
-    Mid(xLinha, 22, 30) = cboGrupoCliente.Text
-    BioImprime "@Printer.Print " & xLinha
+    '                                   +-------+------------------------------------------+-----------+-----------+----------+
+    If chkSomenteCombustivel.Value Then
+        BioImprime "@Printer.Print " & "+-------------------------------------------------------------------------------------+"
+        x_string_40 = g_nome_empresa
+        BioImprime "@Printer.Print " & "| " & x_string_40 & "                                Página, " & Format(lPagina, "000") & " |"
+        '                   1         2         3         4         5         6         7         8
+        '          12345678901234567890123456789012345678901234567890123456789012345678901234567890
+        '                                              123456789012345678901234567890
+        xLinha = "| NOTAS DE ABASTECIMENTO/DUPLICATA                                 CIDADE, __/__/____ |"
+        i = Len(g_cidade_empresa)
+        Mid(xLinha, 37 + 30 - i, i) = g_cidade_empresa
+        Mid(xLinha, 76, 10) = msk_data.Text
+        BioImprime "@Printer.Print " & xLinha
+        BioImprime "@Printer.Print " & "| Referente a.: " & msk_data_i.Text & " a " & msk_data_f.Text & "                                               |"
+        xLinha = "| GRUPO DE CLIENTE.:                                                                  |"
+        Mid(xLinha, 22, 30) = cboGrupoCliente.Text
+        BioImprime "@Printer.Print " & xLinha
+        xLinha = "| Considerar Baixadas:                                       Somente Combustível:     |"
+        Mid(xLinha, 24, 3) = IIf(CBool(chkConsiderarNotasBaixadas.Value), "SIM", "NÃO")
+        Mid(xLinha, 83, 3) = IIf(CBool(chkSomenteCombustivel.Value), "SIM", "NÃO")
+        BioImprime "@Printer.Print " & xLinha
+    Else
+        BioImprime "@Printer.Print " & "+------------------------------------------------------------------------------+"
+        x_string_40 = g_nome_empresa
+        BioImprime "@Printer.Print " & "| " & x_string_40 & "                         Página, " & Format(lPagina, "000") & " |"
+        '                   1         2         3         4         5         6         7         8
+        '          12345678901234567890123456789012345678901234567890123456789012345678901234567890
+        '                                              123456789012345678901234567890
+        xLinha = "| NOTAS DE ABASTECIMENTO/DUPLICATA                          CIDADE, __/__/____ |"
+        i = Len(g_cidade_empresa)
+        Mid(xLinha, 37 + 30 - i, i) = g_cidade_empresa
+        Mid(xLinha, 69, 10) = msk_data.Text
+        BioImprime "@Printer.Print " & xLinha
+        BioImprime "@Printer.Print " & "| Referente a.: " & msk_data_i.Text & " a " & msk_data_f.Text & "                                        |"
+        xLinha = "| GRUPO DE CLIENTE.:                                                           |"
+        Mid(xLinha, 22, 30) = cboGrupoCliente.Text
+        BioImprime "@Printer.Print " & xLinha
+        xLinha = "| Considerar Baixadas:                                Somente Combustível:     |"
+        Mid(xLinha, 24, 3) = IIf(CBool(chkConsiderarNotasBaixadas.Value), "SIM", "NÃO")
+        Mid(xLinha, 76, 3) = IIf(CBool(chkSomenteCombustivel.Value), "SIM", "NÃO")
+        BioImprime "@Printer.Print " & xLinha
+    End If
+    
 End Sub
 Private Sub ImpCabNota()
     BioImprime "@@Printer.FontBold = False"
     BioImprime "@Printer.Print " & "+-------+------------------------------------------+----------------+----------+"
     BioImprime "@Printer.Print " & "|  COD. | RAZÃO SOCIAL                             | TOTAL   ABAST. |   DIAS   |"
     BioImprime "@Printer.Print " & "+-------+------------------------------------------+----------------+----------+"
+    
+    
+End Sub
+Private Sub ImpCabNotaCombustivel()
+    BioImprime "@@Printer.FontBold = False"
+    '                              "+----+------------------------------------------+------------+--------------+---------+"
+    BioImprime "@Printer.Print " & "+----+------------------------------------------+------------+--------------+---------+"
+    If CBool(chkConsiderarNotasBaixadas.Value) Then
+        BioImprime "@Printer.Print " & "| COD| RAZÃO SOCIAL                             |     LITROS |       TOTAL  |DIAS S/BX|"
+    Else
+        BioImprime "@Printer.Print " & "| COD| RAZÃO SOCIAL                             |     LITROS |      TOTAL   |   DIAS  |"
+    End If
+    BioImprime "@Printer.Print " & "+----+------------------------------------------+------------+--------------+---------+"
+    
+    
 End Sub
 Private Sub ImpCabDuplicata()
     BioImprime "@@Printer.FontName = Sans Serif 17cpi"

@@ -15,6 +15,8 @@ Option Explicit
 
 Private mCodigo As Integer
 Private mNome As String
+Private mCodigoFinTipoMovimento As Integer
+Private mEmpresa As Integer
 
 Private rsLocalCobranca As New adodb.Recordset
 'Const errNao_Consegui_Localizar = vbObjectError + 512 + 2
@@ -30,23 +32,38 @@ Public Property Let Codigo(ByVal Valor As Integer)
     mCodigo = Valor
 End Property
 
-
 Public Property Get Nome() As String
     Nome = mNome
 End Property
 Public Property Let Nome(ByVal Valor As String)
     mNome = Valor
 End Property
+
+Public Property Get CodigoFinTipoMovimento() As Integer
+    CodigoFinTipoMovimento = mCodigoFinTipoMovimento
+End Property
+Public Property Let CodigoFinTipoMovimento(ByVal Valor As Integer)
+    mCodigoFinTipoMovimento = Valor
+End Property
+
+Public Property Get Empresa() As Integer
+    Empresa = mEmpresa
+End Property
+Public Property Let Empresa(ByVal Valor As Integer)
+    mEmpresa = Valor
+End Property
+
+
 'Fim Propriedades da Classe
 
 
 'Inicio Métodos da Classe
-Public Function LocalizarCodigo(ByVal nCodigo As Integer) As Boolean
+Public Function LocalizarCodigo(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarCodigo = False
-    gSQL = PreparaSQL("WHERE Codigo = " & nCodigo, "")
+    gSQL = PreparaSQL("WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa, "")
     LocalizarCodigo = Localizar
     Exit Function
 
@@ -55,12 +72,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarAnterior() As Boolean
+Public Function LocalizarAnterior(ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarAnterior = False
-    gSQL = PreparaSQL("WHERE Codigo < " & mCodigo, "ORDER BY Codigo DESC")
+    gSQL = PreparaSQL("WHERE Codigo < " & mCodigo & " AND Empresa = " & pEmpresa, "ORDER BY Codigo DESC")
     LocalizarAnterior = Localizar
     Exit Function
 
@@ -69,12 +86,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarNome(ByVal nNome As String) As Boolean
+Public Function LocalizarNome(ByVal nNome As String, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarNome = False
-    gSQL = PreparaSQL("WHERE Nome = " & preparaTexto(nNome), "")
+    gSQL = PreparaSQL("WHERE Nome = " & preparaTexto(nNome) & " AND Empresa = " & pEmpresa, "")
     LocalizarNome = Localizar
     Exit Function
 
@@ -83,12 +100,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarPrimeiro() As Boolean
+Public Function LocalizarPrimeiro(ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarPrimeiro = False
-    gSQL = PreparaSQL("WHERE Codigo > " & 0, "ORDER BY Codigo ASC")
+    gSQL = PreparaSQL("WHERE Codigo > 0 AND Empresa = " & pEmpresa, "ORDER BY Codigo ASC")
     LocalizarPrimeiro = Localizar
     Exit Function
 
@@ -97,12 +114,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarProximo() As Boolean
+Public Function LocalizarProximo(ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarProximo = False
-    gSQL = PreparaSQL("WHERE Codigo > " & mCodigo, "ORDER BY Codigo ASC")
+    gSQL = PreparaSQL("WHERE Codigo > " & mCodigo & " AND Empresa = " & pEmpresa, "ORDER BY Codigo ASC")
     LocalizarProximo = Localizar
     Exit Function
 
@@ -111,12 +128,12 @@ trata_erro:
 End Function
 
 
-Public Function LocalizarUltimo() As Boolean
+Public Function LocalizarUltimo(ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo trata_erro
     
     LocalizarUltimo = False
-    gSQL = PreparaSQL("WHERE Codigo < " & 9999, "ORDER BY Codigo DESC")
+    gSQL = PreparaSQL("WHERE Codigo < " & 9999 & " AND Empresa = " & pEmpresa, "ORDER BY Codigo DESC")
     LocalizarUltimo = Localizar
     Exit Function
 
@@ -132,9 +149,13 @@ On Error GoTo Err_Incluir
 Dim lRecordsAffected As Long
 
     Incluir = False
-    gSQL = "INSERT INTO Local_Cobrancas ( Codigo, Nome ) VALUES ( "
+    gSQL = "INSERT INTO Local_Cobrancas ( Codigo, Nome, CodigoFinTipoMovimento, Empresa ) VALUES ( "
     Call sqlNumero(1, mCodigo, ", ")
-    Call sqlTexto(1, mNome, " )")
+    Call sqlTexto(1, mNome, ", ")
+    Call sqlNumero(1, mCodigoFinTipoMovimento, ", ")
+    Call sqlNumero(1, mEmpresa, " )")
+    
+    
     gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
     Incluir = True
     Exit Function
@@ -143,14 +164,17 @@ Err_Incluir:
 End Function
 
 
-Public Function Alterar(ByVal nCodigo As Integer) As Boolean
+Public Function Alterar(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo Err_Alterar
 
     Alterar = False
     gSQL = "UPDATE Local_Cobrancas SET "
     Call sqlTexto(2, "Nome = ", mNome)
-    gSQL = gSQL & " WHERE Codigo = " & nCodigo
+    Call sqlNumero(2, ", CodigoFinTipoMovimento = ", mCodigoFinTipoMovimento)
+    Call sqlNumero(2, ", Empresa = ", mEmpresa)
+    
+    gSQL = gSQL & " WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa
     gConn.Execute gSQL, Alterar, adCmdText + adExecuteNoRecords
     Alterar = True
     Exit Function
@@ -159,12 +183,12 @@ Err_Alterar:
 End Function
 
 
-Public Function Excluir(ByVal nCodigo As Integer) As Boolean
+Public Function Excluir(ByVal nCodigo As Integer, ByVal pEmpresa As Integer) As Boolean
 
 On Error GoTo Err_Excluir
             
     Excluir = False
-    gSQL = "DELETE FROM Local_Cobrancas WHERE Codigo = " & nCodigo
+    gSQL = "DELETE FROM Local_Cobrancas WHERE Codigo = " & nCodigo & " AND Empresa = " & pEmpresa
     gConn.Execute gSQL, Excluir, adCmdText + adExecuteNoRecords
     Excluir = True
     Exit Function
@@ -176,7 +200,7 @@ End Function
 
 'Funções / Procedures internas
 Private Function PreparaSQL(ByVal xCondicao As String, ByVal xTipoOrdem As String) As String
-    PreparaSQL = Trim("SELECT Codigo, Nome FROM Local_Cobrancas" & " " & xCondicao & " " & xTipoOrdem)
+    PreparaSQL = Trim("SELECT Codigo, Nome, CodigoFinTipoMovimento, Empresa FROM Local_Cobrancas" & " " & xCondicao & " " & xTipoOrdem)
 End Function
 
 
@@ -199,6 +223,8 @@ End Function
 Private Sub AtribuiValor()
     Codigo = rsLocalCobranca("Codigo").Value
     Nome = rsLocalCobranca("Nome").Value
+    CodigoFinTipoMovimento = rsLocalCobranca("CodigoFinTipoMovimento").Value
+    Empresa = rsLocalCobranca("Empresa").Value
 End Sub
 
 

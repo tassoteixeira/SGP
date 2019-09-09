@@ -250,7 +250,7 @@ Dim lNomeArquivo As String
 Dim lTotal As Currency
 Dim lSQL As String
 
-Dim rstBaixaContasPagar As adodb.Recordset
+Dim rstBaixaContasPagar As ADODB.Recordset
 Private Sub Finaliza()
     Call GravaAuditoria(1, Me.name, 11, "")
 End Sub
@@ -354,11 +354,12 @@ Private Sub LoopBaixaContasPagar()
     Dim x_local_cobranca As String
     
     lSQL = ""
-    lSQL = lSQL & "SELECT Empresa, Nome_Fornecedor, Data_Pagamento, Valor_Pagamento, Numero_Documento, Local_Cobranca, Data_Emissao, Numero_Documento, Complemento, Local_Cobrancas.Nome AS NomeLocalCobranca" 'new 10/02
+    lSQL = lSQL & "SELECT Baixa_Pagar.Empresa, Nome_Fornecedor, Data_Pagamento, Valor_Pagamento, Numero_Documento, Local_Cobranca, Data_Emissao, Numero_Documento, Complemento, Local_Cobrancas.Nome AS NomeLocalCobranca" 'new 10/02
     lSQL = lSQL & "  FROM Baixa_Pagar, Local_Cobrancas"
     lSQL = lSQL & " WHERE Data_Pagamento >= " & preparaData(CDate(msk_data_i.Text))
     lSQL = lSQL & "   AND Data_Pagamento <= " & preparaData(CDate(msk_data_f.Text))
     lSQL = lSQL & "   AND Local_Cobranca = Local_Cobrancas.Codigo"
+    lSQL = lSQL & "   AND Baixa_Pagar.Empresa = Local_Cobrancas.Empresa"
     If chkUnificaEmpresa.Value = 0 Then
         lSQL = lSQL & "    AND Empresa = " & g_empresa
     End If
@@ -385,12 +386,12 @@ Private Sub LoopBaixaContasPagar()
     Set rstBaixaContasPagar = Nothing
 End Sub
 Private Sub PreencheCboConta()
-    Dim rstConta As New adodb.Recordset
+    Dim rstConta As New ADODB.Recordset
     
     cbo_conta.Clear
     cbo_conta.AddItem "Todas as Contas"
     cbo_conta.ItemData(cbo_conta.NewIndex) = 0
-    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM contas ORDER BY NOME")
+    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM contas WHERE Empresa = " & g_empresa & "  ORDER BY NOME")
     Do Until rstConta.EOF
         cbo_conta.AddItem rstConta!Nome
         cbo_conta.ItemData(cbo_conta.NewIndex) = rstConta!Codigo
@@ -457,7 +458,7 @@ Private Sub Relatorio()
 '    cr_relato.Action = 1
 End Sub
 Private Sub cbo_conta_GotFocus()
-    SendMessageLong cbo_conta.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_conta.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -466,7 +467,7 @@ Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 Private Sub cbo_fornecedor_GotFocus()
-    SendMessageLong cbo_fornecedor.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_fornecedor.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_fornecedor_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -475,7 +476,7 @@ Private Sub cbo_fornecedor_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 Private Sub cbo_tipo_despesa_GotFocus()
-    SendMessageLong cbo_tipo_despesa.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_tipo_despesa.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_tipo_despesa_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -608,7 +609,7 @@ Private Sub Form_Load()
     PreencheCboTipoDespesa
 End Sub
 Private Sub PreencheCboFornecedor()
-    Dim rstFornecedor As New adodb.Recordset
+    Dim rstFornecedor As New ADODB.Recordset
     
     cbo_fornecedor.Clear
     cbo_fornecedor.AddItem "Todos os Fornecedores"

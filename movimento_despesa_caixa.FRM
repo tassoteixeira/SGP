@@ -461,7 +461,7 @@ Dim lCxDataDigitacao As Date
 Dim lCxHoraDigitacao As Date
 Dim lCxCodigoLancamentoPadrao As Integer
 
-Private rsTabela As New adodb.Recordset
+Private rsTabela As New ADODB.Recordset
 
 Private BaixaPagar As New cBaixaPagar
 Private Configuracao As New cConfiguracao
@@ -635,7 +635,7 @@ Private Sub AtualTela()
     dtcbo_fornecedor.BoundText = MovDespesaCaixa.CodigoFornecedor
     txt_valor.Text = Format(MovDespesaCaixa.Valor, "###,##0.00")
     txt_numero_documento.Text = MovDespesaCaixa.NumeroDocumento
-    If Contas.LocalizarCodigo(MovDespesaCaixa.CodigoConta) Then
+    If Contas.LocalizarCodigo(MovDespesaCaixa.CodigoConta, MovDespesaCaixa.Empresa) Then
         For i = 0 To cbo_conta.ListCount - 1
             cbo_conta.ListIndex = i
             If cbo_conta.ItemData(i) = Contas.Codigo Then
@@ -986,7 +986,7 @@ Function ValidaConta() As Integer
         MsgBox "Fornecedor não cadastrado, selecione outro fornecedor.", vbInformation, "Mensagem do Sistema!"
         Exit Function
     End If
-    If Not Contas.LocalizarCodigo(Fornecedor.CodigoConta) Then
+    If Not Contas.LocalizarCodigo(Fornecedor.CodigoConta, Fornecedor.Empresa) Then
         MsgBox "Conta não cadastrada.", vbInformation, "Mensagem do Sistema!"
         Exit Function
     End If
@@ -1184,9 +1184,10 @@ Private Sub PreencheCboConta()
     'Prepara SQL
     xSQL = "SELECT Nome, Codigo"
     xSQL = xSQL & "  FROM Contas"
+    xSQL = xSQL & "  WHERE Empresa = " & g_empresa
     xSQL = xSQL & " ORDER BY Nome"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(xSQL)
     'Verifica tabela
     If rsTabela.RecordCount > 0 Then

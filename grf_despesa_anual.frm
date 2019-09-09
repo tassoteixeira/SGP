@@ -197,7 +197,7 @@ Private Sub cbo_ano_Click()
     End If
 End Sub
 Private Sub cbo_ano_GotFocus()
-    SendMessageLong cbo_ano.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_ano.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_ano_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -266,13 +266,13 @@ Private Sub Form_Load()
     CentraForm Me
 End Sub
 Private Sub PreencheCboConta()
-    Dim rsConta As New adodb.Recordset
+    Dim rsConta As New ADODB.Recordset
     
     cbo_conta.Clear
     cbo_conta.AddItem "Todas as Contas"
     cbo_conta.ItemData(cbo_conta.NewIndex) = 0
     
-    Set rsConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas ORDER BY Nome")
+    Set rsConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas WHERE Empresa = " & g_empresa & " ORDER BY Nome")
     'loop RecordSet
     With rsConta
         If .RecordCount > 0 Then

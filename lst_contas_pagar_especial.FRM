@@ -232,7 +232,7 @@ Dim lSubTotal As Currency
 Private GrupoEmpresa As New cGrupoEmpresa
 Private LocalCobranca As New cLocalCobranca
 Private MovimentoContaPagar As New cMovimentoContaPagar
-Private rstMovimentoContasPagar As New adodb.Recordset
+Private rstMovimentoContasPagar As New ADODB.Recordset
 Private Sub CalculaTotalEmpresas()
     Dim x_empresa As Integer
     Dim i As Integer
@@ -306,7 +306,7 @@ Private Sub LoopMovimentoContasPagar()
     With rstMovimentoContasPagar
         If .RecordCount > 0 Then
             Do Until .EOF
-                If LocalCobranca.LocalizarCodigo(!local_cobranca) Then
+                If LocalCobranca.LocalizarCodigo(!local_cobranca, !Empresa) Then
                     x_local_cobranca = LocalCobranca.Nome
                 Else
                     x_local_cobranca = "***"
@@ -325,12 +325,12 @@ Private Sub LoopMovimentoContasPagar()
     End With
 End Sub
 Private Sub PreencheCboConta()
-    Dim rstConta As New adodb.Recordset
+    Dim rstConta As New ADODB.Recordset
     
     cbo_conta.Clear
     cbo_conta.AddItem "Todas as Contas"
     cbo_conta.ItemData(cbo_conta.NewIndex) = 0
-    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas ORDER BY Nome")
+    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas WHERE Empresa = " & g_empresa & " ORDER BY Nome")
     'loop RecordSet
     With rstConta
         If Not .BOF Or Not .EOF Then
@@ -346,7 +346,7 @@ Private Sub PreencheCboConta()
     Set rstConta = Nothing
 End Sub
 Private Sub PreencheCboFornecedor()
-    Dim rstFornecedor As New adodb.Recordset
+    Dim rstFornecedor As New ADODB.Recordset
     
     cbo_fornecedor.Clear
     cbo_fornecedor.AddItem "Todos os Fornecedores"
@@ -614,7 +614,7 @@ End Sub
 Private Sub ZeraVariaveis()
     Dim i As Integer
     Dim i2 As Integer
-    Dim rstEmpresa As New adodb.Recordset
+    Dim rstEmpresa As New ADODB.Recordset
     
     lLinha = 0
     lPagina = 0
@@ -658,7 +658,7 @@ Private Sub ZeraVariaveis()
     Next
 End Sub
 Private Sub cbo_conta_GotFocus()
-    SendMessageLong cbo_conta.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_conta.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -667,7 +667,7 @@ Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 Private Sub cbo_fornecedor_GotFocus()
-    SendMessageLong cbo_fornecedor.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_fornecedor.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_fornecedor_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then

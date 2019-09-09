@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "msmask32.ocx"
-Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "msflxgrd.ocx"
+Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "MSFLXGRD.OCX"
 Begin VB.Form baixa_contas_pagar 
    Caption         =   "Baixa de Contas à Pagar"
    ClientHeight    =   7785
@@ -386,6 +386,7 @@ Dim lData As Date
 Dim lNumeroMovimentoCaixa As Long
 Dim lNumeroMovimentoCaixaBaixa As Long
 Dim lNumeroMovimentoFinanceiro As Integer
+Dim lIntegracaoComFinanceiroDiario As Boolean
 
 Dim lCxData As Date
 Dim lCxPeriodo As String
@@ -407,6 +408,9 @@ Private MovCaixa As New cMovimentoCaixa
 Private MovContaPagar As New cMovimentoContaPagar
 Private MovimentoFinanceiro As New cMovimentoFinanceiro
 Private PortadorFinanceiro As New cPortadorFinanceiro
+
+Private ConfiguracaoDiversa As New cConfiguracaoDiversa
+
 Private Sub AjustaCaixaPista()
     Dim xString As String
     Dim xOperacao As String
@@ -455,7 +459,7 @@ Private Sub AtivaBotoes()
 End Sub
 Private Sub AtualizaMSFlexGrid()
     Dim i As Integer
-    Dim rsTabela As adodb.Recordset
+    Dim rsTabela As ADODB.Recordset
     LimpaMSFlexGrid
     lSQL = ""
     lSQL = lSQL & "SELECT nome_fornecedor, data_vencimento, valor, complemento, numero_documento, local_cobranca, codigo_conta, data_emissao, empresa, registro, codigo_fornecedor"
@@ -463,7 +467,7 @@ Private Sub AtualizaMSFlexGrid()
     lSQL = lSQL & " WHERE contas_pagar.empresa = " & g_empresa
     lSQL = lSQL & " ORDER BY data_vencimento"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(lSQL)
     'Verifica movimento
     i = 0
@@ -564,12 +568,12 @@ Private Sub MostraVencimento()
         lbl_numero_documento.Caption = MovContaPagar.NumeroDocumento
         lbl_data_vencimento.Caption = MovContaPagar.DataVencimento
         lbl_valor_vencimento.Caption = Format(MovContaPagar.Valor, "###,##0.00")
-        If LocalCobranca.LocalizarCodigo(MovContaPagar.LocalCobranca) Then
+        If LocalCobranca.LocalizarCodigo(MovContaPagar.LocalCobranca, g_empresa) Then
             lbl_local_cobranca.Caption = LocalCobranca.Nome
         Else
             lbl_local_cobranca.Caption = "** Não Cadastrada **"
         End If
-        If Contas.LocalizarCodigo(MovContaPagar.CodigoConta) Then
+        If Contas.LocalizarCodigo(MovContaPagar.CodigoConta, MovContaPagar.Empresa) Then
             lbl_conta.Caption = Contas.Nome
         Else
             lbl_conta.Caption = "** Não Cadastrada **"
@@ -606,12 +610,12 @@ Private Sub AtualTela()
     lbl_numero_documento.Caption = BaixaPagar.NumeroDocumento
     lbl_data_vencimento.Caption = BaixaPagar.DataVencimento
     lbl_valor_vencimento.Caption = Format(BaixaPagar.Valor, "###,##0.00")
-    If LocalCobranca.LocalizarCodigo(BaixaPagar.LocalCobranca) Then
+    If LocalCobranca.LocalizarCodigo(BaixaPagar.LocalCobranca, g_empresa) Then
         lbl_local_cobranca.Caption = LocalCobranca.Nome
     Else
         lbl_local_cobranca.Caption = "** Não Cadastrada **"
     End If
-    If Contas.LocalizarCodigo(BaixaPagar.CodigoConta) Then
+    If Contas.LocalizarCodigo(BaixaPagar.CodigoConta, BaixaPagar.Empresa) Then
         lbl_conta.Caption = Contas.Nome
     Else
         lbl_conta.Caption = "** Não Cadastrada **"
@@ -810,6 +814,58 @@ Function IncluiMovimentoCaixaAntesBaixa() As Boolean
         MsgBox "Não foi integrado no caixa o valor=" & lbl_valor_vencimento.Caption, vbInformation, "Erro de Integridade"
     End If
 End Function
+Private Function IncluiMovimentoFinanceiroDiario() As Boolean
+On Error GoTo FileError
+
+IncluiMovimentoFinanceiroDiario = False
+
+        Dim xMovimentoTesouraria As New CadastroDLL.cFinMovimentoTesouraria
+        Dim SaldoTesouraria As New CadastroDLL.cFinSaldoTesouraria
+
+        Dim xCodigoTipoMovimento As Integer
+        Dim xCodigoFinConta As Integer
+        xCodigoTipoMovimento = 0
+        xCodigoFinConta = 0
+        If LocalCobranca.LocalizarCodigo(BaixaPagar.LocalCobranca, BaixaPagar.Empresa) Then
+            xCodigoTipoMovimento = LocalCobranca.CodigoFinTipoMovimento
+        End If
+        
+        If Contas.LocalizarCodigo(BaixaPagar.CodigoConta, BaixaPagar.Empresa) Then
+            xCodigoFinConta = Contas.CodigoFinContaTesouraria
+        End If
+
+        If xCodigoTipoMovimento = 0 Or xCodigoFinConta = 0 Then
+            MsgBox "Não foi possível integrar lançamento ao Financeiro Diário. xCodigoTipoMovimento = " & xCodigoTipoMovimento & " - xCodigoFinConta=" & xCodigoFinConta, vbCritical, "Erro Desconhecido!"
+            Exit Function
+        End If
+
+
+        xMovimentoTesouraria.Empresa = g_empresa
+        xMovimentoTesouraria.Data = BaixaPagar.DataPagamento
+        xMovimentoTesouraria.NumeroMovimento = xMovimentoTesouraria.ProximoCodigo(g_empresa, BaixaPagar.DataPagamento) 'CInt(txtNumeroMovimento.Text)
+        xMovimentoTesouraria.CodigoTipoMovimento = xCodigoTipoMovimento
+        xMovimentoTesouraria.Historico = lbl_complemento.Caption
+        xMovimentoTesouraria.ValorEntrada = 0 'fValidaValor(txtValorEntrada.Text)
+        xMovimentoTesouraria.ValorSaida = BaixaPagar.ValorPagamento
+        xMovimentoTesouraria.CodigoContaTesouraria = xCodigoFinConta
+        xMovimentoTesouraria.RegistroContaPagar = BaixaPagar.Registro
+        
+        If xMovimentoTesouraria.Incluir Then
+            IncluiMovimentoFinanceiroDiario = True
+            If Not SaldoTesouraria.AlterarSaldo(g_empresa, xCodigoTipoMovimento, BaixaPagar.DataPagamento, BaixaPagar.ValorPagamento, False) Then
+                MsgBox "IncluiMovimentoFinanceiroDiario: Não foi possível atualizar saldo do financeiro diário!", vbCritical, "Erro Desconhecido!"
+            End If
+        End If
+
+    Exit Function
+
+FileError:
+    MsgBox "IncluiMovimentoFinanceiroDiario: Erro não identificado!", vbCritical, "Erro Desconhecido!"
+
+End Function
+
+
+
 Private Function IncluiMovimentoFinanceiro(ByVal pFormaPagamento As String) As Boolean
     Dim xContaDebito As String
     Dim xContaCredito As String
@@ -897,6 +953,34 @@ On Error GoTo FileError
     
 FileError:
     MsgBox "ExcluiMovimentoFinanceiro: Erro não identificado!", vbCritical, "Erro Desconhecido!"
+End Function
+Private Function ExcluiMovimentoFinanceiroDiario(ByVal pRegistroContasAPagar As Integer) As Boolean
+    Dim xRegistroLocalizado As Boolean
+    Dim xMovimentoTesouraria As New CadastroDLL.cFinMovimentoTesouraria
+    Dim SaldoTesouraria As New CadastroDLL.cFinSaldoTesouraria
+
+    
+On Error GoTo FileError
+    
+    ExcluiMovimentoFinanceiroDiario = False
+    xRegistroLocalizado = False
+    If xMovimentoTesouraria.LocalizarRegistroContaAPagar(g_empresa, pRegistroContasAPagar) Then
+        If xMovimentoTesouraria.Excluir(g_empresa, xMovimentoTesouraria.Data, xMovimentoTesouraria.NumeroMovimento) Then
+            ExcluiMovimentoFinanceiroDiario = True
+            If Not SaldoTesouraria.AlterarSaldo(g_empresa, xMovimentoTesouraria.CodigoTipoMovimento, xMovimentoTesouraria.Data, xMovimentoTesouraria.ValorSaida, True) Then
+                MsgBox "ExcluiMovimentoFinanceiroDiario: Não foi possível atualizar saldo do financeiro diário!", vbCritical, "Erro Desconhecido!"
+            End If
+        Else
+            MsgBox "Não foi possível excluir o registro Financeiro Diário!", vbCritical, "Erro de Integridade!"
+        End If
+    Else
+        MsgBox "Registro Financeiro Diário não foi localizado para exclusão!", vbCritical, "Erro de Integridade!"
+    End If
+    
+    Exit Function
+    
+FileError:
+    MsgBox "ExcluiMovimentoFinanceiroDiario: Erro não identificado!", vbCritical, "Erro Desconhecido!"
 End Function
 Private Sub LimpaTela()
     lbl_registro.Caption = ""
@@ -989,6 +1073,9 @@ Private Sub cmd_extornar_Click()
             Call GravaAuditoria(1, Me.name, 10, "Dt.Venc:" & lbl_data_vencimento.Caption & "Dt.Pg:" & msk_data_pagamento.Text & " Vlr:" & txt_valor_pagamento.Text & " Forn:" & lbl_nome_fornecedor.Caption & " Reg:" & lbl_registro.Caption)
             Call ExcluiMovimentoCaixa
             Call ExcluiMovimentoFinanceiro
+            If lIntegracaoComFinanceiroDiario Then
+                Call ExcluiMovimentoFinanceiroDiario(BaixaPagar.Registro)
+            End If
             MovContaPagar.Empresa = BaixaPagar.Empresa
             MovContaPagar.Registro = BaixaPagar.Registro
             MovContaPagar.CodigoFornecedor = BaixaPagar.CodigoFornecedor
@@ -1024,16 +1111,28 @@ Private Sub cmd_extornar_Click()
 End Sub
 Private Sub cmd_ok_Click()
     Dim xFormaPagamento As String
+    Dim xCodigoLocalCobranca As Integer
+    
     On Error GoTo FileError
     If ValidaCampos Then
         AtivaBotoes
         'Inicio SELECIONA FORMA DE PAGAMENTO
         g_string = "Selecione a forma de pagamento!|@|"
-        g_string = g_string & 2 & "|@|"
-        g_string = g_string & "1|@|DINHEIRO|@|"
-        g_string = g_string & "1|@|BANCO|@|"
+        
+        If lIntegracaoComFinanceiroDiario Then
+        
+           g_string = g_string & ObtenhaTodosLocalCobranca
+        
+        Else
+            g_string = g_string & 2 & "|@|"
+            g_string = g_string & "1|@|DINHEIRO|@|"
+            g_string = g_string & "1|@|BANCO|@|"
+        End If
+        
         opcaoGeral.Show 1
         xFormaPagamento = RetiraGString(2)
+        xCodigoLocalCobranca = RetiraGString(1)
+        
         g_string = ""
         'Fim SELECIONA FORMA DE PAGAMENTO
         If lOpcao = 1 Then
@@ -1042,8 +1141,16 @@ Private Sub cmd_ok_Click()
                 MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
             End If
             AtualTabe
+            
+            If lIntegracaoComFinanceiroDiario Then
+                BaixaPagar.LocalCobranca = xCodigoLocalCobranca
+            End If
+            
             If BaixaPagar.Incluir Then
                 IncluiMovimentoFinanceiro (xFormaPagamento)
+                If lIntegracaoComFinanceiroDiario Then
+                    Call IncluiMovimentoFinanceiroDiario
+                End If
                 If Not MovContaPagar.Excluir(g_empresa, lRegistro) Then
                     MsgBox "Não foi possível excluir este registro!", vbInformation, "Erro de Integridade."
                 End If
@@ -1060,12 +1167,20 @@ Private Sub cmd_ok_Click()
             Call GravaAuditoria(1, Me.name, 10, "Para: Dt.Venc:" & lbl_data_vencimento.Caption & "Dt.Pg:" & msk_data_pagamento.Text & " Vlr:" & txt_valor_pagamento.Text & " Forn:" & lbl_nome_fornecedor.Caption & " Reg:" & lbl_registro.Caption)
             Call ExcluiMovimentoCaixa
             Call ExcluiMovimentoFinanceiro
+            
+            If lIntegracaoComFinanceiroDiario Then
+                Call ExcluiMovimentoFinanceiroDiario(lRegistro)
+            End If
+            
             If Not IncluiMovimentoCaixa Then
                 MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
             End If
             Atualtabe_2
             If BaixaPagar.Alterar(g_empresa, lRegistro) Then
                 IncluiMovimentoFinanceiro (xFormaPagamento)
+                If lIntegracaoComFinanceiroDiario Then
+                    Call IncluiMovimentoFinanceiroDiario
+                End If
             Else
                 MsgBox "Não foi possível alterar este registro!", vbInformation, "Erro de Integridade."
             End If
@@ -1087,15 +1202,48 @@ FileError:
     'ErroArquivo tbl_baixa_pagar.Name, "Fornecedoro"
     Exit Sub
 End Sub
+Private Function ObtenhaTodosLocalCobranca() As String
+    Dim rsLocalCobranca As ADODB.Recordset
+    Dim xSQL As String
+    Dim xRetorno As String
+
+    On Error GoTo FileError
+        
+        Set rsLocalCobranca = New ADODB.Recordset
+        xRetorno = ""
+        xSQL = "SELECT Codigo, Nome, CodigoFinTipoMovimento, Empresa FROM Local_Cobrancas WHERE Empresa = " & g_empresa
+        
+        Set rsLocalCobranca = Conectar.RsConexao(xSQL)
+        
+        With rsLocalCobranca
+        
+            If .RecordCount > 0 Then
+                xRetorno = .RecordCount & "|@|"
+                Do Until .EOF
+                    xRetorno = xRetorno & rsLocalCobranca("Codigo").Value & "|@|" & UCase(rsLocalCobranca("Nome").Value) & "|@|"
+                    .MoveNext
+                Loop
+            End If
+        End With
+        
+        ObtenhaTodosLocalCobranca = xRetorno
+        
+        Exit Function
+
+FileError:
+    MsgBox "Erro ao processar Baixa Duplicata Receber", vbInformation, "ProcessaBaixaDuplicataReceber"
+    Exit Function
+End Function
+
 Private Sub ProcessaBaixaContasPagar()
     Dim xData As Date
-    Dim rsBaixaPagar As adodb.Recordset
+    Dim rsBaixaPagar As ADODB.Recordset
     Dim xSQL As String
     
     On Error GoTo FileError
     
     xData = CDate("01/10/2004")
-    Set rsBaixaPagar = New adodb.Recordset
+    Set rsBaixaPagar = New ADODB.Recordset
     xSQL = "SELECT Registro, Data_Pagamento FROM Baixa_Pagar WHERE Empresa = " & g_empresa & " AND Data_Pagamento >= " & xData & " AND [Despesa de Caixa] = False" & " ORDER BY Data_Pagamento"
     Set rsBaixaPagar = Conectar.RsConexao(xSQL)
     With rsBaixaPagar
@@ -1257,6 +1405,12 @@ Private Sub Form_Load()
     lOpcao = 0
     lCxPeriodo = 0
     lNumeroMovimentoFinanceiro = 0
+    lIntegracaoComFinanceiroDiario = False
+    
+    If ConfiguracaoDiversa.LocalizarCodigo(1, "CONTAS A PAGAR:INTEGRADO COM FINANCEIRO") Then
+        lIntegracaoComFinanceiroDiario = ConfiguracaoDiversa.Verdadeiro
+    End If
+    
 End Sub
 Private Sub Form_Unload(Cancel As Integer)
     Finaliza

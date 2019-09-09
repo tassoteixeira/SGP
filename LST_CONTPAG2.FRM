@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "msmask32.ocx"
 Object = "{00025600-0000-0000-C000-000000000046}#4.6#0"; "crystl32.ocx"
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form lst_contas_pagar2 
    Caption         =   "Relação de Contas à Pagar Especial"
    ClientHeight    =   4260
@@ -270,13 +270,13 @@ Dim lCodigoGrupoEmpresa As Integer
 Dim lNomeGrupoEmpresa As String
 
 Dim lSQL As String
-Private rsContaPagar As New adodb.Recordset
+Private rsContaPagar As New ADODB.Recordset
 
 Private Fornecedor As New cFornecedor
 Private GrupoEmpresa As New cGrupoEmpresa
 Private LocalCobranca As New cLocalCobranca
 Private MovimentoContaPagar As New cMovimentoContaPagar
-Dim rs As New adodb.Recordset
+Dim rs As New ADODB.Recordset
 Private Sub CalculaResumo()
     Dim i As Integer 'data
     Dim j As Integer 'local de cobranca
@@ -312,6 +312,7 @@ Private Sub CalculaResumo()
     lSQL = lSQL & "      AND data_vencimento >= " & preparaData(CDate(msk_data_i.Text))
     lSQL = lSQL & "      AND data_vencimento <= " & preparaData(CDate(msk_data_f.Text))
     lSQL = lSQL & "      AND Local_Cobrancas.Codigo = local_cobranca"
+    lSQL = lSQL & "      AND Local_Cobrancas.Empresa = contas_pagar.empresa"
     lSQL = lSQL & "      AND Fornecedor.Empresa = contas_pagar.empresa"
     lSQL = lSQL & "      AND Fornecedor.Codigo = codigo_fornecedor"
     lSQL = lSQL & " ORDER BY data_vencimento, local_cobranca, contas_pagar.empresa"
@@ -327,7 +328,7 @@ Private Sub CalculaResumo()
     
     
     'Abre RecordSet
-    Set rsContaPagar = New adodb.Recordset
+    Set rsContaPagar = New ADODB.Recordset
     Set rsContaPagar = Conectar.RsConexao(lSQL)
     
     
@@ -441,12 +442,12 @@ Private Sub Finaliza()
     Set MovimentoContaPagar = Nothing
 End Sub
 Private Sub PreencheCboConta()
-    Dim rstConta As New adodb.Recordset
+    Dim rstConta As New ADODB.Recordset
     
     cbo_conta.Clear
     cbo_conta.AddItem "Todas as Contas"
     cbo_conta.ItemData(cbo_conta.NewIndex) = 0
-    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas ORDER BY Nome")
+    Set rstConta = Conectar.RsConexao("SELECT Codigo, Nome FROM Contas WHERE Empresa = " & g_empresa & " ORDER BY Nome")
     'loop RecordSet
     With rstConta
         If Not .BOF Or Not .EOF Then
@@ -496,6 +497,7 @@ Private Sub Relatorio()
         lSQL = lSQL & "      AND data_vencimento >= " & preparaData(CDate(msk_data_i.Text))
         lSQL = lSQL & "      AND data_vencimento <= " & preparaData(CDate(msk_data_f.Text))
         lSQL = lSQL & "      AND Local_Cobrancas.Codigo = local_cobranca"
+        lSQL = lSQL & "      AND Local_Cobrancas.Empresa = contas_pagar.empresa"
         lSQL = lSQL & "      AND Fornecedor.Empresa = contas_pagar.empresa"
         lSQL = lSQL & "      AND Fornecedor.Codigo = codigo_fornecedor"
         If cbo_fornecedor.ItemData(cbo_fornecedor.ListIndex) > 0 Then
@@ -507,7 +509,7 @@ Private Sub Relatorio()
         lSQL = lSQL & " ORDER BY data_vencimento, data_emissao"
         
         'Abre RecordSet
-        Set rsContaPagar = New adodb.Recordset
+        Set rsContaPagar = New ADODB.Recordset
         Set rsContaPagar = Conectar.RsConexao(lSQL)
         
         'Verifica movimento
@@ -708,7 +710,7 @@ Private Sub ImpResumo()
                         Call ImpResumoCab(l_linha_final)
                     End If
                     l_linha_final = l_linha_final + 0.5
-                    If LocalCobranca.LocalizarCodigo(j) Then
+                    If LocalCobranca.LocalizarCodigo(j, k) Then
                         ImprimeTexto LocalCobranca.Nome, l_coluna_tab + 0, l_coluna_tab + 2, l_linha_final, l_local
                     End If
                     ImprimeValor Format(lTotal(i, j, 1), "##,###,##0.00"), l_coluna_tab + 2, l_coluna_tab + 4, l_linha_final, l_local
@@ -757,7 +759,7 @@ Private Sub ImpResumo()
                 Call ImpResumoCab(l_linha_final)
             End If
             l_linha_final = l_linha_final + 0.5
-            If LocalCobranca.LocalizarCodigo(j) Then
+            If LocalCobranca.LocalizarCodigo(j, k) Then
                 ImprimeTexto LocalCobranca.Nome, l_coluna_tab + 0, l_coluna_tab + 2, l_linha_final, l_local
             End If
             ImprimeValor Format(lTotal(0, j, 1), "##,###,##0.00"), l_coluna_tab + 2, l_coluna_tab + 4, l_linha_final, l_local
@@ -1050,7 +1052,7 @@ Private Sub Form_Activate()
     Screen.MousePointer = 1
 End Sub
 Private Sub PreencheCboFornecedor()
-    Dim rstFornecedor As New adodb.Recordset
+    Dim rstFornecedor As New ADODB.Recordset
     
     cbo_fornecedor.Clear
     cbo_fornecedor.AddItem "Todos os Fornecedores"
@@ -1071,12 +1073,12 @@ Private Sub PreencheCboFornecedor()
     Set rstFornecedor = Nothing
 End Sub
 Private Sub PreencheCboLocalizacaoCobranca()
-    Dim rstLocalizacao As New adodb.Recordset
+    Dim rstLocalizacao As New ADODB.Recordset
     
     cboLocalizacaoCobranca.Clear
     cboLocalizacaoCobranca.AddItem "Todas as Localizações de Cobrança"
     cboLocalizacaoCobranca.ItemData(cboLocalizacaoCobranca.NewIndex) = 0
-    Set rstLocalizacao = Conectar.RsConexao("SELECT Codigo, Nome FROM Local_Cobrancas ORDER BY Nome")
+    Set rstLocalizacao = Conectar.RsConexao("SELECT Codigo, Nome FROM Local_Cobrancas WHERE Empresa = " & g_empresa & " ORDER BY Nome")
     'loop RecordSet
     With rstLocalizacao
         If Not .BOF Or Not .EOF Then

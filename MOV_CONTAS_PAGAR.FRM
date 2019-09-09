@@ -437,8 +437,10 @@ Dim lOpcao As Integer
 Dim lRegistro As Long
 Dim lData As Date
 Dim lNumeroMovimentoCaixa As Long
+Dim lIntegraFinanceiroDiario As Boolean
+Dim lAlterarContaFornecedor As Boolean
 
-Private rsTabela As New adodb.Recordset
+Private rsTabela As New ADODB.Recordset
 
 Private Contas As New cContas
 Private IntegracaoCaixa As New cIntegracaoCaixa
@@ -446,6 +448,8 @@ Private Fornecedor As New cFornecedor
 Private LocalCobranca As New cLocalCobranca
 Private MovCaixa As New cMovimentoCaixa
 Private MovContaPagar As New cMovimentoContaPagar
+Private ConfigDiversa As New cConfiguracaoDiversa
+
 Private Sub AtivaBotoes()
     cmd_novo.Enabled = True
     cmd_alterar.Enabled = True
@@ -506,7 +510,7 @@ Private Sub AtualTela()
     msk_data_vencimento.Text = Format(MovContaPagar.DataVencimento, "dd/mm/yyyy")
     txt_valor.Text = Format(MovContaPagar.Valor, "###,##0.00")
     txt_numero_documento.Text = MovContaPagar.NumeroDocumento
-    If LocalCobranca.LocalizarCodigo(MovContaPagar.LocalCobranca) Then
+    If LocalCobranca.LocalizarCodigo(MovContaPagar.LocalCobranca, MovContaPagar.Empresa) Then
         For i = 0 To cbo_local.ListCount - 1
             cbo_local.ListIndex = i
             If cbo_local.ItemData(i) = LocalCobranca.Codigo Then
@@ -516,7 +520,7 @@ Private Sub AtualTela()
     Else
         cbo_local.ListIndex = -1
     End If
-    If Contas.LocalizarCodigo(MovContaPagar.CodigoConta) Then
+    If Contas.LocalizarCodigo(MovContaPagar.CodigoConta, MovContaPagar.Empresa) Then
         For i = 0 To cbo_conta.ListCount - 1
             cbo_conta.ListIndex = i
             If cbo_conta.ItemData(i) = Contas.Codigo Then
@@ -611,7 +615,7 @@ Function IncluiMovimentoCaixa() As Boolean
     End If
 End Function
 Private Sub cbo_conta_GotFocus()
-    SendMessageLong cbo_conta.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_conta.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -620,7 +624,7 @@ Private Sub cbo_conta_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 Private Sub cbo_local_GotFocus()
-    SendMessageLong cbo_local.hwnd, CB_SHOWDROPDOWN, True, 0
+    SendMessageLong cbo_local.hWnd, CB_SHOWDROPDOWN, True, 0
 End Sub
 Private Sub cbo_local_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
@@ -749,6 +753,14 @@ Private Sub cmd_ok_Click()
             AtualTabe
             If MovContaPagar.Incluir Then
                 lRegistro = MovContaPagar.Registro
+                If lAlterarContaFornecedor Then
+                    If Fornecedor.LocalizarCodigo(g_empresa, MovContaPagar.CodigoFornecedor) Then
+                        Fornecedor.CodigoConta = MovContaPagar.CodigoConta
+                        If Not Fornecedor.Alterar(g_empresa, Fornecedor.Codigo) Then
+                            MsgBox "Não foi possível alterar conta do Fornecedor!", vbInformation, "Erro de Integridade."
+                        End If
+                    End If
+                End If
             Else
                 MsgBox "Não foi possível incluir este registro!", vbInformation, "Erro de Verificação!"
             End If
@@ -760,6 +772,16 @@ Private Sub cmd_ok_Click()
             AtualTabe
             If MovContaPagar.Alterar(g_empresa, lRegistro) Then
                 lRegistro = MovContaPagar.Registro
+                
+                If lAlterarContaFornecedor Then
+                    If Fornecedor.LocalizarCodigo(g_empresa, MovContaPagar.CodigoFornecedor) Then
+                        Fornecedor.CodigoConta = MovContaPagar.CodigoConta
+                        If Not Fornecedor.Alterar(g_empresa, Fornecedor.Codigo) Then
+                            MsgBox "Não foi possível alterar conta do Fornecedor!", vbInformation, "Erro de Integridade."
+                        End If
+                    End If
+                End If
+                
             Else
                 MsgBox "Não foi possível alterar este registro!", vbInformation, "Erro de Verificação!"
             End If
@@ -852,7 +874,7 @@ Function ValidaConta() As Integer
         MsgBox "Fornecedor não cadastrado, selecione outro fornecedor.", vbInformation, "Mensagem do Sistema!"
         Exit Function
     End If
-    If Not Contas.LocalizarCodigo(Fornecedor.CodigoConta) Then
+    If Not Contas.LocalizarCodigo(Fornecedor.CodigoConta, Fornecedor.Empresa) Then
         MsgBox "Conta não cadastrada.", vbInformation, "Mensagem do Sistema!"
         Exit Function
     End If
@@ -860,8 +882,17 @@ Function ValidaConta() As Integer
         MsgBox "Selecione uma conta.", vbInformation, "Mensagem do Sistema!"
     ElseIf cbo_conta.ItemData(cbo_conta.ListIndex) <> Fornecedor.CodigoConta Then
         If (MsgBox("A conta correta para este fornecedor é.: " & Chr(34) & Contas.Nome & Chr(34) & "." & Chr(10) & Chr(13) & "Porém, a conta selecionada foi.: " & Chr(34) & cbo_conta & Chr(34) & "." & Chr(10) & Chr(13) & Chr(10) & Chr(13) & "Deseja mudar para a conta correta?", vbYesNo + vbDefaultButton1 + vbQuestion, "Mensagem do Sistema!")) = 7 Then
-            If (MsgBox("Caso tenha alguma dúvida deste lançamento consulte a diretoria." & Chr(10) & Chr(13) & Chr(10) & Chr(13) & "Tem certeza que este lançamento é da conta.: " & Chr(34) & cbo_conta & Chr(34) & "." & Chr(10) & Chr(13), vbYesNo + vbDefaultButton2 + vbQuestion, "Mensagem do Sistema!")) = 6 Then
+            If lIntegraFinanceiroDiario Then
                 ValidaConta = True
+                If (MsgBox("Deseja alterar a conta fornecedor de " & Contas.Nome & " para " & cbo_conta & "?", vbYesNo + vbDefaultButton2 + vbQuestion, "Mensagem do Sistema!")) = 6 Then
+                    lAlterarContaFornecedor = True
+                Else
+                    lAlterarContaFornecedor = False
+                End If
+            Else
+                If (MsgBox("Caso tenha alguma dúvida deste lançamento consulte a diretoria." & Chr(10) & Chr(13) & Chr(10) & Chr(13) & "Tem certeza que este lançamento é da conta.: " & Chr(34) & cbo_conta & Chr(34) & "." & Chr(10) & Chr(13), vbYesNo + vbDefaultButton2 + vbQuestion, "Mensagem do Sistema!")) = 6 Then
+                    ValidaConta = True
+                End If
             End If
         End If
     Else
@@ -996,6 +1027,14 @@ Private Sub Form_Load()
     Screen.MousePointer = 1
     CentraForm Me
     
+    lIntegraFinanceiroDiario = False
+    lAlterarContaFornecedor = False
+    
+    If ConfigDiversa.LocalizarCodigo(1, "CONTAS A PAGAR:INTEGRADO COM FINANCEIRO") Then
+       lIntegraFinanceiroDiario = ConfigDiversa.Verdadeiro
+    End If
+    
+    
     PreencheCboLocal
     PreencheCboConta
 End Sub
@@ -1008,10 +1047,10 @@ Private Sub PreencheCboLocal()
     cbo_local.Clear
     'Prepara SQL
     xSQL = "SELECT Nome, Codigo"
-    xSQL = xSQL & "  FROM Local_Cobrancas"
+    xSQL = xSQL & "  FROM Local_Cobrancas WHERE Empresa = " & g_empresa
     xSQL = xSQL & " ORDER BY Nome"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(xSQL)
     'Verifica tabela
     If rsTabela.RecordCount > 0 Then
@@ -1031,9 +1070,10 @@ Private Sub PreencheCboConta()
     'Prepara SQL
     xSQL = "SELECT Nome, Codigo"
     xSQL = xSQL & "  FROM Contas"
+    xSQL = xSQL & " WHERE Empresa = " & g_empresa
     xSQL = xSQL & " ORDER BY Nome"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(xSQL)
     'Verifica tabela
     If rsTabela.RecordCount > 0 Then
