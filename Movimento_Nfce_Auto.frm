@@ -11924,7 +11924,7 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                         End If
                     End If
                 Else
-                    If g_nome_empresa Like "*POSTO T13*" Or g_nome_empresa Like "*MARQUES DE CASTRO*" Or g_nome_empresa Like "*AUTO POSTO CLASSE A*" Or g_nome_empresa Like "*FLORIDIAN COMERCIO E PARTICIPAÇOES*" Then
+                    If g_nome_empresa Like "*POSTO T13*" Or g_nome_empresa Like "*MARQUES DE CASTRO*" Or g_nome_empresa Like "*AUTO POSTO CLASSE A*" Or g_nome_empresa Like "*FLORIDIAN COMERCIO E PARTICIPAÇOES*" Or g_nome_empresa Like "*YPE COM DE COMB E LUBRIFICANTES*" Then
                         If UCase(CartaoCredito.Nome) Like "*" & xNomeBandeira & "*" Then
                             If UCase(CartaoCredito.Nome) Like "*" & xOperacao & "*" Then
                                 If xNomeBandeira = "MAESTRO" Or xNomeBandeira = "MASTERCARD" Or xNomeBandeira = "VISA" Then
@@ -11946,7 +11946,7 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                 End If
                 If lCodigoCartao = 0 Then
                     Do Until CartaoCredito.LocalizarProximo = False
-                        If g_nome_empresa Like "*POSTO T13*" Or g_nome_empresa Like "*MARQUES DE CASTRO*" Or g_nome_empresa Like "*AUTO POSTO CLASSE A*" Or g_nome_empresa Like "*FLORIDIAN COMERCIO E PARTICIPAÇOES*" Then
+                        If g_nome_empresa Like "*POSTO T13*" Or g_nome_empresa Like "*MARQUES DE CASTRO*" Or g_nome_empresa Like "*AUTO POSTO CLASSE A*" Or g_nome_empresa Like "*FLORIDIAN COMERCIO E PARTICIPAÇOES*" Or g_nome_empresa Like "*YPE COM DE COMB E LUBRIFICANTES*" Then
                             If UCase(CartaoCredito.Nome) Like "*" & xNomeBandeira & "*" Then
                                 If UCase(CartaoCredito.Nome) Like "*" & xOperacao & "*" Then
                                     'If xNomeBandeira = "MAESTRO" Or xNomeBandeira = "MASTERCARD" Or xNomeBandeira = "VISA" Then

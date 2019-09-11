@@ -361,7 +361,7 @@ Private Sub LoopBaixaContasPagar()
     lSQL = lSQL & "   AND Local_Cobranca = Local_Cobrancas.Codigo"
     lSQL = lSQL & "   AND Baixa_Pagar.Empresa = Local_Cobrancas.Empresa"
     If chkUnificaEmpresa.Value = 0 Then
-        lSQL = lSQL & "    AND Empresa = " & g_empresa
+        lSQL = lSQL & "    AND Baixa_Pagar.Empresa = " & g_empresa
     End If
     If cbo_conta.ItemData(cbo_conta.ListIndex) > 0 Then
         lSQL = lSQL & " AND Codigo_Conta = " & cbo_conta.ItemData(cbo_conta.ListIndex)
