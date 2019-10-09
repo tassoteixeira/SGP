@@ -36,6 +36,9 @@ Private mValorRestante As Currency
 Private mDataVencimentoRestante As Date
 Private mNumeroContaBancaria As String
 Private mValorPagoBanco As Currency
+Private mValorPagoCartao As Currency
+Private mDadosInterno As String
+
 
 
 Private rsBaixaDuplicataReceber As New adodb.Recordset
@@ -224,6 +227,19 @@ Public Property Let ValorPagoBanco(ByVal Valor As Currency)
     mValorPagoBanco = Valor
 End Property
 
+Public Property Get ValorPagoCartao() As Currency
+    ValorPagoCartao = mValorPagoCartao
+End Property
+Public Property Let ValorPagoCartao(ByVal Valor As Currency)
+    mValorPagoCartao = Valor
+End Property
+
+Public Property Get DadosInterno() As String
+    DadosInterno = mDadosInterno
+End Property
+Public Property Let DadosInterno(ByVal Valor As String)
+    mDadosInterno = Valor
+End Property
 
 'Fim das Propriedades da Classe
 
@@ -382,7 +398,7 @@ On Error GoTo Err_Incluir
     gSQL = gSQL & "[Data do Periodo Final], [Numero da Duplicata], [Data do Vencimento], [Valor do Custo Bancario], [Valor do Vencimento], "
     gSQL = gSQL & "[Data do Pagamento], [Valor do Juros], [Valor Pago], [Valor Pago Cheque Vista], [Valor Pago Cheque Prazo], "
     gSQL = gSQL & "Periodo, [Numero do Movimento do Caixa], [Numero do Movimento do Caixa Baixa], [Valor do Desconto], "
-    gSQL = gSQL & "[Valor Restante], [Data de Vencimento do Restante], [Numero da Conta Bancaria], [Valor Pago Banco] ) VALUES ( "
+    gSQL = gSQL & "[Valor Restante], [Data de Vencimento do Restante], [Numero da Conta Bancaria], [Valor Pago Banco], [Valor Pago Cartao], [Dados Interno] ) VALUES ( "
     Call sqlNumero(1, mEmpresa, ", ")
     Call sqlNumero(1, mNumeroDocumento, ", ")
     Call sqlNumero(1, mCodigoCliente, ", ")
@@ -405,7 +421,9 @@ On Error GoTo Err_Incluir
     Call sqlValor(1, mValorRestante, ", ")
     Call sqlData(1, mDataVencimentoRestante, ", ")
     Call sqlTexto(1, mNumeroContaBancaria, ", ")
-    Call sqlValor(1, mValorPagoBanco, ") ")
+    Call sqlValor(1, mValorPagoBanco, ", ")
+    Call sqlValor(1, mValorPagoCartao, ", ")
+    Call sqlTexto(1, mDadosInterno, " )")
     gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
     If lRecordsAffected > 0 Then
         Incluir = True
@@ -449,6 +467,8 @@ On Error GoTo Err_Alterar
     Call sqlData(2, ", [Data de Vencimento do Restante] = ", mDataVencimentoRestante)
     Call sqlTexto(2, ", [Numero da Conta Bancaria] = ", mNumeroContaBancaria)
     Call sqlValor(2, ", [Valor Pago Banco] = ", mValorPagoBanco)
+    Call sqlValor(2, ", [Valor Pago Cartao] = ", mValorPagoCartao)
+    Call sqlTexto(2, ", [Dados Interno] = ", mDadosInterno)
     gSQL = gSQL & " WHERE Empresa = " & nEmpresa
     gSQL = gSQL & " AND [Numero do Documento] = " & nNumeroDocumento
     gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
@@ -482,7 +502,7 @@ End Function
 
 'Funções / Procedures internas
 Private Function PreparaSQL(ByVal xCondicao As String, ByVal xTipoOrdem As String) As String
-    PreparaSQL = Trim("SELECT Empresa, [Numero do Documento], [Codigo do Cliente], [Data de Emissao], [Data do Periodo Inicial], [Data do Periodo Final], [Numero da Duplicata], [Data do Vencimento], [Valor do Custo Bancario], [Valor do Vencimento], [Data do Pagamento], [Valor do Juros], [Valor Pago], [Valor Pago Cheque Vista], [Valor Pago Cheque Prazo], Periodo, [Numero do Movimento do Caixa], [Numero do Movimento do Caixa Baixa], [Valor do Desconto], [Valor Restante], [Data de Vencimento do Restante], [Numero da Conta Bancaria], [Valor Pago Banco] FROM Baixa_Duplicata_Receber" & " " & xCondicao & " " & xTipoOrdem)
+    PreparaSQL = Trim("SELECT Empresa, [Numero do Documento], [Codigo do Cliente], [Data de Emissao], [Data do Periodo Inicial], [Data do Periodo Final], [Numero da Duplicata], [Data do Vencimento], [Valor do Custo Bancario], [Valor do Vencimento], [Data do Pagamento], [Valor do Juros], [Valor Pago], [Valor Pago Cheque Vista], [Valor Pago Cheque Prazo], Periodo, [Numero do Movimento do Caixa], [Numero do Movimento do Caixa Baixa], [Valor do Desconto], [Valor Restante], [Data de Vencimento do Restante], [Numero da Conta Bancaria], [Valor Pago Banco], [Valor Pago Cartao], [Dados Interno] FROM Baixa_Duplicata_Receber" & " " & xCondicao & " " & xTipoOrdem)
 End Function
 
 
@@ -530,6 +550,8 @@ Private Sub AtribuiValor()
     End If
     NumeroContaBancaria = rsBaixaDuplicataReceber("Numero da Conta Bancaria").Value
     ValorPagoBanco = rsBaixaDuplicataReceber("Valor Pago Banco").Value
+    ValorPagoCartao = rsBaixaDuplicataReceber("Valor Pago Cartao").Value
+    DadosInterno = rsBaixaDuplicataReceber("Dados Interno").Value
 End Sub
 
 

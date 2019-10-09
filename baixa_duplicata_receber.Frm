@@ -78,9 +78,17 @@ Begin VB.Form baixa_duplicata_receber
       TabIndex        =   5
       Top             =   3480
       Width           =   9315
+      Begin VB.TextBox txtValorCartao 
+         Height          =   285
+         Left            =   7660
+         MaxLength       =   10
+         TabIndex        =   55
+         Top             =   2160
+         Width           =   1095
+      End
       Begin VB.TextBox txtValorPagoBanco 
          Height          =   285
-         Left            =   7980
+         Left            =   6500
          MaxLength       =   10
          TabIndex        =   53
          Top             =   2160
@@ -88,7 +96,7 @@ Begin VB.Form baixa_duplicata_receber
       End
       Begin VB.TextBox txtValorRestante 
          Height          =   285
-         Left            =   6300
+         Left            =   5340
          MaxLength       =   10
          TabIndex        =   39
          Top             =   2760
@@ -96,7 +104,7 @@ Begin VB.Form baixa_duplicata_receber
       End
       Begin VB.TextBox txtValorDesconto 
          Height          =   285
-         Left            =   4680
+         Left            =   4200
          MaxLength       =   10
          TabIndex        =   37
          Top             =   2760
@@ -104,7 +112,7 @@ Begin VB.Form baixa_duplicata_receber
       End
       Begin VB.TextBox txt_valor_pago_ch_prazo 
          Height          =   285
-         Left            =   6300
+         Left            =   5340
          MaxLength       =   10
          TabIndex        =   33
          Top             =   2160
@@ -112,7 +120,7 @@ Begin VB.Form baixa_duplicata_receber
       End
       Begin VB.TextBox txt_valor_pago_ch_vista 
          Height          =   285
-         Left            =   4680
+         Left            =   4200
          MaxLength       =   10
          TabIndex        =   31
          Top             =   2160
@@ -167,7 +175,7 @@ Begin VB.Form baixa_duplicata_receber
       End
       Begin MSMask.MaskEdBox mskDataVencimentoRestante 
          Height          =   300
-         Left            =   7980
+         Left            =   6500
          TabIndex        =   41
          Top             =   2760
          Width           =   1095
@@ -189,10 +197,19 @@ Begin VB.Form baixa_duplicata_receber
          PromptChar      =   "_"
       End
       Begin VB.Label Label3 
+         Caption         =   "Valor Cartão"
+         Height          =   195
+         Index           =   20
+         Left            =   7680
+         TabIndex        =   56
+         Top             =   1920
+         Width           =   975
+      End
+      Begin VB.Label Label3 
          Caption         =   "Vl Pg Banco"
          Height          =   195
          Index           =   19
-         Left            =   8100
+         Left            =   6500
          TabIndex        =   54
          Top             =   1920
          Width           =   975
@@ -201,7 +218,7 @@ Begin VB.Form baixa_duplicata_receber
          Caption         =   "Dt Vcto. Restante"
          Height          =   195
          Index           =   18
-         Left            =   7740
+         Left            =   6500
          TabIndex        =   40
          Top             =   2520
          Width           =   1335
@@ -210,34 +227,34 @@ Begin VB.Form baixa_duplicata_receber
          Caption         =   "Valor Restante"
          Height          =   195
          Index           =   17
-         Left            =   6240
+         Left            =   5340
          TabIndex        =   38
          Top             =   2520
          Width           =   1095
       End
       Begin VB.Label Label3 
-         Caption         =   "Valor do Desconto"
+         Caption         =   "Desconto"
          Height          =   195
          Index           =   16
-         Left            =   4380
+         Left            =   4200
          TabIndex        =   36
          Top             =   2520
          Width           =   1455
       End
       Begin VB.Label Label3 
-         Caption         =   "Vl. Pgo Ch. Prazo"
+         Caption         =   "Cheque Prazo"
          Height          =   195
          Index           =   15
-         Left            =   6060
+         Left            =   5340
          TabIndex        =   32
          Top             =   1920
          Width           =   1305
       End
       Begin VB.Label Label3 
-         Caption         =   "Vl Pg Ch. Vista"
+         Caption         =   "Cheque a Vista"
          Height          =   195
          Index           =   12
-         Left            =   4680
+         Left            =   4200
          TabIndex        =   30
          Top             =   1920
          Width           =   1095
@@ -326,7 +343,7 @@ Begin VB.Form baixa_duplicata_receber
          Caption         =   "Valor do Juros"
          Height          =   195
          Index           =   10
-         Left            =   3120
+         Left            =   3060
          TabIndex        =   34
          Top             =   2520
          Width           =   1095
@@ -621,6 +638,10 @@ Private BaixaDuplicataReceber As New cBaixaDuplicataReceber
 Private DuplicataReceber As New cDuplicataReceber
 Private IntegracaoCaixa As New cIntegracaoCaixa
 Private MovCaixa As New cMovimentoCaixa
+
+Dim lDadosInterno As String
+
+
 Private Sub AtivaBotoes()
     cmd_alterar.Enabled = True
     If g_nivel_acesso <= 3 Then
@@ -637,6 +658,7 @@ Private Sub Inclui()
     DesativaBotoes
     cmd_ok.Visible = True
     cmd_cancelar.Visible = True
+    lDadosInterno = ""
 End Sub
 Function IncluiMovimentoCaixa() As Boolean
     Dim xComplemento As String
@@ -648,15 +670,15 @@ Function IncluiMovimentoCaixa() As Boolean
     If IntegracaoCaixa.LocalizarNome(g_empresa, "BAIXA DUPLICATAS A RECEBER") Then
     
         xContaDebito = IntegracaoCaixa.ContaDebito
-        xValor = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) 'ALEX-BANCO
+        xValor = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text) 'ALEX-BANCO
         
         'Cheque Pré-Datado
-        If (fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txtValorPagoBanco.Text)) = 0 Then 'ALEX-BANCO
+        If (fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text)) = 0 Then 'ALEX-BANCO
             xContaDebito = ""
         End If
         
         'Cheque À Vista
-        If (fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text)) = 0 Then 'ALEX-BANCO
+        If (fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text)) = 0 Then 'ALEX-BANCO
             Mid(xContaDebito, 9, 1) = "2"
         End If
         
@@ -712,6 +734,7 @@ Private Sub AtualTabe()
     End If
     BaixaDuplicataReceber.NumeroContaBancaria = DuplicataReceber.NumeroContaBancaria
     BaixaDuplicataReceber.ValorPagoBanco = fValidaValor2(txtValorPagoBanco.Text)
+    BaixaDuplicataReceber.ValorPagoCartao = fValidaValor2(txtValorCartao.Text)
 End Sub
 Private Sub AtualTabeDuplicata()
     DuplicataReceber.Empresa = BaixaDuplicataReceber.Empresa
@@ -739,6 +762,7 @@ Private Sub Atualtabe2()
     BaixaDuplicataReceber.ValorDesconto = fValidaValor2(txtValorDesconto.Text)
     BaixaDuplicataReceber.ValorRestante = fValidaValor2(txtValorRestante.Text)
     BaixaDuplicataReceber.ValorPagoBanco = fValidaValor2(txtValorPagoBanco.Text)
+    BaixaDuplicataReceber.ValorPagoCartao = fValidaValor2(txtValorCartao.Text)
 End Sub
 Private Sub AtualTelaDuplicata()
     lbl_numero_documento = DuplicataReceber.NumeroDocumento
@@ -759,6 +783,8 @@ Private Sub AtualTela()
     lbl_numero_documento.Caption = BaixaDuplicataReceber.NumeroDocumento
     lbl_nome_cliente.Caption = "** Não Cadastrado **"
     
+    lDadosInterno = BaixaDuplicataReceber.DadosInterno
+    
     If Cliente.LocalizarCodigo(BaixaDuplicataReceber.CodigoCliente) Then
         lbl_nome_cliente.Caption = Cliente.RazaoSocial
     End If
@@ -778,6 +804,7 @@ Private Sub AtualTela()
     txtValorDesconto.Text = Format(BaixaDuplicataReceber.ValorDesconto, "###,###,##0.00")
     txtValorRestante.Text = Format(BaixaDuplicataReceber.ValorRestante, "###,###,##0.00")
     txtValorPagoBanco.Text = Format(BaixaDuplicataReceber.ValorPagoBanco, "###,###,##0.00")
+    txtValorCartao.Text = Format(BaixaDuplicataReceber.ValorPagoCartao, "###,###,##0.00")
     frmDados.Enabled = False
 End Sub
 Function BuscaRegistroDuplicata(pNumeroDocumento As Long) As Boolean
@@ -804,6 +831,26 @@ Private Sub ExcluiMovimentoCaixa()
         End If
     End If
 End Sub
+
+Private Sub ExcluiMovimentoCartaoCredito(ByVal pDataPagamento As Date, ByVal pPeriodo As Integer, ByVal pDadosInterno As String)
+    Dim xMovCartao As New CadastroDLL.cMovimentoCartaoCredito
+    Dim xNumeroLancamento As Integer
+
+    If pDadosInterno <> "" Then
+        xNumeroLancamento = RetiraString(2, pDadosInterno)
+    
+        If xMovCartao.LocalizarCodigo(g_empresa, pDataPagamento, pPeriodo, xNumeroLancamento) Then
+            If xMovCartao.TipoMovimento = 4 Then
+                If Not xMovCartao.Excluir(xMovCartao.Empresa, xMovCartao.DataEmissao, xMovCartao.Periodo, xMovCartao.NumeroLancamento) Then
+                    MsgBox "Não foi excluído o movimento do cartão!", vbInformation, "Erro de Integridade."
+                End If
+            End If
+        Else
+            MsgBox "Não foi encontrado o movimento de cartão!", vbInformation, "Erro de Integridade."
+        End If
+    End If
+End Sub
+
 Private Sub Finaliza()
     Set Cliente = Nothing
     Set BaixaDuplicataReceber = Nothing
@@ -813,7 +860,7 @@ Private Sub Finaliza()
 End Sub
 Private Sub AtualizaMSFlexGrid(ByVal pCliente As Integer)
     Dim i As Integer
-    Dim rsTabela As adodb.Recordset
+    Dim rsTabela As ADODB.Recordset
     
     LimpaMSFlexGrid
     lSQL = ""
@@ -826,7 +873,7 @@ Private Sub AtualizaMSFlexGrid(ByVal pCliente As Integer)
     End If
     lSQL = lSQL & " ORDER BY [Data do Vencimento]"
     'Abre RecordSet
-    Set rsTabela = New adodb.Recordset
+    Set rsTabela = New ADODB.Recordset
     Set rsTabela = Conectar.RsConexao(lSQL)
     'Verifica movimento
     i = 0
@@ -989,12 +1036,17 @@ Private Sub LimpaTela()
     txtValorRestante.Text = ""
     mskDataVencimentoRestante.Text = "__/__/____"
     txtValorPagoBanco.Text = ""
+    txtValorCartao.Text = ""
+    lDadosInterno = ""
 End Sub
 Private Sub cmd_extornar_Click()
     On Error GoTo FileError
     If BaixaDuplicataReceber.LocalizarCodigo(g_empresa, lNumeroDocumento) Then
         If (MsgBox("Deseja realmente extornar esta duplicata?", 4 + 32 + 256, "Extorno de Duplicata Baixada!")) = 6 Then
             Call ExcluiMovimentoCaixa
+            If BaixaDuplicataReceber.ValorPagoCartao > 0 Then
+                Call ExcluiMovimentoCartaoCredito(BaixaDuplicataReceber.DataPagamento, BaixaDuplicataReceber.Periodo, BaixaDuplicataReceber.DadosInterno)
+            End If
             AtualTabeDuplicata
             If DuplicataReceber.Incluir Then
                 If Not BaixaDuplicataReceber.Excluir(g_empresa, lNumeroDocumento) Then
@@ -1025,11 +1077,24 @@ Private Sub cmd_ok_Click()
                 g_string = "BaixaDuplicataReceber" & "|@|" & msk_data_pagamento.Text & "|@|" & cbo_periodo.Text & "|@|" & txt_valor_pago_ch_prazo.Text & "|@|"
                 movimento_cheque.Show 1
             End If
+            If fValidaValor(txtValorCartao.Text) > 0 Then
+                lDadosInterno = ""
+                'g_string = "Movimento_NFCe_Auto|@|Incluir|@|" & Format(lDataCupom, "dd/MM/yyyy") & "|@|" & lPeriodo & "|@|" & lTipoMovimento & "|@|" & lIlha & "|@|1|@|2|@|" & g_usuario & "|@|" & lbl_valor_compra.Caption & "|@|" & lNumeroCupom & "|@|" & l_codigo_funcionario & "|@|" & xCodigoCartaoDesconto & "|@|"
+                g_string = "BaixaDuplicataReceber|@|Incluir|@|" & msk_data_pagamento.Text & "|@|" & cbo_periodo.Text & "|@|4|@|1|@|4|@|0|@|" & g_usuario & "|@|" & txtValorCartao.Text & "|@|" & DuplicataReceber.NumeroDocumento & "|@|"
+                movimento_cartao_credito.Show 1
+                If RetiraGString(1) = "Retorno-BaixaDuplicataReceber" Then
+                    lDadosInterno = "CAR" & RetiraGString(2) & "|@|"
+                    lDadosInterno = lDadosInterno & RetiraGString(3) & "|@|"
+                End If
+            End If
             AtivaBotoes
             If Not IncluiMovimentoCaixa Then
                 MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
             End If
             AtualTabe
+            
+            BaixaDuplicataReceber.DadosInterno = lDadosInterno
+            
             g_data = BaixaDuplicataReceber.DataPagamento
             If BaixaDuplicataReceber.Incluir Then
                 If Not DuplicataReceber.Excluir(g_empresa, lNumeroDocumento) Then
@@ -1051,11 +1116,36 @@ Private Sub cmd_ok_Click()
             End If
         ElseIf lOpcao = 2 Then
             Call ExcluiMovimentoCaixa
+            lDadosInterno = ""
+            If BaixaDuplicataReceber.ValorPagoCartao <> fValidaValor(txtValorCartao.Text) Or BaixaDuplicataReceber.DataPagamento <> CDate(Format(msk_data_pagamento.Text, "dd/mm/yyyy")) Then
+                If BaixaDuplicataReceber.ValorPagoCartao > 0 Then
+                    Call ExcluiMovimentoCartaoCredito(BaixaDuplicataReceber.DataPagamento, BaixaDuplicataReceber.Periodo, BaixaDuplicataReceber.DadosInterno)
+                Else
+                    lDadosInterno = BaixaDuplicataReceber.DadosInterno
+                End If
+            Else
+                lDadosInterno = BaixaDuplicataReceber.DadosInterno
+            End If
+            
+            If fValidaValor(txtValorCartao.Text) > 0 Then
+                lDadosInterno = ""
+                'g_string = "Movimento_NFCe_Auto|@|Incluir|@|" & Format(lDataCupom, "dd/MM/yyyy") & "|@|" & lPeriodo & "|@|" & lTipoMovimento & "|@|" & lIlha & "|@|1|@|2|@|" & g_usuario & "|@|" & lbl_valor_compra.Caption & "|@|" & lNumeroCupom & "|@|" & l_codigo_funcionario & "|@|" & xCodigoCartaoDesconto & "|@|"
+                g_string = "BaixaDuplicataReceber|@|Incluir|@|" & msk_data_pagamento.Text & "|@|" & cbo_periodo.Text & "|@|4|@|1|@|4|@|0|@|" & g_usuario & "|@|" & txtValorCartao.Text & "|@|" & BaixaDuplicataReceber.NumeroDocumento & "|@|"
+                movimento_cartao_credito.Show 1
+                If RetiraGString(1) = "Retorno-BaixaDuplicataReceber" Then
+                    lDadosInterno = "CAR" & RetiraGString(2) & "|@|"
+                    lDadosInterno = lDadosInterno & RetiraGString(3) & "|@|"
+                End If
+            End If
+
             If Not IncluiMovimentoCaixa Then
                 MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
             End If
             AtivaBotoes
             Atualtabe2
+            
+            BaixaDuplicataReceber.DadosInterno = lDadosInterno
+            
             If Not BaixaDuplicataReceber.Alterar(g_empresa, lNumeroDocumento) Then
                 MsgBox "Não possível alterar este registro de baixa!", vbInformation, "Erro de Integridade"
             End If
@@ -1076,7 +1166,7 @@ End Sub
 Function ValidaCampos() As Boolean
     Dim xValorPago As Currency
     
-    xValorPago = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text)
+    xValorPago = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text)
     ValidaCampos = False
     If Not IsDate(msk_data_pagamento.Text) Then
         MsgBox "Informe a data do pagamento.", vbInformation, "Atenção!"
@@ -1287,7 +1377,7 @@ End Sub
 Private Sub txt_valor_juros_GotFocus()
     Dim xValorJuros As Currency
     
-    xValorJuros = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) - fValidaValor2(lbl_valor_vencimento.Caption)
+    xValorJuros = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text) - fValidaValor2(lbl_valor_vencimento.Caption)
     If xValorJuros > 0 Then
         txt_valor_juros.Text = Format(xValorJuros, "###,###,##0.00")
     Else
@@ -1307,6 +1397,25 @@ End Sub
 Private Sub txt_valor_juros_LostFocus()
     txt_valor_juros.Text = Format(txt_valor_juros.Text, "###,###,##0.00")
 End Sub
+
+Private Sub txtValorCartao_GotFocus()
+    txtValorCartao.SelStart = 0
+    txtValorCartao.SelLength = Len(txtValorCartao.Text)
+End Sub
+
+Private Sub txtValorCartao_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 46 Then
+        KeyAscii = 44
+    ElseIf KeyAscii = 13 Then
+        KeyAscii = 0
+        txt_valor_juros.SetFocus
+    End If
+End Sub
+
+Private Sub txtValorCartao_LostFocus()
+    txtValorCartao.Text = Format(txtValorCartao.Text, "###,###,##0.00")
+End Sub
+
 Private Sub txtValorPagoBanco_GotFocus()
     txtValorPagoBanco.SelStart = 0
     txtValorPagoBanco.SelLength = Len(txtValorPagoBanco.Text)
@@ -1316,7 +1425,7 @@ Private Sub txtValorPagoBanco_KeyPress(KeyAscii As Integer)
         KeyAscii = 44
     ElseIf KeyAscii = 13 Then
         KeyAscii = 0
-        txt_valor_juros.SetFocus
+        txtValorCartao.SetFocus
     End If
 End Sub
 Private Sub txtValorPagoBanco_LostFocus()
@@ -1374,13 +1483,13 @@ Private Sub txt_valor_pago_dinheiro_LostFocus()
 End Sub
 Private Sub ProcessaBaixaDuplicataReceber()
     Dim xData As Date
-    Dim rsBaixaDuplicataReceber As adodb.Recordset
+    Dim rsBaixaDuplicataReceber As ADODB.Recordset
     Dim xSQL As String
     
     On Error GoTo FileError
     
     xData = CDate("01/10/2004")
-    Set rsBaixaDuplicataReceber = New adodb.Recordset
+    Set rsBaixaDuplicataReceber = New ADODB.Recordset
     xSQL = "SELECT [Numero do Documento], [Data do Pagamento] FROM Baixa_Duplicata_Receber WHERE Empresa = " & g_empresa & " AND [Data do Pagamento] >= " & xData & " ORDER BY [Data do Pagamento]"
     Set rsBaixaDuplicataReceber = Conectar.RsConexao(xSQL)
     With rsBaixaDuplicataReceber
@@ -1415,7 +1524,7 @@ Private Sub txtValorDesconto_GotFocus()
     Dim xPercentual As Currency
     Dim xValorPago As Currency
     
-    xValorPago = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text)
+    xValorPago = fValidaValor2(txt_valor_pago_dinheiro.Text) + fValidaValor2(txt_valor_pago_ch_vista.Text) + fValidaValor2(txt_valor_pago_ch_prazo.Text) + fValidaValor2(txtValorPagoBanco.Text) + fValidaValor2(txtValorCartao.Text)
     If lOpcao = 1 And fValidaValor2(txtValorDesconto.Text) = 0 And fValidaValor2(txtValorRestante.Text) = 0 Then
         If xValorPago < fValidaValor2(lbl_valor_vencimento.Caption) Then
             xPercentual = (fValidaValor2(lbl_valor_vencimento.Caption) - xValorPago) * 100 / fValidaValor2(lbl_valor_vencimento.Caption)

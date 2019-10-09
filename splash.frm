@@ -535,10 +535,14 @@ Private Sub Form_Load()
     gSenhaBD = "cerrado72"
     If gIpBanco Like "*cloudapp.net*" Or xNivelSenha = "padrao2" Then
         gSenhaBD = "cRr472#*$pst"
-    ElseIf gNomeBancoDados Like "*cerrado.database.windows.net*" Then
+    End If
+    
+    If gIpBanco Like "*cerrado.database.windows.net*" Then
         gNomeUsuarioBD = "cerrado"
         gSenhaBD = "cRr472#*$pst"
         bdSqlServerAzure = True
+    Else
+        bdSqlServerAzure = False
     End If
     Timer1.Enabled = True
     Timer1.Interval = 900

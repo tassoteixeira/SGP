@@ -646,6 +646,36 @@ On Error GoTo Err_LiberaAbastecimentoAfericaoTemporaria
 Err_LiberaAbastecimentoAfericaoTemporaria:
     MsgBox "Não possível liberar o abastecimento com aferição temporária!" & Chr(10) & "Favor entrar em contato com o suporte!", vbCritical, "Erro de Integridade!"
 End Function
+Public Function LiberaAbastecimentoAfericaoTemporariaBico(ByVal pEmpresa As Integer, ByVal pData As Date, ByVal pCodigoFuncionario As Integer, ByVal pBico As Integer) As Boolean
+Dim lRecordsAffected As Long
+
+On Error GoTo Err_LiberaAbastecimentoAfericaoTemporariaBico
+
+    LiberaAbastecimentoAfericaoTemporariaBico = False
+    gSQL = "UPDATE Movimento_Abastecimento SET "
+    Call sqlBoolean(2, "Acerto = ", "False")
+    Call sqlNumero(2, ", [Numero do Cupom] = ", "0")
+    Call sqlNumero(2, ", [Codigo da ECF] = ", 0)
+    Call sqlTexto(2, ", [Documento Gerado] = ", "")
+    Call sqlTexto(2, ", [Complemento Documento Gerado] = ", "")
+    gSQL = gSQL & " WHERE Empresa = " & pEmpresa
+    gSQL = gSQL & " AND Data = " & preparaData(pData)
+    gSQL = gSQL & " AND [Complemento Documento Gerado] = " & preparaTexto("AFTEMP")
+    gSQL = gSQL & " AND Bico = " & pBico
+    
+    If pCodigoFuncionario > 0 Then
+        gSQL = gSQL & " AND [Codigo do Funcionario] = " & pCodigoFuncionario
+    End If
+    
+    gConn.Execute gSQL, lRecordsAffected, adCmdText + adExecuteNoRecords
+    If lRecordsAffected > 0 Then
+        LiberaAbastecimentoAfericaoTemporariaBico = True
+    End If
+    Exit Function
+
+Err_LiberaAbastecimentoAfericaoTemporariaBico:
+    MsgBox "Não possível liberar o abastecimento com aferição temporária!" & Chr(10) & "Favor entrar em contato com o suporte!", vbCritical, "Erro de Integridade!"
+End Function
 Public Function LiberaAbastecimentoAfericao(ByVal pEmpresa As Integer, ByVal pDataAbastecimento As Date, ByVal pHoraAbastecimento As Date, ByVal pBico As Integer, ByVal pCodigoFuncionario As Integer) As Boolean
 Dim lRecordsAffected As Long
 

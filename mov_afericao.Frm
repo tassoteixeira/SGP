@@ -84,7 +84,7 @@ Begin VB.Form movimento_afericao
          Width           =   1815
       End
       Begin VB.CommandButton btnAtualizaGrid 
-         Caption         =   "Listar de Abastecimentos Selecionados"
+         Caption         =   "Adicionar Abastecimentos Selecionados"
          Height          =   495
          Left            =   2160
          TabIndex        =   32
@@ -177,6 +177,15 @@ Begin VB.Form movimento_afericao
          _ExtentY        =   3625
          _StockProps     =   77
          BackColor       =   16777215
+         BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Cols            =   11
          FixedCols       =   0
       End
@@ -364,7 +373,7 @@ Dim lPossuiAbastecimentosVinculados As Boolean
 Const NIVEL_ACESSO_DESENVOLVIMENTO As Integer = 1
 Dim lNivelAcessoRestricaoLancarAfericaoSemAbstecimento As Integer
 
-Private rsAuxiliar As New adodb.Recordset
+Private rsAuxiliar As New ADODB.Recordset
 Private Bomba As New cBomba
 Private Combustivel As New cCombustivel
 Private Configuracao As New cConfiguracao
@@ -676,10 +685,10 @@ Private Sub ExcluiSaidaBomba(pTipoCombustivel As String, pQuantidade As Currency
 End Sub
 Private Sub PreencheCboBomba()
     Dim nome_combustivel As String
-    Dim rsBomba As adodb.Recordset
+    Dim rsBomba As ADODB.Recordset
     Dim xSQL As String
     
-    Set rsBomba = New adodb.Recordset
+    Set rsBomba = New ADODB.Recordset
     xSQL = "SELECT Codigo, [Tipo de Combustivel] FROM Bomba WHERE Empresa = " & g_empresa & " ORDER BY Codigo"
     Set rsBomba = Conectar.RsConexao(xSQL)
     cbo_bomba.Clear
@@ -703,7 +712,7 @@ End Sub
 
 
 
-Private Sub AdcionaDadosGrid(lRS As adodb.Recordset)
+Private Sub AdcionaDadosGrid(lRS As ADODB.Recordset)
     Dim x_i As Integer
 
 
@@ -818,18 +827,25 @@ Private Sub btnAtualizaGrid_Click()
         Call AtualizaGridAbastecimentoAfericaoGravado(g_empresa, lData, lBomba, lPeriodo, lCxCodigoFuncionario)
     End If
 End Sub
-Private Sub LiberarAbastecimentoAfericaoPendente(ByVal pData As Date, ByVal pCodigoFuncionario As Integer)
+Private Function LiberarAbastecimentoAfericaoPendente(ByVal pData As Date, ByVal pCodigoFuncionario As Integer, ByVal pBico As Integer) As Boolean
+On Error GoTo trata_erro
+    LiberarAbastecimentoAfericaoPendente = False
     Dim xMovimentoAbastecimento As New CadastroDLL.cMovimentoAbastecimento
     
-    Call xMovimentoAbastecimento.LiberaAbastecimentoAfericaoTemporaria(g_empresa, pData, pCodigoFuncionario)
-    
-End Sub
+    LiberarAbastecimentoAfericaoPendente = xMovimentoAbastecimento.LiberaAbastecimentoAfericaoTemporariaBico(g_empresa, pData, pCodigoFuncionario, pBico)
 
-Public Function AtualizaGridAbastecimentoAfericaoPendente(ByVal pEmpresa As Integer, pData As Date, ByVal pBico As Integer, ByVal pPeriodo As Integer, ByVal pCodigoFuncionario As Integer) As adodb.Recordset
+    Exit Function
+trata_erro:
+    MsgBox "Erro ao tentar liberar abastecimento reservados - " & Err.Number & " - " & Err.Description
+    
+    
+End Function
+
+Public Function AtualizaGridAbastecimentoAfericaoPendente(ByVal pEmpresa As Integer, pData As Date, ByVal pBico As Integer, ByVal pPeriodo As Integer, ByVal pCodigoFuncionario As Integer) As ADODB.Recordset
 
 On Error GoTo trata_erro
     
-    Dim xRsMovAbastecimento As New adodb.Recordset
+    Dim xRsMovAbastecimento As New ADODB.Recordset
     Dim xSQL As String
     Dim xTotal As Currency
     Dim xQuanidadeTotal As Currency
@@ -882,11 +898,49 @@ trata_erro:
     MsgBox Err.Number & " - " & Err.Description
 
 End Function
-Public Function AtualizaGridAbastecimentoAfericaoGravado(ByVal pEmpresa As Integer, pDataAfericao As Date, ByVal pBico As Integer, ByVal pPeriodo As Integer, ByVal pCodigoFuncionario As Integer) As adodb.Recordset
+Public Function ExisteAbastecimentoAfericaoPendente(ByVal pEmpresa As Integer, pData As Date, ByVal pBico As Integer, ByVal pPeriodo As Integer, ByVal pCodigoFuncionario As Integer) As Boolean
+
+ExisteAbastecimentoAfericaoPendente = False
+On Error GoTo trata_erro
+    
+    Dim xRsMovAbastecimento As New ADODB.Recordset
+    Dim xSQL As String
+    Dim xTotal As Currency
+    Dim xQuanidadeTotal As Currency
+    Dim xValorUnitario As Currency
+
+    
+    xSQL = "SELECT * FROM Movimento_Abastecimento"
+    xSQL = xSQL & " WHERE Empresa = " & pEmpresa
+    xSQL = xSQL & " AND Bico = " & pBico
+    xSQL = xSQL & " AND Data = " & preparaData(pData)
+    xSQL = xSQL & " AND Periodo = " & pPeriodo
+    xSQL = xSQL & " AND [Complemento Documento Gerado] = " & preparaTexto("AFTEMP")
+    If pCodigoFuncionario > 0 Then
+        xSQL = xSQL & " AND [Codigo do Funcionario] = " & pCodigoFuncionario
+    End If
+    
+    xRsMovAbastecimento.CursorLocation = adUseClient
+    Set xRsMovAbastecimento = Conectar.RsConexao(xSQL)
+
+    If xRsMovAbastecimento.RecordCount > 0 Then
+       ExisteAbastecimentoAfericaoPendente = True
+    End If
+    
+    xRsMovAbastecimento.Close
+    Set xRsMovAbastecimento = Nothing
+    
+    Exit Function
+
+trata_erro:
+    MsgBox Err.Number & " - " & Err.Description
+
+End Function
+Public Function AtualizaGridAbastecimentoAfericaoGravado(ByVal pEmpresa As Integer, pDataAfericao As Date, ByVal pBico As Integer, ByVal pPeriodo As Integer, ByVal pCodigoFuncionario As Integer) As ADODB.Recordset
 
 On Error GoTo trata_erro
     
-    Dim xRsMovAbastecimento As New adodb.Recordset
+    Dim xRsMovAbastecimento As New ADODB.Recordset
     Dim xSQL As String
 
     MontaGrid
@@ -1092,6 +1146,15 @@ Private Sub cmd_anterior_Click()
 End Sub
 Private Sub cmd_cancelar_Click()
     Call GravaAuditoria(1, Me.name, 9, "")
+    
+    If g_automacao Then
+        If ExisteAbastecimentoAfericaoPendente(g_empresa, CDate(txtData.Text), Val(cbo_bomba.Text), Val(cbo_periodo.Text), lCxCodigoFuncionario) Then
+            If Not LiberarAbastecimentoAfericaoPendente(CDate(txtData.Text), lCxCodigoFuncionario, Val(cbo_bomba.Text)) Then
+                MsgBox "Não foi possivel liberar os abastecimentos selecionados.", vbInformation, "Atenção!"
+            End If
+        End If
+    End If
+    
     If lCxPeriodo > 0 Then
         cmd_sair_Click
         Exit Sub
@@ -1400,7 +1463,7 @@ Private Sub TransfereDadosLMC()
     xSQL = xSQL & "    WHERE Empresa = " & g_empresa
     xSQL = xSQL & "      AND Data >= " & preparaData(x_data)
     xSQL = xSQL & " ORDER BY Data, Periodo"
-    Set rsAuxiliar = New adodb.Recordset
+    Set rsAuxiliar = New ADODB.Recordset
     Set rsAuxiliar = Conectar.RsConexao(xSQL)
     
     'Transfere Dados para o LMC
@@ -1446,7 +1509,13 @@ FileError:
 
 End Sub
 Function ValidaCampos() As Integer
-    ValidaCampos = False
+Dim xCamposValidos As Boolean
+
+On Error GoTo FileError
+
+
+xCamposValidos = False
+    
     If Not IsDate(txtData.Text) Then
         MsgBox "Informe a data.", vbInformation, "Atenção!"
         txtData.SetFocus
@@ -1459,49 +1528,57 @@ Function ValidaCampos() As Integer
     ElseIf cbo_bomba.ListIndex = -1 Then
         MsgBox "Selecione a bomba.", vbInformation, "Atenção!"
         cbo_bomba.SetFocus
-'        If cbo_bomba.Enabled Then
-'           cbo_bomba.SetFocus
-'        Else
-           'btnSelecionaAbastecimento.SetFocus
-'        End If
 
     ElseIf Not fValidaValor4(txt_valor_litro.Text) > 0 Then
         MsgBox "Informe o valor do litro.", vbInformation, "Atenção!"
         
         txt_valor_litro.SetFocus
-'        If txt_valor_litro.Enabled Then
-'           txt_valor_litro.SetFocus
-'        Else
-'           'btnSelecionaAbastecimento.SetFocus
-'        End If
-
-    ElseIf Not fValidaValor2(txtQuantidade.Text) > 0 Then
-        MsgBox "Informe a quantidade.", vbInformation, "Atenção!"
-        txtQuantidade.SetFocus
-'        If txtQuantidade.Enabled Then
-'           txtQuantidade.SetFocus
-'        Else
-'           'btnSelecionaAbastecimento.SetFocus
-'        End If
-    ElseIf Not fValidaValor2(txt_valor_total.Text) > 0 Then
-        MsgBox "Informe o valor total.", vbInformation, "Atenção!"
-        txt_valor_total.SetFocus
-'        If txt_valor_total.Enabled Then
-'           txt_valor_total.SetFocus
-'        Else
-'           'btnSelecionaAbastecimento.SetFocus
-'        End If
-        
-    ElseIf Not VerificaCriarAfericao() Then
-           cbo_bomba.SetFocus
-'        If cbo_bomba.Enabled Then
-'           cbo_bomba.SetFocus
-'        Else
-'           'btnSelecionaAbastecimento.SetFocus
-'        End If
     Else
-        ValidaCampos = True
+        xCamposValidos = True
     End If
+    
+    
+    If xCamposValidos = True Then
+        If gridAbastecimentoAfericao.Rows <= 2 Then
+            If g_nivel_acesso > lNivelAcessoRestricaoLancarAfericaoSemAbstecimento Then
+                MsgBox "Adicione os abastecimentos referentes a aferição.", vbInformation, "Atenção!"
+                xCamposValidos = False
+                btnAtualizaGrid.SetFocus
+            ElseIf ExisteAbastecimentoAfericaoPendente(g_empresa, CDate(txtData.Text), Val(cbo_bomba.Text), Val(cbo_periodo.Text), lCxCodigoFuncionario) Then
+                MsgBox "Adicione os abastecimentos selecionados.", vbInformation, "Atenção!"
+                xCamposValidos = False
+                btnAtualizaGrid.SetFocus
+            End If
+        End If
+    Else
+        ValidaCampos = xCamposValidos
+        Exit Function
+    End If
+
+    
+    If xCamposValidos = True Then
+
+        If Not fValidaValor2(txtQuantidade.Text) > 0 Then
+            MsgBox "Informe a quantidade.", vbInformation, "Atenção!"
+            txtQuantidade.SetFocus
+        ElseIf Not fValidaValor2(txt_valor_total.Text) > 0 Then
+            MsgBox "Informe o valor total.", vbInformation, "Atenção!"
+            txt_valor_total.SetFocus
+        ElseIf Not VerificaCriarAfericao() Then
+               cbo_bomba.SetFocus
+        Else
+            xCamposValidos = True
+        End If
+    
+    End If
+    
+    ValidaCampos = xCamposValidos
+    
+    Exit Function
+FileError:
+    MsgBox Error
+
+    
 End Function
 Private Sub VerificaLiberacaoDigitacao()
     Dim x_flag As Boolean

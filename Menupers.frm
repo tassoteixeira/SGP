@@ -1218,7 +1218,7 @@ Private Sub ClickMenu(ByVal x_tipo As String, ByVal xNomeMenu As String)
          
         xCaminho3 = "C:\Cerrado Tecnologia\Petromovel\Petromovel.exe"
         If gArqTxt.FileExists(xCaminho3) Then
-            xRetorno2 = Shell(xCaminho3 & " " & g_empresa & " " & Replace(g_nome_empresa, " ", "_") & " " & g_usuario & " " & Replace(g_nome_usuario, " ", "_") & " " & g_nivel_acesso & " " & Replace(gDrive, ":", "") & " " & gIpBanco & " " & Replace(gPortaBanco, ",", "") & " " & gNomeInternoBD & " " & gSenhaBD & " " & gCNPJEmpresa & " " & Empresa.Cidade & " " & "frmManutencaoAbastecimento", vbNormalFocus)
+            xRetorno2 = Shell(xCaminho3 & " " & g_empresa & " " & Replace(g_nome_empresa, " ", "_") & " " & g_usuario & " " & Replace(g_nome_usuario, " ", "_") & " " & g_nivel_acesso & " " & Replace(gDrive, ":", "") & " " & gIpBanco & " " & Replace(gPortaBanco, ",", "") & " " & gNomeInternoBD & " " & gSenhaBD & " " & gCNPJEmpresa & " " & Replace(Empresa.Cidade, " ", "_") & " " & "frmManutencaoAbastecimento", vbNormalFocus)
         Else
             MsgBox "Programa não encontrado!"
         End If
@@ -2411,7 +2411,7 @@ Private Sub Form_Load()
     'Sub-Versao Mes   = 01
     'Sub-versao Dia   = 22
     'Correcao do dia  = a
-    gVersaoSGP = "19.09.10b"
+    gVersaoSGP = "19.10.07a"
 
     gTipoAmbienteNFCe = ""
     Me.Caption = "Sistema Gerênciador de Postos de Combustíveis - Versão " & gVersaoSGP

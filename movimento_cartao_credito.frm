@@ -387,6 +387,9 @@ Dim lCxCodigoUsuario As Integer
 Dim lCxValor As Currency
 Dim lCxNumeroNFCe As Long
 Dim lLancamentoDePOS As Boolean
+Dim lLancamentoDeBaixaDuplicata As Boolean
+Dim lNumeroDocumentoDuplicata As String
+
 Dim lOrigem As String
 Dim lCxCodigoCartaoPreDefinido As Integer
 
@@ -406,6 +409,7 @@ Private Sub AtualizaConstantes()
         lQtdPeriodo = 1
     End If
     lLancamentoDePOS = False
+    lLancamentoDeBaixaDuplicata = False
 End Sub
 Private Sub AtualizaTabela()
     MovCartaoCredito.Empresa = g_empresa
@@ -420,6 +424,8 @@ Private Sub AtualizaTabela()
     MovCartaoCredito.Nome = ""
     If lLancamentoDePOS = True Then
         MovCartaoCredito.Nome = "NFCe-POS: " & lCxNumeroNFCe
+    ElseIf lLancamentoDeBaixaDuplicata = True Then
+        MovCartaoCredito.Nome = "DUPL-POS: " & lNumeroDocumentoDuplicata
     End If
     If lOpcao = 2 Then
         MovCartaoCredito.Nome = lNomeAnterior
@@ -440,14 +446,14 @@ End Sub
 
 Private Function ObtenhaCodigoFuncionarioDoUsuario() As Integer
 
-ObtenhaCodigoFuncionarioDoUsuario = 0
-Dim xFuncionario As New CadastroDLL.cFuncionario
-
-If (xFuncionario.LocalizarFuncionarioDoUsuario(g_usuario, g_empresa)) Then
-    ObtenhaCodigoFuncionarioDoUsuario = xFuncionario.Codigo
-End If
-
-Exit Function
+    ObtenhaCodigoFuncionarioDoUsuario = 0
+    Dim xFuncionario As New CadastroDLL.cFuncionario
+    
+    If (xFuncionario.LocalizarFuncionarioDoUsuario(g_usuario, g_empresa)) Then
+        ObtenhaCodigoFuncionarioDoUsuario = xFuncionario.Codigo
+    End If
+    
+    Exit Function
 
 End Function
 
@@ -459,6 +465,8 @@ Private Sub PreencheCboTipoMovimento()
     cbo_tipo_movimento.ItemData(cbo_tipo_movimento.NewIndex) = 2
     cbo_tipo_movimento.AddItem "3 Caixa da Borr./Lavador"
     cbo_tipo_movimento.ItemData(cbo_tipo_movimento.NewIndex) = 3
+    cbo_tipo_movimento.AddItem "4 - Cartão POS/Sem Caixa"
+    cbo_tipo_movimento.ItemData(cbo_tipo_movimento.NewIndex) = 4
 End Sub
 Private Sub AtualizaTela()
     Dim i As Integer
@@ -536,6 +544,16 @@ Private Sub SelecionaCartaoNaCombo(ByVal pCodigoCartao As Integer)
     For i = 0 To cboCartao.ListCount - 1
         If cboCartao.ItemData(i) = pCodigoCartao Then
             cboCartao.ListIndex = i
+            Exit For
+        End If
+    Next
+End Sub
+Private Sub SelecionaTipoMovimentoNaCombo(ByVal pTipoMovimento As Integer)
+    Dim i As Integer
+    cbo_tipo_movimento.ListIndex = -1
+    For i = 0 To cbo_tipo_movimento.ListCount - 1
+        If cbo_tipo_movimento.ItemData(i) = pTipoMovimento Then
+            cbo_tipo_movimento.ListIndex = i
             Exit For
         End If
     Next
@@ -782,6 +800,9 @@ Private Sub cmd_novo_Click()
                 txtValor.Text = Format(lCxValor, "###,##0.00")
                 txtValor.Enabled = False
                 'txtNSU.Enabled = False
+            ElseIf lLancamentoDeBaixaDuplicata = True Then
+                txtValor.Text = Format(lCxValor, "###,##0.00")
+                txtValor.Enabled = False
             End If
             Exit Sub
         End If
@@ -829,10 +850,15 @@ Private Sub cmd_ok_Click()
         If VerificaLiberacaoDigitacao2 Then
             AtivaBotoes
             If lOpcao = 1 Then
-                If Not IncluiMovimentoCaixa Then
-                    MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
+                
+                If Not lLancamentoDeBaixaDuplicata Then
+                    If Not IncluiMovimentoCaixa Then
+                        MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
+                    End If
                 End If
+                
                 AtualizaTabela
+                
                 Call GravaAuditoria(1, Me.name, 10, "Dt:" & txtDataVencimento.Text & " Per:" & cbo_periodo.Text & " N.Mov:" & lbl_numero_lancamento.Caption & " Vlr:" & txtValor.Text & " Cod.Cart:" & txt_cartao.Text)
 'ver aqui
                 Dim xNumeroLancamentoAtual As Integer
@@ -891,6 +917,11 @@ Private Sub cmd_ok_Click()
                     Exit Sub
                 ElseIf lLancamentoDePOS = True And lOrigem = "Movimento_Nfce_Conveniencia" Then
                     g_string = "Retorno-Movimento_Nfce_Conveniencia|@|" & cboCartao.ItemData(cboCartao.ListIndex) & "|@|" & cboCartao.Text & "|@|" & txtValor.Text & "|@|" & txtAutorizacao.Text & "|@|"
+                    cmd_sair_Click
+                    Exit Sub
+                ElseIf lLancamentoDeBaixaDuplicata = True Then
+                    'Format(CartaoCredito.Codigo, "00") & "|@|" & lNumeroLancamentoCartao & "|@|
+                    g_string = "Retorno-BaixaDuplicataReceber|@|" & cboCartao.ItemData(cboCartao.ListIndex) & "|@|" & lbl_numero_lancamento.Caption & "|@|"
                     cmd_sair_Click
                     Exit Sub
                 Else
@@ -1062,13 +1093,15 @@ Private Sub AjustaCaixaPista(ByVal pOrigem As String)
     xOperacao = RetiraString(2, xString)
     g_string = ""
     lCxValor = 0
-
+'g_string = "BaixaDuplicataReceber|@|Incluir|@|" & msk_data_pagamento.Text & "|@|" & cbo_periodo.Text & "|@|4|@|1|@|4|@|0|@|" & g_usuario & "|@|" & txtValorCartao.Text & "|@|" & DuplicataReceber.NumeroDocumento & "|@|"
     lCxData = CDate(RetiraString(3, xString))
     lCxPeriodo = RetiraString(4, xString)
     lCxTipoMovimento = Val(RetiraString(5, xString))
+    
     lCxIlha = Val(RetiraString(6, xString))
     lCxTipoMov = Val(RetiraString(7, xString))
     lCxCodigoLancamentoPadrao = Val(RetiraString(8, xString))
+    
 
     If pOrigem = "CaixaPista" And lCaixaIndividual Then
         lCxCodigoFuncionario = Val(RetiraString(11, xString))
@@ -1077,6 +1110,9 @@ Private Sub AjustaCaixaPista(ByVal pOrigem As String)
         If pOrigem = "Movimento_NFCe_Auto" Then
             lCxCodigoCartaoPreDefinido = Val(RetiraString(13, xString))
         End If
+    ElseIf pOrigem = "BaixaDuplicataReceber" Then
+        lCxCodigoFuncionario = 0
+        lNumeroDocumentoDuplicata = ""
     End If
 
     lData = lCxData
@@ -1094,6 +1130,11 @@ Private Sub AjustaCaixaPista(ByVal pOrigem As String)
             lCxValor = fValidaValor(RetiraString(10, xString))
             lCxNumeroNFCe = CLng(RetiraString(11, xString))
             VerificaEExcluiMovExistentes
+        ElseIf lLancamentoDeBaixaDuplicata = True Then
+            lCxValor = fValidaValor(RetiraString(10, xString))
+            lCxNumeroNFCe = 0
+            lNumeroDocumentoDuplicata = RetiraString(11, xString)
+            lNumeroMovimentoCaixa = 0
         End If
         cmd_novo_Click
     ElseIf xOperacao = "Alterar" Then
@@ -1168,6 +1209,9 @@ Private Sub Form_Activate()
                 txt_cartao.Enabled = False
                 cboCartao.Enabled = False
             End If
+        ElseIf lOrigem = "BaixaDuplicataReceber" Then
+            lLancamentoDeBaixaDuplicata = True
+            AjustaCaixaPista (lOrigem)
         Else
             lCxPeriodo = 0
             If MovCartaoCredito.LocalizarUltimo(g_empresa) Then

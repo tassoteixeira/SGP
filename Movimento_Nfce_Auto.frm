@@ -139,7 +139,6 @@ Begin VB.Form Movimento_Nfce_Auto
       _ExtentY        =   15584
       _Version        =   393217
       BackColor       =   16777215
-      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   3
       TextRTF         =   $"Movimento_Nfce_Auto.frx":2BE8
@@ -9471,7 +9470,7 @@ Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As AD
     xTipoServico = pTipoServico
     xCNPJEmpresa = Empty
     
-    xIdentificadorLocalOperacao = 1
+    xIdentificadorLocalOperacao = 1 'operacao interna
     
     
     
@@ -9504,9 +9503,9 @@ Private Function MontaTextoCabecalhoSolicitacaoNFCE(ByVal pRsDadosParaNFCe As AD
                     xCPFCNPJCliente = Cliente.CPF
                 End If
                 
-                If Trim(UCase(Cliente.UF)) <> Trim(UCase(xEmpresa.Estado)) Then
-                    xIdentificadorLocalOperacao = 2
-                End If
+'                If Trim(UCase(Cliente.UF)) <> Trim(UCase(xEmpresa.Estado)) Then
+'                    xIdentificadorLocalOperacao = 2
+'                End If
                 
                 'Foi levantado que para emitir NFCe, sempre usa codigo 9
                 'If UCase(Trim(xInscricaoEstadualCliente)) Like IE_ISENTO Then
@@ -11454,7 +11453,7 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                 If xNomeAdm = "" Then
                     If xString Like "*CIELO*" Then
                         xNomeAdm = "CIELO"
-                    ElseIf xString Like "*REDECARD*" Then
+                    ElseIf xString Like "*REDECARD*" Or xString Like "*REDE*" Then
                         xNomeAdm = "REDECARD"
                     ElseIf xString Like "*SAFRAPAY*" Then
                         xNomeAdm = "SAFRAPAY"
@@ -11927,13 +11926,13 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                     If g_nome_empresa Like "*POSTO T13*" Or g_nome_empresa Like "*MARQUES DE CASTRO*" Or g_nome_empresa Like "*AUTO POSTO CLASSE A*" Or g_nome_empresa Like "*FLORIDIAN COMERCIO E PARTICIPAÇOES*" Or g_nome_empresa Like "*YPE COM DE COMB E LUBRIFICANTES*" Then
                         If UCase(CartaoCredito.Nome) Like "*" & xNomeBandeira & "*" Then
                             If UCase(CartaoCredito.Nome) Like "*" & xOperacao & "*" Then
-                                If xNomeBandeira = "MAESTRO" Or xNomeBandeira = "MASTERCARD" Or xNomeBandeira = "VISA" Then
+                                'If xNomeBandeira Like "*MAESTRO*" Or xNomeBandeira Like "*MASTERCARD*" Or xNomeBandeira Like "*VISA*" Then
                                     If UCase(CartaoCredito.Nome) Like "*" & xNomeAdm & "*" Then
                                         lCodigoCartao = CartaoCredito.Codigo
                                     End If
-                                Else
-                                    lCodigoCartao = CartaoCredito.Codigo
-                                End If
+                                'Else
+                                    'lCodigoCartao = CartaoCredito.Codigo
+                                'End If
                             End If
                         End If
                     Else
@@ -13384,7 +13383,7 @@ Function PermiteValorFracionado(ByVal pCodigoProduto As String) As Boolean
              PermiteValorFracionado = True
          End If
     ElseIf UCase(g_nome_empresa) Like "*AUTO POSTO VERA CRUZ*" Then 'VERA CRUZ 2
-         If pCodigoProduto = "1366" Then  'produtos a granel
+         If pCodigoProduto = "1366" Or pCodigoProduto = "1435" Then  'produtos a granel
              PermiteValorFracionado = True
          End If
     End If

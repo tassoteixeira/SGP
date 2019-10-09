@@ -588,6 +588,7 @@ Private Sub Relatorio()
     If g_nivel_acesso = 4 Or g_usuario = 8 Then
         txtDataInicial.Text = Format(CDate(txtDataInicial.Text) + 1, "dd/mm/yyyy")
         txtDataFinal.Text = Format(CDate(txtDataFinal.Text) + 1, "dd/mm/yyyy")
+        cmd_imprimir.Enabled = True
         cmd_imprimir.SetFocus
     End If
 End Sub
@@ -698,6 +699,7 @@ Private Sub LoopBaixaDuplicataAReceber()
     Dim xTotalChVista As Currency
     Dim xTotalChPrazo As Currency
     Dim xTotalBanco As Currency
+    Dim xTotalCartao As Currency
     Dim xTotal As Currency
     Dim xContadorFormaPagamento As Integer
     
@@ -705,6 +707,8 @@ Private Sub LoopBaixaDuplicataAReceber()
     Const FORMA_PAGAMENTO_CH_VISTA As String = "CH VISTA"
     Const FORMA_PAGAMENTO_CH_PRAZO As String = "CH PRAZO"
     Const FORMA_PAGAMENTO_BANCO As String = "   BANCO"
+    Const FORMA_PAGAMENTO_CARTAO As String = "  CARTÃO"
+    
     Const TAM_CAMPO_FORMA_PAGAMENTO As Integer = 12
     Dim xTamanhoFormaPagamento As Integer
     
@@ -722,6 +726,7 @@ Private Sub LoopBaixaDuplicataAReceber()
         xTotalDinheiro = 0
         xTotalChVista = 0
         xTotalChPrazo = 0
+        xTotalCartao = 0
         xTotal = 0
         
         'loop baixa de duplicata a receber
@@ -826,6 +831,20 @@ Private Sub LoopBaixaDuplicataAReceber()
                 xLinha = "|       |                                                |        |            |"
             End If
             
+            If rsBaixaDuplicataReceber("Valor Pago Cartao").Value > 0 Then
+                i = Len(Format(rsBaixaDuplicataReceber("Valor Pago Cartao").Value, "#,###,##0.00"))
+                Mid(xLinha, 68 + 12 - i, i) = Format(rsBaixaDuplicataReceber("Valor Pago Cartao").Value, "#,###,##0.00")
+                BioImprime "@Printer.Print " & xLinha
+                
+                xLinha = "|       |                                                |        |            |"
+                
+                xTamanhoFormaPagamento = Len(FORMA_PAGAMENTO_CARTAO)
+                Mid(xLinha, 68 + TAM_CAMPO_FORMA_PAGAMENTO - xTamanhoFormaPagamento, xTamanhoFormaPagamento) = FORMA_PAGAMENTO_CARTAO
+                BioImprime "@Printer.Print " & xLinha
+                xContadorFormaPagamento = xContadorFormaPagamento + 1
+                xLinha = "|       |                                                |        |            |"
+            End If
+            
             If xContadorFormaPagamento = 0 Then
                 BioImprime "@Printer.Print " & xLinha
             End If
@@ -837,6 +856,7 @@ Private Sub LoopBaixaDuplicataAReceber()
             xTotalChVista = xTotalChVista + rsBaixaDuplicataReceber("Valor Pago Cheque Vista").Value
             xTotalChPrazo = xTotalChPrazo + rsBaixaDuplicataReceber("Valor Pago Cheque Prazo").Value
             xTotalBanco = xTotalBanco + rsBaixaDuplicataReceber("Valor Pago Banco").Value
+            xTotalCartao = xTotalCartao + rsBaixaDuplicataReceber("Valor Pago Cartao").Value
             xTotal = xTotal + rsBaixaDuplicataReceber("TotalRecebido").Value
             rsBaixaDuplicataReceber.MoveNext
         Loop
@@ -865,6 +885,13 @@ Private Sub LoopBaixaDuplicataAReceber()
             Mid(xLinha, 68 + 12 - i, i) = Format(xTotalBanco, "##,###,##0.00")
             BioImprime "@Printer.Print " & xLinha
         End If
+        If xTotalCartao > 0 Then
+            xLinha = "|                          *** DUPLICATAS RECEBIDAS EM CARTÃO     |            |"
+            i = Len(Format(xTotalCartao, "##,###,##0.00"))
+            Mid(xLinha, 68 + 12 - i, i) = Format(xTotalCartao, "##,###,##0.00")
+            BioImprime "@Printer.Print " & xLinha
+        End If
+        
         xLinha = "|                          *** TOTAL DE DUPLICATAS RECEBIDAS      |            |"
         i = Len(Format(xTotal, "##,###,##0.00"))
         Mid(xLinha, 68 + 12 - i, i) = Format(xTotal, "##,###,##0.00")
@@ -2088,8 +2115,8 @@ Private Sub TotalizaBaixaDuplicataAReceber()
     lSQL = lSQL & "       [Data do Periodo Inicial], [Data do Periodo Final], [Data do Vencimento], "
     lSQL = lSQL & "       [Valor do Vencimento], [Data do Pagamento], Periodo, "
     lSQL = lSQL & "       [Valor Pago] AS [Valor Pago Dinheiro], [Valor Pago Cheque Vista], "
-    lSQL = lSQL & "       [Valor Pago Cheque PRAZO], [Valor Pago Banco], "
-    lSQL = lSQL & "      ([Valor Pago] + [Valor Pago Cheque Vista] + [Valor Pago Cheque PRAZO] + [Valor Pago Banco]) AS TotalRecebido"
+    lSQL = lSQL & "       [Valor Pago Cheque PRAZO], [Valor Pago Banco], [Valor Pago Cartao], "
+    lSQL = lSQL & "      ([Valor Pago] + [Valor Pago Cheque Vista] + [Valor Pago Cheque PRAZO] + [Valor Pago Banco] + [Valor Pago Cartao]) AS TotalRecebido"
     lSQL = lSQL & "  FROM [baixa_duplicata_receber], Cliente"
     lSQL = lSQL & " WHERE Baixa_Duplicata_Receber.Empresa = " & g_empresa
     lSQL = lSQL & "   AND Baixa_Duplicata_Receber.[Data do Pagamento] >= " & preparaData(CDate(txtDataInicial.Text))
@@ -2727,9 +2754,13 @@ Private Sub ImpDetLubrificante()
     i = Len(Format(xValorUnitario, "#,###,###.00"))
     Mid(xLinha, 48 + 12 - i, i) = Format(xValorUnitario, "#,###,###.00")
     
-    
-    i = Len(Format(rsMovLubrificante("Quantidade").Value, "##,###"))
-    Mid(xLinha, 61 + 6 - i, i) = Format(rsMovLubrificante("Quantidade").Value, "##,###")
+    If (CCur(rsMovLubrificante("Quantidade").Value) - Val(rsMovLubrificante("Quantidade").Value)) = 0 Then
+        i = Len(Format(rsMovLubrificante("Quantidade").Value, "##,###"))
+        Mid(xLinha, 61 + 6 - i, i) = Format(rsMovLubrificante("Quantidade").Value, "##,###")
+    Else
+        i = Len(FormatNumber(rsMovLubrificante("Quantidade").Value, 2))
+        Mid(xLinha, 61 + 6 - i, i) = FormatNumber(rsMovLubrificante("Quantidade").Value, 2)
+    End If
             
     i = Len(Format(rsMovLubrificante("Valor Total").Value, "#,###,###.00"))
     Mid(xLinha, 68 + 12 - i, i) = Format(rsMovLubrificante("Valor Total").Value, "#,###,###.00")
