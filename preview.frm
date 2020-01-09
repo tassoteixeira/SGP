@@ -87,7 +87,6 @@ Begin VB.Form frm_preview
       _ExtentY        =   9234
       _Version        =   393217
       BackColor       =   16777215
-      Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   3
       RightMargin     =   9,99999e5
@@ -654,19 +653,21 @@ Private Sub Form_Resize()
 End Sub
 Private Sub Form_Unload(Cancel As Integer)
     Finaliza
-    If Mid(g_string, Len(g_string) - 3, 4) <> ".LOG" Then
-        Mid(g_string, 13, 1) = "V"
-        
-        If gArqTxt.FileExists(gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1)) Then
-            gArqTxt.DeleteFile (gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1))
+    If Len(g_string) > 0 Then
+        If Mid(g_string, Len(g_string) - 3, 4) <> ".LOG" Then
+            Mid(g_string, 13, 1) = "V"
+            
+            If gArqTxt.FileExists(gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1)) Then
+                gArqTxt.DeleteFile (gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1))
+            End If
+            
+            Mid(g_string, 13, 1) = "P"
+            
+            If gArqTxt.FileExists(gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1)) Then
+                gArqTxt.DeleteFile (gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1))
+            End If
+            
         End If
-        
-        Mid(g_string, 13, 1) = "P"
-        
-        If gArqTxt.FileExists(gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1)) Then
-            gArqTxt.DeleteFile (gDrive & gDiretorioData & Mid(g_string, 2, Len(g_string) - 1))
-        End If
-        
     End If
     If AcionadoEnviarEmail Then
         If InternetAutodialHangup(0) Then

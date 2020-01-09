@@ -551,6 +551,13 @@ On Error GoTo trata_erro
                         gConn.RollbackTrans
                         Exit Function
                     End If
+                    'PARA TESTES NA EXCLUSÃO 1 POR 1
+'                    If Not ExcluiRegistroMovimentoCartao(!Empresa, ![Data de Emissao], !Periodo, ![Tipo do Movimento], ![Numero do Lancamento], ![Codigo do Cartao]) Then
+'                        rsMovCartaoCredito.Close
+'                        Set rsMovCartaoCredito = Nothing
+'                        gConn.RollbackTrans
+'                        Exit Function
+'                    End If
                 Else
                     MsgBox "Não foi possível integrar com o Caixa!", vbInformation, "Erro de Integridade."
                     rsMovCartaoCredito.Close
@@ -558,13 +565,16 @@ On Error GoTo trata_erro
                     gConn.RollbackTrans
                     Exit Function
                 End If
+                
                 .MoveNext
+
             Loop
+        
         End With
     End If
     rsMovCartaoCredito.Close
     Set rsMovCartaoCredito = Nothing
-    
+  
     'DELETA Movimento_Cartao_Credito
     gSQL = "DELETE FROM Movimento_Cartao_Credito " & xCondicao
     gConn.Execute gSQL, xRecordsAffected, adCmdText + adExecuteNoRecords
@@ -581,6 +591,31 @@ trata_erro:
     MsgBox Err.Number & " - " & Err.Description
 End Function
 
+''COMENTAR DELETE APÓS TESTES NO ESMERALDA - ALEX - 06-01-2020
+'Private Function ExcluiRegistroMovimentoCartao(ByVal pEmpresa As Integer, ByVal pDataEmissao As Date, ByVal pPeriodo As Integer, ByVal pTipoMovimento As String, ByVal pNumeroLancamento As Integer, ByVal pCodigoCartao As Integer)
+'    ExcluiRegistroMovimentoCartao = False
+'    Dim xRecordsAffected As Long
+'
+'    On Error GoTo trata_erro_DELETE
+'
+'                    gSQL = "DELETE FROM Movimento_Cartao_Credito WHERE "
+'                    gSQL = gSQL & " Empresa = " & pEmpresa
+'                    gSQL = gSQL & " AND [Data de Emissao] = " & preparaData(pDataEmissao)
+'                    gSQL = gSQL & " AND Periodo = " & pPeriodo
+'                    gSQL = gSQL & " AND [Tipo do Movimento] = " & preparaTexto(pTipoMovimento)
+'                    gSQL = gSQL & " AND [Numero do Lancamento] = " & pNumeroLancamento
+'                    gSQL = gSQL & " AND [Codigo do Cartao] = " & pCodigoCartao
+'
+'                    gConn.Execute gSQL, xRecordsAffected, adCmdText + adExecuteNoRecords
+'                    If xRecordsAffected = 0 Then
+'                        Exit Function
+'                    End If
+'                    ExcluiRegistroMovimentoCartao = True
+'                    gSQL = ""
+'Exit Function
+'trata_erro_DELETE:
+'        MsgBox "Erro ao tentar deletar movimento " & Err.Number & " - " & Err.Description & " - pDataEmissao=" & pDataEmissao & " - pNumeroLancamento=" & pNumeroLancamento
+'End Function
 
 Public Function EstornaCartao(ByVal nEmpresa As Integer, ByVal nDataEmissao As Boolean, ByVal nDataInicial As Date, ByVal nDataFinal As Date, ByVal nCodigoCartao As Integer) As Boolean
     Dim xRecordsAffected As Long

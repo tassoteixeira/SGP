@@ -1537,22 +1537,23 @@ xCamposValidos = False
         xCamposValidos = True
     End If
     
-    
-    If xCamposValidos = True Then
-        If gridAbastecimentoAfericao.Rows <= 2 Then
-            If g_nivel_acesso > lNivelAcessoRestricaoLancarAfericaoSemAbstecimento Then
-                MsgBox "Adicione os abastecimentos referentes a aferição.", vbInformation, "Atenção!"
-                xCamposValidos = False
-                btnAtualizaGrid.SetFocus
-            ElseIf ExisteAbastecimentoAfericaoPendente(g_empresa, CDate(txtData.Text), Val(cbo_bomba.Text), Val(cbo_periodo.Text), lCxCodigoFuncionario) Then
-                MsgBox "Adicione os abastecimentos selecionados.", vbInformation, "Atenção!"
-                xCamposValidos = False
-                btnAtualizaGrid.SetFocus
+    If g_automacao Then
+        If xCamposValidos = True Then
+            If gridAbastecimentoAfericao.Rows <= 2 Then
+                If g_nivel_acesso > lNivelAcessoRestricaoLancarAfericaoSemAbstecimento Then
+                    MsgBox "Adicione os abastecimentos referentes a aferição.", vbInformation, "Atenção!"
+                    xCamposValidos = False
+                    btnAtualizaGrid.SetFocus
+                ElseIf ExisteAbastecimentoAfericaoPendente(g_empresa, CDate(txtData.Text), Val(cbo_bomba.Text), Val(cbo_periodo.Text), lCxCodigoFuncionario) Then
+                    MsgBox "Adicione os abastecimentos selecionados.", vbInformation, "Atenção!"
+                    xCamposValidos = False
+                    btnAtualizaGrid.SetFocus
+                End If
             End If
+        Else
+            ValidaCampos = xCamposValidos
+            Exit Function
         End If
-    Else
-        ValidaCampos = xCamposValidos
-        Exit Function
     End If
 
     

@@ -1222,6 +1222,16 @@ Private Sub ClickMenu(ByVal x_tipo As String, ByVal xNomeMenu As String)
         Else
             MsgBox "Programa não encontrado!"
         End If
+    ElseIf xNomeInterno = "RelatoriosDiversos" Then
+      Dim xRetorno4 As String
+      Dim xCaminho4 As String
+         
+        xCaminho4 = "C:\Cerrado Tecnologia\Petromovel\Petromovel.exe"
+        If gArqTxt.FileExists(xCaminho4) Then
+            xRetorno4 = Shell(xCaminho4 & " " & g_empresa & " " & Replace(g_nome_empresa, " ", "_") & " " & g_usuario & " " & Replace(g_nome_usuario, " ", "_") & " " & g_nivel_acesso & " " & Replace(gDrive, ":", "") & " " & gIpBanco & " " & Replace(gPortaBanco, ",", "") & " " & gNomeInternoBD & " " & gSenhaBD & " " & gCNPJEmpresa & " " & Replace(Empresa.Cidade, " ", "_") & " " & "frmRelatorioDiversos", vbNormalFocus)
+        Else
+            MsgBox "Programa não encontrado!"
+        End If
     Else
         Call Chama(xNomeInterno)
     End If
@@ -2411,7 +2421,7 @@ Private Sub Form_Load()
     'Sub-Versao Mes   = 01
     'Sub-versao Dia   = 22
     'Correcao do dia  = a
-    gVersaoSGP = "19.10.07a"
+    gVersaoSGP = "20.01.07a"
 
     gTipoAmbienteNFCe = ""
     Me.Caption = "Sistema Gerênciador de Postos de Combustíveis - Versão " & gVersaoSGP

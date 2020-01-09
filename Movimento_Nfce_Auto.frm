@@ -3403,6 +3403,8 @@ Dim lNFCe_tBand As String
 Dim lNFCe_cAut As String
 Dim lContadorAguarde As Integer
 
+Dim lPOSImprimeNFCe As Boolean
+
 Dim lTotalDescontoNivelPreco As Currency
 Dim lTotalAcrescimoNivelPreco As Currency
 
@@ -5758,6 +5760,8 @@ Private Sub AtualizaConstantes()
     If ConfiguracaoDiversa.LocalizarCodigo(1, "ECF: Exige NCM") Then
         lExigeNCM = ConfiguracaoDiversa.Verdadeiro
     End If
+    
+    lPOSImprimeNFCe = True
 End Sub
 Private Sub AtualizaRecordset(xMaxRecords As Integer)
     
@@ -7672,6 +7676,7 @@ On Error GoTo trata_erro
     End If
 
 
+    xRealizarImpressao = IIf(lPOSImprimeNFCe = False, "false", xRealizarImpressao)
 
  '   MsgBox "EnviaDadosParaNFCe - ALEX TESTE 2"
     xTipoServico = "NFCe 3.10"
@@ -7722,7 +7727,6 @@ On Error GoTo trata_erro
             gStringChamada = gStringChamada & MovDocEletronicoCabecalho.Modelo & "|@|" 'Modelo
             
             
-            
             Call CriaLogCupom("[NFCE] Erro EnviaDadosParaNFCe: gStringChamada=" & gStringChamada)
             
             If ConfiguracaoDiversa.LocalizarCodigo(1, "PETROMOVELAUTO AUTORIZA NFCE") Then
@@ -7732,10 +7736,10 @@ On Error GoTo trata_erro
                         If Not GravaSolicitacaoProcessamentoNFCe(MovSolicitacaoFuncaoNFe.NumeroNFe_MovSolicitacaoFuncaoNFe, gStringChamada) Then
                             MsgBox "Não foi possível gravar a Solicitação do processamento para NFC-e!", vbCritical, "Erro de Integridade"
                         Else
-                            Call AtivaDesativaAguarde("Aguarde! Processando NFCe... NSU(" & MovSolicitacaoFuncaoNFe.NSU_MovSolicitacaoFuncaoNFe & ")", True)
-                            Call IniciaContadorAguarde(120)
-                            lbl_mensagem.Caption = "Aguarde... Processando NFCe."
-                            DoEvents
+                             Call AtivaDesativaAguarde("Aguarde! Processando NFCe... NSU(" & MovSolicitacaoFuncaoNFe.NSU_MovSolicitacaoFuncaoNFe & ")", True)
+                             Call IniciaContadorAguarde(120)
+                             lbl_mensagem.Caption = "Aguarde... Processando NFCe."
+                             DoEvents
                         End If
                     'Else
                         'Call MovSolicitacaoFuncaoNFe.DefineHoraCancelamentoHost(MovSolicitacaoFuncaoNFe.NSU_MovSolicitacaoFuncaoNFe, Now, gVersaoSGP)
@@ -11561,7 +11565,7 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
                     ElseIf xString Like "*AMEX*" Then
                         xNomeBandeiraLido = "AMERICAN EXPRESS"
                         xNomeBandeira = "AMERICAN EXPRESS"
-                        xOperacao = "CREDITO"
+                        xOperacao = "CRED"
                         Exit Do
                     ElseIf xString Like "*AMERICAN EXPRESS*" Then
                         xNomeBandeiraLido = "AMERICAN EXPRESS"
@@ -11886,6 +11890,8 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
             End If
         Loop
         xArquivo.Close
+        
+        CriaLogECF (Date & " " & Time & "[IntegraCartaoCreditoNoCaixa] - Leitura do arquivo finalizada: xNomeBandeira = " & xNomeBandeira & " - xOperacao=" & xOperacao & " - xNomeAdm=" & xNomeAdm)
        
         'Quando for CIELO
         'Chega aqui com xNomeBandeira = "REDECARD"
@@ -11978,10 +11984,12 @@ Private Function IntegraCartaoCreditoNoCaixa() As Boolean
             End If
         End If
         If lCodigoCartao > 0 Then
-            Call CriaLogECF(Date & " " & Time & " IntegraCartaoCreditoNoCaixa: 1 lCodigoCartao=" & lCodigoCartao & " - xNomeBandeira=" & xNomeBandeira & " - xNomeArquivo=" & xNomeArquivo)
+            Call CriaLogECF(Date & " " & Time & " IntegraCartaoCreditoNoCaixa: 1 lCodigoCartao=" & lCodigoCartao & " - xNomeBandeira=" & xNomeBandeira & " - xNomeAdm=" & xNomeAdm & " - xNomeArquivo=" & xNomeArquivo)
             Call BuscaNsuCartaoCredito(xNomeAdm, xNomeBandeira, xNomeArquivo)
             If lCartaoAutorizacao = "" And lCartaoNSU = "" Then
                 Call BuscaDadosCartaoTefCerrado(xNomeArquivo)
+                
+                Call CriaLogECF(Date & " " & Time & " IntegraCartaoCreditoNoCaixa: 1 lCodigoCartao=" & lCodigoCartao & "lCartaoAutorizacao=" & lCartaoAutorizacao & " - lCartaoNSU=" & lCartaoNSU)
             End If
             Call CriaLogECF(Date & " " & Time & " IntegraCartaoCreditoNoCaixa: 2")
             IntegraCartaoCreditoNoCaixa = True
@@ -13551,6 +13559,7 @@ Function ValidaCartaoPOS() As Boolean
     lNFCe_tBand = ""
     lNFCe_cAut = ""
     xCodigoCartaoDesconto = 0
+    lPOSImprimeNFCe = True
     If cbo_forma_pagamento.ItemData(cbo_forma_pagamento.ListIndex) = 16 Then
         
         If lDescontoCartaoEspecial = True Then
@@ -13594,6 +13603,9 @@ Function ValidaCartaoPOS() As Boolean
                 lIntegraDescontoCartaoEspecial = True
             End If
             
+            If ConfiguracaoDiversa.LocalizarCodigo(1, "NFCEAUTO: Cartao POS Imprime NFCe") Then
+                lPOSImprimeNFCe = ConfiguracaoDiversa.Verdadeiro
+            End If
             
             ValidaCartaoPOS = True
         Else

@@ -599,7 +599,14 @@ Private Sub ImpMovimentoBomba(i As Integer)
     lSQL = "SELECT [Tipo de Combustivel],"
     lSQL = lSQL & " SUM([Quantidade da Saida]) AS TotalQtd,"
     lSQL = lSQL & " SUM(" & preparaArredonda("[Quantidade da Saida] * [Preco de Custo]", 2) & ") AS TotalCusto,"
-    lSQL = lSQL & " SUM(" & preparaArredonda("[Quantidade da Saida] * [Preco de Venda]", 2) & ") AS TotalVenda"
+    lSQL = lSQL & " SUM(" & preparaArredonda("[Quantidade da Saida] * [Preco de Venda]", 2) & ") AS TotalVenda,"
+    
+    'TotalAcrescimo e TotalDesconto são referentes a utilização de automação com 2 preços
+    
+    lSQL = lSQL & " " & preparaArredonda("SUM([Total Desconto])", 2) & " AS TotalDesconto,"
+    lSQL = lSQL & " " & preparaArredonda("SUM([Total Acrescimo])", 2) & " AS TotalAcrescimo"
+
+    
     lSQL = lSQL & " FROM Movimento_Bomba"
     lSQL = lSQL & " WHERE Empresa = " & i
     lSQL = lSQL & " AND Data >= " & preparaData(CDate(msk_data_i.Text))
@@ -621,16 +628,18 @@ Private Sub ImpMovimentoBomba(i As Integer)
                     l_litro_a(gQUANTIDADE_MAXIMA_BICO) = l_litro_a(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_a(i) = l_custo_a(i) + !TotalCusto
                     l_custo_a(gQUANTIDADE_MAXIMA_BICO) = l_custo_a(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_a(i) = l_venda_a(i) + !TotalVenda
-                    l_venda_a(gQUANTIDADE_MAXIMA_BICO) = l_venda_a(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_a(i) = (l_venda_a(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_a(gQUANTIDADE_MAXIMA_BICO) = (l_venda_a(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
                     
                 ElseIf Trim(![Tipo de Combustivel]) = "AA" Then
                     l_litro_aa(i) = l_litro_aa(i) + !TotalQtd
                     l_litro_aa(gQUANTIDADE_MAXIMA_BICO) = l_litro_aa(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_aa(i) = l_custo_aa(i) + !TotalCusto
                     l_custo_aa(gQUANTIDADE_MAXIMA_BICO) = l_custo_aa(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_aa(i) = l_venda_aa(i) + !TotalVenda
-                    l_venda_aa(gQUANTIDADE_MAXIMA_BICO) = l_venda_aa(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_aa(i) = (l_venda_aa(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_aa(gQUANTIDADE_MAXIMA_BICO) = (l_venda_aa(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
                     
                    
                 ElseIf Trim(![Tipo de Combustivel]) = "D" Then
@@ -638,8 +647,9 @@ Private Sub ImpMovimentoBomba(i As Integer)
                     l_litro_d(gQUANTIDADE_MAXIMA_BICO) = l_litro_d(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_d(i) = l_custo_d(i) + !TotalCusto
                     l_custo_d(gQUANTIDADE_MAXIMA_BICO) = l_custo_d(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_d(i) = l_venda_d(i) + !TotalVenda
-                    l_venda_d(gQUANTIDADE_MAXIMA_BICO) = l_venda_d(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_d(i) = (l_venda_d(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_d(gQUANTIDADE_MAXIMA_BICO) = (l_venda_d(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
                     
                
                 ElseIf Trim(![Tipo de Combustivel]) = "DA" Then
@@ -647,24 +657,27 @@ Private Sub ImpMovimentoBomba(i As Integer)
                     l_litro_da(gQUANTIDADE_MAXIMA_BICO) = l_litro_da(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_da(i) = l_custo_da(i) + !TotalCusto
                     l_custo_da(gQUANTIDADE_MAXIMA_BICO) = l_custo_da(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_da(i) = l_venda_da(i) + !TotalVenda
-                    l_venda_da(gQUANTIDADE_MAXIMA_BICO) = l_venda_da(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_da(i) = (l_venda_da(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_da(gQUANTIDADE_MAXIMA_BICO) = (l_venda_da(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
                 
                 ElseIf Trim(![Tipo de Combustivel]) = "G" Then
                     l_litro_g(i) = l_litro_g(i) + !TotalQtd
                     l_litro_g(gQUANTIDADE_MAXIMA_BICO) = l_litro_g(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_g(i) = l_custo_g(i) + !TotalCusto
                     l_custo_g(gQUANTIDADE_MAXIMA_BICO) = l_custo_g(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_g(i) = l_venda_g(i) + !TotalVenda
-                    l_venda_g(gQUANTIDADE_MAXIMA_BICO) = l_venda_g(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_g(i) = (l_venda_g(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_g(gQUANTIDADE_MAXIMA_BICO) = (l_venda_g(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
 
                 ElseIf Trim(![Tipo de Combustivel]) = "GA" Then
                     l_litro_ga(i) = l_litro_ga(i) + !TotalQtd
                     l_litro_ga(gQUANTIDADE_MAXIMA_BICO) = l_litro_ga(gQUANTIDADE_MAXIMA_BICO) + !TotalQtd
                     l_custo_ga(i) = l_custo_ga(i) + !TotalCusto
                     l_custo_ga(gQUANTIDADE_MAXIMA_BICO) = l_custo_ga(gQUANTIDADE_MAXIMA_BICO) + !TotalCusto
-                    l_venda_ga(i) = l_venda_ga(i) + !TotalVenda
-                    l_venda_ga(gQUANTIDADE_MAXIMA_BICO) = l_venda_ga(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda
+                    
+                    l_venda_ga(i) = (l_venda_ga(i) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
+                    l_venda_ga(gQUANTIDADE_MAXIMA_BICO) = (l_venda_ga(gQUANTIDADE_MAXIMA_BICO) + !TotalVenda + !TotalAcrescimo) - !TotalDesconto
                     
                 Else
                     MsgBox "teste" & ![Tipo de Combustivel]

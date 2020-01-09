@@ -410,6 +410,10 @@ On Error GoTo Err_Incluir
     Exit Function
 
 Err_Incluir:
+Call CriaLogCadastroDll2("cMovimentoNotaAbastecimento.Incluir", Err.Number & " - " & Err.Description, "gSQL=" & gSQL)
+Exit Function
+
+
 End Function
 
 
